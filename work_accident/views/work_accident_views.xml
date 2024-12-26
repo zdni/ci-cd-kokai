@@ -26,19 +26,20 @@
                                     <field name="date" />
                                     <field name="job_id" />
                                     <field name="work_location_id" />
+                                    <field name="area_id" />
                                     <field name="detail_location" />
-                                    <field name="area_location" />
                                     <field name="work_equipment" />
-                                    <field name="material" />
+                                    <field name="product_id" />
                                     <field name="description" />
                                 </group>
                             </page>
                             <page name="victim" string="Victim">
                                 <group>
                                     <field name="employee_id" />
-                                    <field name="injured_body_part" />
-                                    <field name="wound_type" />
-                                    <field name="medical_treatment" />
+                                    <field name="body_part_ids" />
+                                    <field name="type_wound_ids" />
+                                    <field name="treatment_ids" />
+                                    <field name="detail_treatment" placeholder="Detail of Treatment..." />
                                 </group>
                             </page>
                         </notebook>
@@ -56,7 +57,7 @@
             <field name="name">work.accident.view.tree</field>
             <field name="model">work.accident</field>
             <field name="arch" type="xml">
-                <tree string="Work Accident">
+                <tree editable="bottom" string="Work Accident">
                     <field name="name" />
                     <field name="date" />
                     <field name="employee_id" />
@@ -89,6 +90,93 @@
             name="Work Accident"
             action="work_accident_action"
             parent="qhse_program.hse_menu"
+            sequence="10"
+        />
+
+
+        <menuitem
+            id="hse_configuration_menu"
+            name="HSE"
+            parent="qhse_program.configuration_menu"
+            sequence="10"
+        />
+
+        <record id="body_part_view_tree" model="ir.ui.view">
+            <field name="name">body.part.view.tree</field>
+            <field name="model">body.part</field>
+            <field name="arch" type="xml">
+                <tree string="Body Part">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="body_part_action" model="ir.actions.act_window">
+            <field name="name">Body Part</field>
+            <field name="res_model">body.part</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="body_part_menu"
+            name="Body Part"
+            action="body_part_action"
+            parent="hse_configuration_menu"
+            sequence="10"
+        />
+
+        <record id="type_wound_view_tree" model="ir.ui.view">
+            <field name="name">type.wound.view.tree</field>
+            <field name="model">type.wound</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Type Wound">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="type_wound_action" model="ir.actions.act_window">
+            <field name="name">Type Wound</field>
+            <field name="res_model">type.wound</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="type_wound_menu"
+            name="Type Wound"
+            action="type_wound_action"
+            parent="hse_configuration_menu"
+            sequence="10"
+        />
+
+        <record id="medical_treatment_view_tree" model="ir.ui.view">
+            <field name="name">medical.treatment.view.tree</field>
+            <field name="model">medical.treatment</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Medical Treatment">
+                    <field name="name" />
+                    <field name="description" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="medical_treatment_action" model="ir.actions.act_window">
+            <field name="name">Medical Treatment</field>
+            <field name="res_model">medical.treatment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="medical_treatment_menu"
+            name="Medical Treatment"
+            action="medical_treatment_action"
+            parent="hse_configuration_menu"
             sequence="10"
         />
     
