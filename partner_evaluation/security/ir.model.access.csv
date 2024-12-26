@@ -1,8 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_evaluation_template,access_evaluation_template,model_evaluation_template,base.group_user,1,1,1,1
-access_evaluation_question,access_evaluation_question,model_evaluation_question,base.group_user,1,1,1,1
-access_partner_evaluation,access_partner_evaluation,model_partner_evaluation,base.group_user,1,1,1,1
-access_evaluation_result,access_evaluation_result,model_evaluation_result,base.group_user,1,1,1,1
-access_evaluation_item,access_evaluation_item,model_evaluation_item,base.group_user,1,1,1,1
-access_evaluation_category,access_evaluation_category,model_evaluation_category,base.group_user,1,1,1,1
-access_generate_evaluation_wizard,access_generate_evaluation_wizard,model_generate_evaluation_wizard,base.group_user,1,1,1,1
