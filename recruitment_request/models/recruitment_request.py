@@ -226,7 +226,7 @@ class RecruitmentRequest(models.Model):
 class AllowanceSubmission(models.Model):
     _name = 'allowance.submission'
     _description = 'Allowance Submission'
-    _inherit = ['mail.activity.type', 'mail.thread']
+    _inherit = ['mail.activity.mixin', 'mail.thread']
 
     request_id = fields.Many2one('recruitment.request', string='Request')
     allowance_type_id = fields.Many2one('hr.allowance.type', string='Allowance Type')
