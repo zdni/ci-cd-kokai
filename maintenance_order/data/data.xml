@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+    
+        <record id="maintenance_stage_data_draft" model="maintenance.stage">
+            <field name="name">Draft</field>
+            <field name="fold">False</field>
+        </record>
+        <record id="maintenance_stage_data_request" model="maintenance.stage">
+            <field name="name">Request</field>
+            <field name="fold">False</field>
+        </record>
+        <record id="maintenance_stage_data_progress" model="maintenance.stage">
+            <field name="name">In Progress</field>
+            <field name="fold">False</field>
+        </record>
+        <record id="maintenance_stage_data_done" model="maintenance.stage">
+            <field name="name">Done</field>
+            <field name="fold">True</field>
+        </record>
+        <record id="maintenance_stage_data_cancel" model="maintenance.stage">
+            <field name="name">Cancel</field>
+            <field name="fold">True</field>
+        </record>
+    
+    </data>
+
+</odoo>

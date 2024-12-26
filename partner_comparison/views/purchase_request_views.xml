@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_purchase_request_form_inherit_agreement" model="ir.ui.view">
+            <field name="name">purchase.request.view.form.inherit</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button string="Generate Agreement" name="generate_purchase_agreement" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('agreement_count', '>', 0)]}" />
+                    <button string="Generate PO" name="generate_order" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('agreement_count', '=', 0)]}" />
+                    <button string="Sent" name="action_sent" type="object" class="oe_highlight" states="approved,comparison" />
+                    <button string="Reply" name="action_notif_for_team" type="object" class="oe_highlight" states="sent" />
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_show_price_comparison" string="Comparison" type="object" class="oe_stat_button" icon="fa-table"/>
+                    <button name="action_show_agreement" type="object" class="oe_stat_button" icon="fa-list">
+                        <field name="agreement_count" string="" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='type_id']" position="after">
+                    <field name="sent_to_ids" attrs="{'readonly': [('state', 'in', ['in_progress', 'done'])], 'required': [('state', '=', 'comparison')]}" widget="many2many_tags" />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page name="potential_partner" string="Potential Vendor">
+                        <field name="potential_partner_ids" attrs="{'readonly': [('state', 'in', ['comparison', 'in_progress', 'done'])]}">
+                            <tree editable="bottom">
+                                <field name="name"></field>
+                                <field name="phone"></field>
+                                <field name="email"></field>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_order_form_inherit_agreement" model="ir.ui.view">
+            <field name="name">purchase.order.view.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <field name="date_order" position="before">
+                    <field name="agreement_id" attrs="{'invisible': [('agreement_id', '=', False)]}" />
+                </field>
+                <xpath expr="//page[@name='products']//field[@name='order_line']//tree" position="inside">
+                    <field name="agreement_id" readonly="1" invisible="1" />
+                </xpath>
+                <xpath expr="//page[@name='products']//field[@name='order_line']//form//field[@name='taxes_id']" position="after">
+                    <field name="agreement_id" readonly="1" invisible="1" />
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="inspection_menu"
+            name="Inspection"
+            parent="qhse_program.qc_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

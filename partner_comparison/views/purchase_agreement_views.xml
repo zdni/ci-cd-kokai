@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="purchase_agreement_view_form" model="ir.ui.view">
+            <field name="name">purchase.agreement.view.form</field>
+            <field name="model">purchase.agreement</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Agreement">
+                    <header>
+                        <button string="Draft" name="action_draft" type="object" class="oe_highlight" states="cancel" />
+                        <button string="Done" name="action_done" type="object" class="oe_highlight" states="sent" />
+                        <button string="Generate PO" name="generate_purchase_order" type="object" class="oe_highlight" states="done" />
+                        <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" states="draft,sent" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_id" readonly="1" />
+                                <field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="agreement_date" />
+                                <field name="order_id" attrs="{'invisible': [('order_id', '=', False)], 'readonly': 1}" />
+                            </group>
+                            <group>
+                                <field name="delivery_time" />
+                                <field name="uom_delivery_id" />
+                                <field name="currency_id" invisible="1" />
+                                <field name="company_id" invisible="1" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="line" string="Lines">
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="agreement_id" optional="hide" readonly="1" />
+                                        <field name="line_id" optional="hide" readonly="1" />
+                                        <field name="product_id" readonly="1" />
+                                        <field name="qty" optional="hide" readonly="1" />
+                                        <field name="uom_id" optional="hide" readonly="1" />
+                                        <field name="price_unit" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="tax_ids" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
+                                        <field name="price_total" optional="hide" />
+                                        <field name="price_tax" optional="hide" />
+                                        <field name="discount" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="discount_fixed" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="price_subtotal" />
+                                        <field name="is_accept" />
+                                    </tree>
+                                </field>
+                                <group>
+                                    <group>
+                                        <field name="has_discount_global" />
+                                        <field name="discount_type" attrs="{'invisible': [('has_discount_global', '=', False)], 'required': [('has_discount_global', '=', True)]}" />
+                                        <field name="discount" attrs="{'invisible': ['|', ('has_discount_global', '=', False), ('discount_type', '=', 'fixed')], 'required': [('has_discount_global', '=', True)]}" />
+                                        <field name="discount_fixed" attrs="{'invisible': ['|', ('has_discount_global', '=', False), ('discount_type', '=', 'percent')], 'required': [('has_discount_global', '=', True)]}" />
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field colspan="2" name="notes" nolabel="1" placeholder="Define your terms and conditions ..."/>
+                                    </group>
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
+                                    </group>
+                                </group>
+                                <div class="clearfix"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="purchase_agreement_view_tree" model="ir.ui.view">
+            <field name="name">purchase.agreement.view.tree</field>
+            <field name="model">purchase.agreement</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Agreement" create="False">
+                    <field name="request_id" /> 
+                    <field name="partner_id" /> 
+                    <field name="delivery_time" /> 
+                    <field name="uom_delivery_id" /> 
+                    <field name="amount_total" /> 
+                    <field name="state" /> 
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_agreement_view_search" model="ir.ui.view">
+            <field name="name">purchase.agreement.view.search</field>
+            <field name="model">purchase.agreement</field>
+            <field name="arch" type="xml">
+                <search string="Purchase Agreement">
+                    <filter name="request" string="Purchase Request" domain="[('request_id', 'ilike', self)]"/>
+                    <filter name="partner" string="Partner" domain="[('partner_id', 'ilike', self)]"/>
+                    <group string="Group By" expand="1">
+                        <filter name="request" string="Purchase Request" context="{'group_by': 'request_id'}" />
+                        <filter name="partner" string="Partner" context="{'group_by': 'partner_id'}" />
+                        <filter name="state" string="Status" context="{'group_by': 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="purchase_agreement_action" model="ir.actions.act_window">
+            <field name="name">Purchase Agreement</field>
+            <field name="res_model">purchase.agreement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="purchase_agreement_menu"
+            name="Purchase Agreement"
+            action="purchase_agreement_action"
+            groups="purchase_request.group_purchase_request_manager"
+            parent="purchase_request.menu_purchase_request"
+            sequence="10"
+        />
+
+
+
+        <record id="agreement_line_view_tree" model="ir.ui.view">
+            <field name="name">agreement.line.view.tree</field>
+            <field name="model">agreement.line</field>
+            <field name="arch" type="xml">
+                <tree string="Price Comparison" create="False">
+                    <field name="request_id" />
+                    <field name="agreement_id" optional="hide" />
+                    <field name="partner_id" />
+                    <field name="product_id" />
+                    <field name="qty" optional="hide" />
+                    <field name="uom_id" optional="hide" />
+                    <field name="price_unit" />
+                    <field name="price_subtotal" optional="hide" />
+                    <field name="price_tax" optional="hide" />
+                    <field name="discount" />
+                    <field name="discount_fixed" />
+                    <field name="price_total" />
+                    <field name="is_accept" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="agreement_line_view_pivot" model="ir.ui.view">
+            <field name="name">agreement.line.view.pivot</field>
+            <field name="model">agreement.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Comparison Analysis">
+                    <field name="product_id" type="row" />
+                    <field name="partner_id" type="col" />
+                    <field name="price_total" type="measure" />
+                </pivot>
+            </field>
+        </record>
+
+        <record id="agreement_line_action" model="ir.actions.act_window">
+            <field name="name">Comparison Analysis</field>
+            <field name="res_model">agreement.line</field>
+            <field name="view_mode">pivot,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+
+</odoo>

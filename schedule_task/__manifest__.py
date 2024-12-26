@@ -1,0 +1,55 @@
+{
+    'name': 'Schedule Task',
+    'version': '16.0',
+    'summary': 'Module for assign Schedule Task to User and Tracking Activity User',
+    'author': 'github.com/zdni',
+    'license': 'LGPL-3',
+    'category': 'Productivity',
+    'depends': [
+        'account',
+        'activity_notes',
+        'base_setup', 
+        'department_user',
+        'hr_timesheet', 
+        'project',
+        'sequence_reset_period',
+        'timesheet_grid',
+        'mail',
+        'department_detail',
+    ],
+    'data': [
+        'security/group_security.xml',
+        'security/ir_rules.xml',
+        'security/ir.model.access.csv',
+        
+        'data/data.xml',
+        'data/ir_sequence.xml',
+        'data/schedule_reminder_data.xml',
+        
+        'views/hr_timesheet_views.xml',
+        'views/menu.xml',
+        'views/assignment_task_views.xml',
+        'views/schedule_reminder_views.xml',
+        'views/schedule_task_views.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            "schedule_task/static/src/js/main.js",
+            "schedule_task/static/src/js/ir_model.js",
+            "schedule_task/static/src/js/systray_service.js",
+            "schedule_task/static/src/js/systray.js",
+            "schedule_task/static/src/js/schedule_groups.js",
+            "schedule_task/static/src/js/schedule_menu_view.js",
+            "schedule_task/static/src/js/schedule_task_widget.js",
+            "schedule_task/static/src/js/schedule_group_view.js",
+            "schedule_task/static/src/js/schedule_menu_container.js",
+            "schedule_task/static/src/js/schedule_notification_handler.js",
+            "schedule_task/static/src/xml/**/*",
+
+            # 'schedule_task/static/src/js/systray_icon.js', 
+            # 'schedule_task/static/src/xml/systray_icon.xml', 
+        ]
+    },
+    'auto_install': False,
+    'application': False,
+}

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="minutes_meeting_view_form" model="ir.ui.view">
+            <field name="name">minutes.meeting.view.form</field>
+            <field name="model">minutes.meeting</field>
+            <field name="arch" type="xml">
+                <form string="Minutes of Meeting">
+                    <header>
+                        <button string="Draft" name="action_draft" type="object" states="cancel" />
+                        <button string="Cancel" name="action_cancel" type="object" states="draft" />
+                        <button string="Assign" name="action_assign" type="object" class="oe_highlight" states="draft" />
+                        <button string="Process" name="action_progress" type="object" class="oe_highlight" states="assign" />
+                        <button string="Done" name="action_done" type="object" states="progress" />
+                        <button string="Attend" name="action_attend" type="object" class="oe_highlight" states="progress" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page name="detail" string="Detail">
+                                <group>
+                                    <group string="Time">
+                                        <field name="user_id" readonly="1" />
+                                        <field name="leader_id"  />
+                                        <field name="type" />
+                                        <field name="partner_ids" attrs="{'invisible': [('type', '=', 'internal')]}" widget="many2many_tags" />
+                                        <field name="date_start" />
+                                        <field name="date_end" />
+                                    </group>
+                                    <group string="Location">
+                                        <field name="location_id" />
+                                        <field name="area_id" domain="[('location_id', '=', location_id)]"/>
+                                        <field name="detail_location" />
+                                        <field name="videocall_url" attrs="{'invisible': [('location_id', '!=', %(minutes_of_meeting.hr_work_location_data_virtual_location)d)]}" />
+                                    </group>
+                                    <group string="Participants">
+                                        <field name="participant_type" />
+                                        <field name="department_ids" widget="many2many_tags" attrs="{'invisible': [('participant_type', '!=', 'department')]}" />
+                                        <field name="employee_type_ids" widget="many2many_tags" attrs="{'invisible': [('participant_type', '!=', 'department')]}" />
+                                        <field name="user_ids" widget="many2many_tags" attrs="{'invisible': [('participant_type', '!=', 'employee')]}" />
+                                    </group>
+                                </group>
+                                <group string="Detail">
+                                    <field name="subject" />
+                                </group>
+                            </page>
+                            <page name="attendances" string="Attendance">
+                                <field name="attendance_ids" readonly="1">
+                                    <tree>
+                                        <field name="meeting_id" invisible="1" />
+                                        <field name="user_id" />
+                                        <field name="partner_id" />
+                                        <field name="datetime_attend" />
+                                        <field name="attend_id" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="minutes_meeting_view_tree" model="ir.ui.view">
+            <field name="name">minutes.meeting.view.tree</field>
+            <field name="model">minutes.meeting</field>
+            <field name="arch" type="xml">
+                <tree string="Minutes of Meeting">
+                    <field name="name" />
+                    <field name="date_start" />
+                    <field name="date_end" />
+                    <field name="detail_location" />
+                    <field name="user_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="minutes_meeting_action" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="res_model">minutes.meeting</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="minutes_meeting_menu"
+            name="Meetings"
+            action="minutes_meeting_action"
+            parent="schedule_task.schedule_task_menu"
+            sequence="10"
+        />
+
+    </data>
+
+</odoo>

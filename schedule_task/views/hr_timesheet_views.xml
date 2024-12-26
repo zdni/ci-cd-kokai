@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="timesheet_view_form_inherit_schedule" model="ir.ui.view">
+            <field name="name">account.analytic.line.view.form.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="schedule_id" readonly="1" />
+                </field>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

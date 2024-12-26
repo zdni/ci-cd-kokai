@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="helpdesk_tag_view_tree" model="ir.ui.view">
+            <field name="name">helpdesk.tag.view.tree</field>
+            <field name="model">helpdesk.tag</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Tags">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_tag_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">helpdesk.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="helpdesk_tag_menu"
+            name="Tags"
+            action="helpdesk_tag_action"
+            parent="helpdesk_maintenance.helpdesk_configuration_menu"
+            sequence="10"
+        />
+    
+        <record id="helpdesk_type_view_tree" model="ir.ui.view">
+            <field name="name">helpdesk.type.view.tree</field>
+            <field name="model">helpdesk.type</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Type">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_type_action" model="ir.actions.act_window">
+            <field name="name">Type</field>
+            <field name="res_model">helpdesk.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="helpdesk_type_menu"
+            name="Type"
+            action="helpdesk_type_action"
+            parent="helpdesk_maintenance.helpdesk_configuration_menu"
+            sequence="10"
+        />
+
+        <record id="helpdesk_stage_view_tree" model="ir.ui.view">
+            <field name="name">helpdesk.stage.view.tree</field>
+            <field name="model">helpdesk.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Stages" editable="bottom">
+                    <field name="name" />
+                    <field name="is_progress" />
+                    <field name="is_close" />
+                </tree>
+            </field>
+        </record>
+    
+        <record id="helpdesk_stage_action" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">helpdesk.stage</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="helpdesk_stage_menu"
+            name="Stages"
+            action="helpdesk_stage_action"
+            parent="helpdesk_maintenance.helpdesk_configuration_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

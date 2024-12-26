@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="schedule_task_root_menu"
+            name="Schedule"
+            sequence="10"
+            web_icon="schedule_task,static/description/icon.png"
+        />
+
+        <menuitem
+            id="schedule_task_menu"
+            name="Schedule"
+            parent="schedule_task.schedule_task_root_menu"
+            sequence="10"
+            groups="schedule_task.group_schedule_user_all_task"
+        />
+
+        <menuitem
+            id="configuration_schedule_menu"
+            name="Configuration"
+            parent="schedule_task.schedule_task_root_menu"
+            sequence="1000"
+            groups="schedule_task.group_schedule_manager"
+        />
+
+        <menuitem
+            id="schedule_type_menu"
+            name="Type"
+            action="mail.mail_activity_type_action"
+            parent="schedule_task.configuration_schedule_menu"
+            sequence="10"
+            groups="schedule_task.group_schedule_manager"
+        />
+    
+    </data>
+
+</odoo>

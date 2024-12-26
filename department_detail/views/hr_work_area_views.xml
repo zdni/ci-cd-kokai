@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="hr_work_area_view_tree" model="ir.ui.view">
+            <field name="name">hr.work.area.view.tree</field>
+            <field name="model">hr.work.area</field>
+            <field name="arch" type="xml">
+                <tree string="Work Area" editable="bottom">
+                    <field name="display_name" />
+                    <field name="location_id" />
+                    <field name="name" optional='hide' />
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_work_area_action" model="ir.actions.act_window">
+            <field name="name">Work Area</field>
+            <field name="res_model">hr.work.area</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_location': 1}</field>
+        </record>
+
+        <record id="hr_work_area_view_search" model="ir.ui.view">
+            <field name="name">hr.work.area.view.search</field>
+            <field name="model">hr.work.area</field>
+            <field name="arch" type="xml">
+                <search string="Work Area">
+                    <filter name="display_name" string="Name" domain="[('display_name', '=', self)]" context="{'group_by': 'location_id'}" />
+                    <group string="Group By" expand="1">
+                        <filter name="location" string="Location" context="{'group_by': 'location_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <menuitem
+            id="hr_work_area_menu"
+            name="Work Area"
+            action="hr_work_area_action"
+            parent="hr.menu_config_employee"
+            sequence="10"
+        />
+
+        <record id="hr_work_location_form_view_inherit_area" model="ir.ui.view">
+            <field name="name">hr.work.location.view.form.inherit</field>
+            <field name="model">hr.work.location</field>
+            <field name="inherit_id" ref="hr.hr_work_location_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet//group[1]" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_work_area" type="object" class="oe_stat_button" icon="fa-sitemap">
+                            <field name="area_count" string="Area" widget="statinfo"/>
+                        </button>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

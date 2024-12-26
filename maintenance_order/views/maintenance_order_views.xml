@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <menuitem
+            id="maintenance_menu"
+            name="Maintenance"
+            sequence="10"
+            web_icon="maintenance_order,static/description/icon.png"
+        />
+
+        <menuitem
+            id="maintenance_root_menu"
+            name="Maintenance"
+            parent="maintenance_order.maintenance_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="maintenance_configuration_menu"
+            name="Configuration"
+            parent="maintenance_order.maintenance_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="maintenance_team_menu"
+            name="Team"
+            parent="maintenance_order.maintenance_configuration_menu"
+            sequence="10"
+        />
+
+        <record id="maintenance_stage_view_tree" model="ir.ui.view">
+            <field name="name">maintenance.stage.view.tree</field>
+            <field name="model">maintenance.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Stage" editable="bottom">
+                    <field name="name" />
+                    <field name="fold" />
+                    <field name="done" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="maintenance_stage_action" model="ir.actions.act_window">
+            <field name="name">Stage</field>
+            <field name="res_model">maintenance.stage</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="maintenance_stage_menu"
+            name="Stage"
+            action="maintenance_stage_action"
+            parent="maintenance_order.maintenance_configuration_menu"
+            sequence="10"
+        />
+
+    
+        <record id="maintenance_order_view_form" model="ir.ui.view">
+            <field name="name">maintenance.order.view.form</field>
+            <field name="model">maintenance.order</field>
+            <field name="arch" type="xml">
+                <form string="Maintenance">
+                    <header>
+                        <field name="archive" invisible="1" />
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}" attrs="{'invisible': [('archive', '=', True)]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_date" readonly="1" />
+                                <field name="request_by_id" readonly="1" />
+                                <field name="department_request_id" readonly="1" />
+                                <field name="department_id" />
+                            </group>
+                            <group>
+                                <field name="progressing_date" readonly="1" />
+                                <field name="expected_date" attrs="{'readonly': [('stage_id', 'not in', [%(maintenance_order.maintenance_stage_data_draft)d, %(maintenance_order.maintenance_stage_data_request)d])]}" />
+                                <label for="duration"/>
+                                <div>
+                                    <field name="duration" widget="float_time" class="oe_inline" attrs="{'readonly': [('stage_id', 'not in', [%(maintenance_order.maintenance_stage_data_draft)d, %(maintenance_order.maintenance_stage_data_request)d])]}" /> <span class="ml8">hours</span>
+                                </div>
+                                <field name="closing_date" readonly="1" />
+                                <field name="responsible_id" readonly="1" />
+                                <field name="priority" widget="priority" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Description your request"  />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="maintenance_order_view_tree" model="ir.ui.view">
+            <field name="name">maintenance.order.view.tree</field>
+            <field name="model">maintenance.order</field>
+            <field name="arch" type="xml">
+                <tree string="Maintenance">
+                    <field name="name" />
+                    <field name="request_by_id" />
+                    <field name="request_date" />
+                    <field name="department_id" />
+                    <field name="progressing_date" optional="hide" />
+                    <field name="responsible_id" optional="hide" />
+                    <field name="priority" optional="hide" />
+                    <field name="stage_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="maintenance_order_view_kanban" model="ir.ui.view">
+            <field name="name">maintenance.order.view.kanban</field>
+            <field name="model">maintenance.order</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id" sample="1">
+                    <field name="stage_id"/>
+                    <field name="priority"/>
+                    <field name="request_by_id"/>
+                    <field name="kanban_state"/>
+                    <field name="activity_ids" />
+                    <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                    <templates>
+                        <t t-name="kanban-tooltip">
+                            <ul class="oe_kanban_tooltip">
+                                <li t-if="record.user_id.raw_value"><b>Request to:</b> <t t-esc="record.department_id.value"/></li>
+                            </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <div class="o_kanban_record_top">
+                                        <b class="o_kanban_record_title"><field name="name"/></b>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <span name="request_by_id" t-if="record.request_by_id.raw_value">Requested by : <field name="request_by_id"/><br/></span>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
+                                            <div class="o_kanban_inline_block ml4 mr4">
+                                                <field name="activity_ids" widget="kanban_activity" />
+                                            </div>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="kanban_state" widget="state_selection"/>
+                                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="maintenance_order_action" model="ir.actions.act_window">
+            <field name="name">My Request</field>
+            <field name="res_model">maintenance.order</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="my_request_menu"
+            name="My Request"
+            action="maintenance_order_action"
+            parent="maintenance_order.maintenance_root_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

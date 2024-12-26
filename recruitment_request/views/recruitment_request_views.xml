@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <record id="recruitment_request_stage_view_tree" model="ir.ui.view">
+            <field name="name">recruitment.request.stage.view.tree</field>
+            <field name="model">recruitment.request.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Request Stage" editable="bottom">
+                    <field name="name" />
+                    <field name="fold" />
+                    <field name="done" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="recruitment_request_stage_action" model="ir.actions.act_window">
+            <field name="name">Request Stage</field>
+            <field name="res_model">recruitment.request.stage</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="recruitment_request_stage_menu"
+            name="Request Stage"
+            action="recruitment_request_stage_action"
+            parent="hr_recruitment.menu_hr_recruitment_configuration"
+            sequence="10"
+        />
+    
+        <record id="recruitment_request_view_form" model="ir.ui.view">
+            <field name="name">recruitment.request.view.form</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <form string="Recruitment Request">
+                    <header>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_applications" type="object" class="oe_stat_button" icon="fa-address-card-o">
+                                <field name="applications_count" string="Applications" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_by_id" readonly="1" />
+                                <field name="department_id" invisible="1" />
+                                <field name="department_id" groups="recruitment_request.group_recruitment_request_manager" attrs="{'readonly': [('stage_id', '!=', %(recruitment_request.recruitment_request_stage_data_draft)d)]}"/>
+                                <field name="job_id" attrs="{'readonly': [('stage_id', '!=', %(recruitment_request.recruitment_request_stage_data_draft)d)]}"/>
+                                <label for="target"/>
+                                <div class="o_row" name="recruitment_target">
+                                    <field name="target" class="o_hr_narrow_field" attrs="{'readonly': [('stage_id', '!=', %(recruitment_request.recruitment_request_stage_data_draft)d)]}"/>
+                                    <span>new Employees</span>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="request_date" attrs="{'readonly': [('stage_id', '!=', %(recruitment_request.recruitment_request_stage_data_draft)d)]}"/>
+                                <field name="due_date" attrs="{'readonly': [('stage_id', '!=', %(recruitment_request.recruitment_request_stage_data_draft)d)]}"/>
+                                <field name="progressing_date" attrs="{'invisible': [('progressing_date', '=', False)], 'readonly': True}" />
+                                <field name="closing_date" attrs="{'invisible': [('closing_date', '=', False)], 'readonly': True}" />
+                                <field name="handle_by_id" attrs="{'invisible': [('handle_by_id', '=', False)], 'readonly': True}" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="recruitment_request_view_tree" model="ir.ui.view">
+            <field name="name">recruitment.request.view.tree</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <tree 
+                    string="Recruitment Request" 
+                    decoration-danger="stage_id == 'cancel'"
+                    decoration-warning="stage_id == 'requested'"
+                    decoration-info="stage_id == 'progress'"
+                    decoration-success="stage_id == 'done'"
+                >
+                    <field name="name" />
+                    <field name="request_by_id" optional="hide" />
+                    <field name="department_id" optional="hide" />
+                    <field name="job_id" />
+                    <field name="target" />
+                    <field name="handle_by_id" optional="hide" />
+                    <field name="request_date" optional="hide" />
+                    <field name="due_date" />
+                    <field name="stage_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="recruitment_request_view_search" model="ir.ui.view">
+            <field name="name">recruitment.request.view.search</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <search string="Recruitment Request">
+                    <filter name="job_id" string="Job" domain="[('job_id.name','ilike','self')]" />
+                    <group expand="1" string="Group By">
+                        <filter name="request_by_id" string="Request By" context="{'group_by': 'request_by_id'}" />
+                        <filter name="department_id" string="Department" context="{'group_by': 'department_id'}" />
+                        <filter name="job_id" string="Job" context="{'group_by': 'job_id'}" />
+                        <filter name="due_date" string="Due Date" context="{'group_by': 'due_date:month'}" />
+                        <filter name="stage_id" string="Stage" context="{'group_by': 'stage_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="recruitment_request_view_calendar" model="ir.ui.view">
+            <field name="name">recruitment.request.view.calendar</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <calendar string="Recruitment Request" date_start="request_date" date_stop="due_date" color="stage_id" mode="month" create="False">
+                    <field name="department_id" />
+                    <field name="job_id" />
+                    <field name="handle_by_id" />
+                    <field name="stage_id" />
+                </calendar>
+            </field>
+        </record>
+
+        <record id="recruitment_request_view_kanban" model="ir.ui.view">
+            <field name="name">recruitment.request.view.kanban</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id" sample="1">
+                    <field name="stage_id"/>
+                    <field name="priority"/>
+                    <field name="request_by_id"/>
+                    <field name="kanban_state"/>
+                    <field name="activity_ids" />
+                    <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                    <templates>
+                        <t t-name="kanban-tooltip">
+                            <ul class="oe_kanban_tooltip">
+                                <li t-if="record.user_id.raw_value"><b>Job:</b> <t t-esc="record.job_id.value"/></li>
+                            </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <div class="o_kanban_record_top">
+                                        <b class="o_kanban_record_title"><field name="name"/></b>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <span name="request_by_id" t-if="record.request_by_id.raw_value">Requested by : <field name="request_by_id"/><br/></span>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
+                                            <div class="o_kanban_inline_block ml4 mr4">
+                                                <field name="activity_ids" widget="kanban_activity" />
+                                            </div>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="kanban_state" widget="state_selection"/>
+                                            <field name="handle_by_id" widget="many2one_avatar_user"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="recruitment_request_action" model="ir.actions.act_window">
+            <field name="name">Recruitment Request</field>
+            <field name="res_model">recruitment.request</field>
+            <field name="view_mode">kanban,tree,form,calendar</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="recruitment_request_menu"
+            name="Request"
+            action="recruitment_request_action"
+            parent="hr_recruitment.menu_crm_case_categ0_act_job"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

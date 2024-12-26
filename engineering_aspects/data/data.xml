@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+    
+        <record id="product_category_data_raw_part" model="product.category">
+            <field name="name">Raw Part</field>
+        </record>
+        <record id="product_category_data_finish_part" model="product.category">
+            <field name="name">Finish Part</field>
+        </record>
+
+        <record id="product_attribute_data_class" model="product.attribute">
+            <field name="name">Class</field>
+        </record>
+        <record id="product_attribute_data_size" model="product.attribute">
+            <field name="name">Size</field>
+        </record>
+    
+    </data>
+
+</odoo>

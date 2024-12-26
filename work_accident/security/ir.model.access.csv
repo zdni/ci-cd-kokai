@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_work_accident,access_work_accident,model_work_accident,base.group_user,1,1,1,1
+access_body_part,access_body_part,model_body_part,base.group_user,1,1,1,1
+access_type_wound,access_type_wound,model_type_wound,base.group_user,1,1,1,1
+access_medical_treatment,access_medical_treatment,model_medical_treatment,base.group_user,1,1,1,1

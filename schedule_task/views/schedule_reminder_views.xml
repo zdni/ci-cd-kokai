@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="schedule_reminder_view_tree" model="ir.ui.view">
+            <field name="name">schedule.reminder.view.tree</field>
+            <field name="model">schedule.reminder</field>
+            <field name="arch" type="xml">
+                <tree string="Reminder" editable="bottom">
+                    <field name="type" />
+                    <field name="duration" />
+                    <field name="interval" />
+                    <field name="active" invisible="1" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="schedule_reminder_action" model="ir.actions.act_window">
+            <field name="name">Reminder</field>
+            <field name="res_model">schedule.reminder</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="schedule_reminder_menu"
+            name="Reminder"
+            action="schedule_reminder_action"
+            parent="schedule_task.configuration_schedule_menu"
+            sequence="10"
+            groups="schedule_task.group_schedule_manager"
+        />
+    
+    </data>
+
+</odoo>

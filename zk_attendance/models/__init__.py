@@ -1,0 +1,1 @@
+from . import fingerprint_device

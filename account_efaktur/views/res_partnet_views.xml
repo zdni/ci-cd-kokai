@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_partner_form_inherit_efaktur" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="efaktur" string="E-Faktur">
+                        <group>
+                            <group>
+                                <field name="tin" placeholder='99.999.999.9-999.999' />
+                                <field name="block" />
+                                <field name="number" />
+                                <field name="neighbourhood" />
+                                <field name="hamlet" />
+                                <field name="subdistrict_id" />
+                                <field name="ward_id" />
+                                <field name="complete_address" />
+                            </group>
+                            <group>
+                                <field name="is_efaktur_exported" />
+                                <field name="date_efaktur_exported" />
+                                <field name="is_union" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

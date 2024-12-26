@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="standard_manufacturing_view_form" model="ir.ui.view">
+            <field name="name">standard.manufacturing.view.form</field>
+            <field name="model">standard.manufacturing</field>
+            <field name="arch" type="xml">
+                <form string="Standard Manufacturing">
+                    <header>
+                        <button string="Applicable" name="action_applicable" type="object" class="oe_highlight" states="draft" />
+                        <button string="Cancel" name="action_cancelled" type="object" states="applicable" />
+                        <button string="Draft" name="action_draft" type="object" states="cancelled" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,applicable,expired" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type_id" />
+                                <field name="edition" />
+                                <field name="file" />
+                                <field name="file_id" />
+                            </group>
+                            <group>
+                                <field name="effective_date" />
+                                <field name="due_date" />
+                                <field name="description" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="standard_manufacturing_view_tree" model="ir.ui.view">
+            <field name="name">standard.manufacturing.view.tree</field>
+            <field name="model">standard.manufacturing</field>
+            <field name="arch" type="xml">
+                <tree string="Standard Manufacturing">
+                    <field name="name" />
+                    <field name="type_id" />
+                    <field name="edition" />
+                    <field name="effective_date" />
+                    <field name="due_date" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="standard_manufacturing_action" model="ir.actions.act_window">
+            <field name="name">Standard Manufacturing</field>
+            <field name="res_model">standard.manufacturing</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="standard_manufacturing_menu"
+            name="Standard Manufacturing"
+            action="standard_manufacturing_action"
+            parent="engineering_aspects.datasheet_menu"
+            sequence="10"
+        />
+
+        <record id="manufacturing_type_view_tree" model="ir.ui.view">
+            <field name="name">manufacturing.type.view.tree</field>
+            <field name="model">manufacturing.type</field>
+            <field name="arch" type="xml">
+                <tree string="Manufacturing Type" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="manufacturing_type_action" model="ir.actions.act_window">
+            <field name="name">Manufacturing Type</field>
+            <field name="res_model">manufacturing.type</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem
+            id="manufacturing_type_menu"
+            name="Manufacturing Type"
+            action="manufacturing_type_action"
+            parent="engineering_aspects.datasheet_menu"
+            sequence="10"
+        />
+
+        <record id="manufacturing_method_view_tree" model="ir.ui.view">
+            <field name="name">manufacturing.method.view.tree</field>
+            <field name="model">manufacturing.method</field>
+            <field name="arch" type="xml">
+                <tree string="Manufacturing Method" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="manufacturing_method_action" model="ir.actions.act_window">
+            <field name="name">Manufacturing Method</field>
+            <field name="res_model">manufacturing.method</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem
+            id="manufacturing_method_menu"
+            name="Manufacturing Method"
+            action="manufacturing_method_action"
+            parent="engineering_aspects.datasheet_menu"
+            sequence="10"
+        />
+
+        <record id="product_part_view_tree" model="ir.ui.view">
+            <field name="name">product.part.view.tree</field>
+            <field name="model">product.part</field>
+            <field name="arch" type="xml">
+                <tree string="Product Part" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_part_action" model="ir.actions.act_window">
+            <field name="name">Product Part</field>
+            <field name="res_model">product.part</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem
+            id="product_part_menu"
+            name="Product Part"
+            action="product_part_action"
+            parent="engineering_aspects.datasheet_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

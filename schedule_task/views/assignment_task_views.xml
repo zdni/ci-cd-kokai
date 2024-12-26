@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="assignment_task_view_form" model="ir.ui.view">
+            <field name="name">assignment.task.view.form</field>
+            <field name="model">assignment.task</field>
+            <field name="arch" type="xml">
+                <form string="Assignment Task">
+                    <header>
+                        <button string="Open Document" name="action_open_document" type="object" class="oe_highlight"/>
+                        <button string="Assign" name="action_assign" type="object" class="oe_highlight" states="draft"/>
+                        <button string="Cancel" name="action_cancel" type="object" states="draft,assign"/>
+                        <button string="Draft" name="action_draft" type="object" states="cancel"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" class="oe_inline" readonly="1" /></h1>
+                        </div>
+                        <field name="subject" />
+                        <notebook>
+                            <page name="detail" string="Detail">
+                                <group string="Assignment Detail">
+                                    <group>
+                                        <field name="parent_id" attrs="{'readonly': 1, 'invisible': [('parent_id', '=', False)]}" />
+                                        <field name="user_id" invisible="1" />
+                                        <field name="handle_by" />
+                                        <field name="assigned_to" />
+                                        <field name="department_ids" widget="many2many_tags" groups="schedule_task.group_assignment_manager" attrs="{'invisible': [('assigned_to', '!=', 'department')]}" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="employee_type_ids" widget="many2many_tags" attrs="{'invisible': [('assigned_to', '!=', 'department')]}" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="user_ids" widget="many2many_tags" attrs="{'invisible': [('assigned_to', '!=', 'employee')]}" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="alarm_id" options="{'no_create': True, 'no_open': True}" />
+                                    </group>
+                                    <group>
+                                        <field name="date" readonly="1" />
+                                        <field name="start_date" />
+                                        <field name="stop_date" />
+                                        <field name="hour_spent" widget="float_time" />
+                                        <field name="processing_time" widget="float_time" />
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Detail">
+                                        <field name="type" />
+                                        <field name="schedule_type_id" attrs="{'readonly': [('type', '=', 'notification')]}" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="work_loc_id" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="description" />
+                                    </group>
+                                    <group string="Dokumen" name='document'>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="assignment_task_view_tree" model="ir.ui.view">
+            <field name="name">assignment.task.view.tree</field>
+            <field name="model">assignment.task</field>
+            <field name="arch" type="xml">
+                <tree string="Assignment Task">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="start_date" />
+                    <field name="stop_date" />
+                    <field name="schedule_type_id" />
+                    <field name="work_loc_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="assignment_task_view_search" model="ir.ui.view">
+            <field name="name">assignment.task.view.search</field>
+            <field name="model">assignment.task</field>
+            <field name="arch" type="xml">
+                <search string="Assignment Task">
+                    <field name="subject" />
+                    <separator />
+                    <group>
+                        <filter name="notification" string="Notification" domain="[('schedule_type_id', '=', %(schedule_task.mail_activity_type_data_notification)d)]" />
+                        <filter name="my_assign" string="My Assign" domain="[('user_id', '=', uid)]" />
+                        <filter name="my_department" string="My Department" domain="[('department_ids.user_ids', 'in', [uid])]" />
+                        <filter name="type" string="Task Type" context="{'group_by': 'schedule_type_id'}" />
+                        <filter name="date" string="Date" context="{'group_by': 'date'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="assignment_task_action" model="ir.actions.act_window">
+            <field name="name">Assignment Task</field>
+            <field name="res_model">assignment.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="assignment_task_menu"
+            name="Assignment Task"
+            action="assignment_task_action"
+            parent="schedule_task.schedule_task_menu"
+            groups="schedule_task.group_assignment_manager"
+            sequence="10"
+        />
+
+        <record id="assignment_notification_action" model="ir.actions.act_window">
+            <field name="name">Notification</field>
+            <field name="res_model">assignment.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type', '=', 'notification')]</field>
+            <field name="context">{'search_default_notification': 1, 'default_type': 'notification'}</field>
+        </record>
+
+        <menuitem
+            id="assignment_notification_menu"
+            name="Notification"
+            action="assignment_notification_action"
+            parent="schedule_task.schedule_task_menu"
+            sequence="10"
+        />
+
+    </data>
+
+</odoo>

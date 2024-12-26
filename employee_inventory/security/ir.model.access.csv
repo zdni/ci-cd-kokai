@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_equipment,access_stock_equipment,model_stock_equipment,base.group_user,1,1,1,1
+access_equipment_part,access_equipment_part,model_equipment_part,base.group_user,1,1,1,1
+access_stock_equipment_return,access_stock_equipment_return,model_stock_equipment_return,base.group_user,1,1,1,1
+access_equipment_part_return,access_equipment_part_return,model_equipment_part_return,base.group_user,1,1,1,1

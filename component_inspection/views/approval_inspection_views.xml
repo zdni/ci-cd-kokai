@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="approval_inspection_view_form" model="ir.ui.view">
+            <field name="name">approval.inspection.view.form</field>
+            <field name="model">approval.inspection</field>
+            <field name="arch" type="xml">
+                <form string="Approval">
+                    <header>
+                        <button string="Cancel" name="action_cancel" type="object" states="draft"/>
+                        <button string="Process" name="action_process" type="object" states="draft" class="oe_highlight"/>
+                        <button string="Request Approval" name="generate_approval_request" states="process" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_inspection" type="object" class="oe_stat_button" string="Inspection" icon="fa-list"/>
+                            <button name="action_view_approval_request" type="object" class="oe_stat_button" icon="fa-list" string="Approval"/>
+                        </div>
+                        <group>
+                            <field name="name" readonly="1" />
+                            <field name="picking_id" readonly="1" />
+                            <field name="user_id" readonly="1" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="approval_inspection_view_tree" model="ir.ui.view">
+            <field name="name">approval.inspection.view.tree</field>
+            <field name="model">approval.inspection</field>
+            <field name="arch" type="xml">
+                <tree string="Approval">
+                    <field name="name" />
+                    <field name="picking_id" />
+                    <field name="user_id" />
+                    <field name="date" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="approval_inspection_action" model="ir.actions.act_window">
+            <field name="name">Approval</field>
+            <field name="res_model">approval.inspection</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="approval_inspection_menu"
+            name="Approval"
+            action="approval_inspection_action"
+            parent="component_inspection.inspection_menu"
+            sequence="10"/>
+    
+    </data>
+
+</odoo>

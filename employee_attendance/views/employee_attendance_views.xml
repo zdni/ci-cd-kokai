@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <menuitem
+            id="attendance_menu"
+            name="Attendance"
+            parent="hr.menu_hr_root"
+            sequence="10"
+        />
+    
+        <record id="employee_attendance_view_form" model="ir.ui.view">
+            <field name="name">employee.attendance.view.form</field>
+            <field name="model">employee.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Attendance">
+                    <sheet>
+                        <group>
+                            <field name="name" readonly="1" attrs="{'invisible': [('id', '=', 0)]}" />
+                            <field name="employee_id" readonly="1" />
+                            <field name="date" readonly="1" />
+                            <field name="attendance_time" readonly="1" />
+                            <field name="value_id" />
+                            <field name="description" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_attendance_view_tree" model="ir.ui.view">
+            <field name="name">employee.attendance.view.tree</field>
+            <field name="model">employee.attendance</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance" create="False">
+                    <field name="name" optional="hide" />
+                    <field name="employee_id" />
+                    <field name="date" />
+                    <field name="attendance_time" optional="hide" />
+                    <field name="value_id" />
+                    <field name="description" optional="hide" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="employee_attendance_view_calendar" model="ir.ui.view">
+            <field name="name">employee.attendance.view.calendar</field>
+            <field name="model">employee.attendance</field>
+            <field name="arch" type="xml">
+                <calendar string="Attendance" date_start="date" color="value_id" mode="month" create="False">
+                    <field name="name" />
+                    <field name="employee_id" />
+                    <field name="attendance_time" />
+                </calendar>
+            </field>
+        </record>
+
+        <record id="employee_attendance_view_search" model="ir.ui.view">
+            <field name="name">employee.attendance.view.search</field>
+            <field name="model">employee.attendance</field>
+            <field name="arch" type="xml">
+                <search string="Attendance">
+                    <field name="name" filter_domain="[('employee_id.name','ilike',self)]" string="Employee"/>
+                    <separator/>
+                    <group expand="1" string="Group By">
+                        <filter name="employee_id" string="Employee" context="{'group_by': 'employee_id'}" />
+                        <filter name="date" string="Date" context="{'group_by': 'date'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="employee_attendance_action" model="ir.actions.act_window">
+            <field name="name">Attendance</field>
+            <field name="res_model">employee.attendance</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'group_by': ['employee_id', 'date:month']}</field>
+        </record>
+
+        <menuitem
+            id="employee_attendance_menu"
+            name="Employee"
+            action="employee_attendance_action"
+            parent="employee_attendance.attendance_menu"
+            sequence="10"
+        />
+
+        <record id="attendance_value_view_tree" model="ir.ui.view">
+            <field name="name">attendance.value.view.tree</field>
+            <field name="model">attendance.value</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance" editable="bottom">
+                    <field name="name" />
+                    <field name="value" />
+                    <field name="color" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="attendance_value_action" model="ir.actions.act_window">
+            <field name="name">Attendance</field>
+            <field name="res_model">attendance.value</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="attendance_value_menu"
+            name="Attendance Value"
+            action="attendance_value_action"
+            parent="hr.menu_human_resources_configuration"
+            sequence="10"
+        />
+
+        <record id="view_employee_form_inherit_attendance" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_show_attendance" string="Attendances" type="object" class="oe_stat_button" icon="fa-clock-o" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+
+</odoo>

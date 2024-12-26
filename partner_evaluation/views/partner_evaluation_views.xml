@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="evaluation_category_view_tree" model="ir.ui.view">
+            <field name="name">evaluation.category.view.tree</field>
+            <field name="model">evaluation.category</field>
+            <field name="arch" type="xml">
+                <tree string="Category" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="evaluation_category_action" model="ir.actions.act_window">
+            <field name="name">Category</field>
+            <field name="res_model">evaluation.category</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="evaluation_category_menu"
+            name="Category"
+            action="evaluation_category_action"
+            parent="partner_evaluation.evaluation_menu"
+            sequence="20"
+        />
+    
+        <record id="evaluation_item_view_tree" model="ir.ui.view">
+            <field name="name">evaluation.item.view.tree</field>
+            <field name="model">evaluation.item</field>
+            <field name="arch" type="xml">
+                <tree string="Item" editable="bottom">
+                    <field name="category_id" />
+                    <field name="name" />
+                    <field name="score" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="evaluation_item_action" model="ir.actions.act_window">
+            <field name="name">Item</field>
+            <field name="res_model">evaluation.item</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="evaluation_item_menu"
+            name="Item"
+            action="evaluation_item_action"
+            parent="partner_evaluation.evaluation_menu"
+            sequence="30"
+        />
+
+        <record id="partner_evaluation_view_form" model="ir.ui.view">
+            <field name="name">partner.evaluation.view.form</field>
+            <field name="model">partner.evaluation</field>
+            <field name="arch" type="xml">
+                <form string="Evaluation">
+                    <header>
+                        <button string="Generate" name="generate_question_from_template" type="object" class="oe_highlight" attrs="{'invisible': [('template_id', '=', False)]}"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_approval_request" type="object" class="oe_stat_button" icon="fa-list" attrs="{'invisible':[('approval_count', '=', 0)]}">
+                                <field name="approval_count" string="" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="template_id" />
+                                <field name="title" />
+                                <field name="partner_id" />
+                                <field name="evaluation_date" />
+                                <field name="user_ids" widget="many2many_tags" />
+                            </group>
+                            <group>
+                                <field name="classification" />
+                                <field name="product_ids" widget="many2many_tags" />
+                                <field name="total_employee" />
+                                <field name="due_date" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="evaluation" string="Evaluation">
+                                <field name="result_ids">
+                                    <tree create="False" delete="False" editable="bottom">
+                                        <field name="evaluation_id" invisible="1" />
+                                        <field name="question_id" invisible="1" />
+                                        <field name="category_id" />
+                                        <field name="item_id" domain="[('category_id', '=', category_id)]" />
+                                        <field name="score" />
+                                        <field name="remark" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group string="Result">
+                            <group>
+                                <field name="total_point" />
+                                <field name="average_point" />
+                                <field name="conclusion" />
+                            </group>
+                            <group>
+                                <field name="note" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="partner_evaluation_view_tree" model="ir.ui.view">
+            <field name="name">partner.evaluation.view.tree</field>
+            <field name="model">partner.evaluation</field>
+            <field name="arch" type="xml">
+                <tree string="Evaluation">
+                    <field name="name" />
+                    <field name="title" />
+                    <field name="partner_id" />
+                    <field name="evaluation_date" />
+                    <field name="average_point" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="partner_evaluation_action" model="ir.actions.act_window">
+            <field name="name">Partner Evaluation</field>
+            <field name="res_model">partner.evaluation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="partner_evaluation_menu"
+            name="Partner Evaluation"
+            action="partner_evaluation_action"
+            parent="qhse_program.qc_menu"
+            sequence="10"
+        />
+
+    </data>
+
+</odoo>

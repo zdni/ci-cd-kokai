@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="schedule_task.ScheduleMenuContainer" owl="1">
+        <t t-if="scheduleMenuView">
+            <ScheduleMenuView record="scheduleMenuView" />
+        </t>
+    </t>
+</templates>

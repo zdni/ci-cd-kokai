@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_department_form_inherit_equipment" model="ir.ui.view">
+            <field name="name">hr.department.view.form.inherit</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_show_stock_equipment" type="object" class="oe_stat_button" icon="fa-keyboard-o">
+                        <field name="equipment_count" string="Equipment" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_department_form_inherit_team_inherit_inventory" model="ir.ui.view">
+            <field name="name">hr.department.view.form.inherit</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="department_detail.view_department_form_inherit_team"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="parts" string="Products">
+                        <field name="part_ids" readonly="1">
+                            <tree>
+                                <field name="product_id" />
+                                <field name="qty" />
+                                <field name="uom_id" />
+                                <field name="assigned_time" />
+                                <field name="condition" />
+                                <field name="state" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

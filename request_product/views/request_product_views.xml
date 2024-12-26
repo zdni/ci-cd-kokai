@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="request_product_view_form" model="ir.ui.view">
+            <field name="name">request.product.view.form</field>
+            <field name="model">request.product</field>
+            <field name="arch" type="xml">
+                <form string="Request Product">
+                    <header>
+                        <button string="Draft" name="action_draft" type="object" states="cancel" />
+                        <button string="Request" name="action_requested" type="object" class="oe_highlight" states="draft" />
+                        <button string="Process" name="action_process" attrs="{'invisible': ['|', ('is_group_all_request', '=', False), ('state', '!=', 'requested')]}" type="object" class="oe_highlight" />
+                        <button string="Done" name="action_done" attrs="{'invisible': ['|', ('is_group_all_request', '=', False), ('state', '!=', 'process')]}" type="object" class="oe_highlight"/>
+                        <button string="Cancel" name="action_cancel" type="object" states="draft,process" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <field name="is_group_all_request" invisible="1" />
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="user_id" readonly="1" />
+                                <field name="department_id" readonly="1" />
+                                <field name="request_date" readonly="1" />
+                                <field name="notes" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            </group>
+                            <group>
+                                <field name="handle_by_id" readonly="1" />
+                                <field name="closing_date" readonly="1" />
+                                <field name="reply" attrs="{'readonly': [('is_group_all_request', '=', False)]}" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="lines" string="Lines">
+                                <field name="line_ids">
+                                    <form string="Request">
+                                        <sheet>
+                                            <group>
+                                                <field name="request_id" readonly="1" />
+                                                <field name="product_id" groups="request_product.group_request_product_all_request" />
+                                                <field name="product" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                                <field name="description" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                                <field name="img_product" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                                <field name="reason" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                                <field name="link" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                                <field name="reply" attrs="{'readonly': [('parent.is_group_all_request', '=', False)]}" />
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                    <tree>
+                                        <field name="request_id" invisible="1" />
+                                        <field name="product" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="description" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="img_product" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="link" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="reason" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />
+                                        <field name="reply" attrs="{'readonly': [('parent.is_group_all_request', '=', False)]}" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="request_product_view_tree" model="ir.ui.view">
+            <field name="name">request.product.view.tree</field>
+            <field name="model">request.product</field>
+            <field name="arch" type="xml">
+                <tree string="Request Product">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="request_date" />
+                    <field name="handle_by_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="request_product_view_search" model="ir.ui.view">
+            <field name="name">request.product.view.search</field>
+            <field name="model">request.product</field>
+            <field name="arch" type="xml">
+                <search string="Request Product">
+                    <filter name="name" string="Name" domain="[('name', 'ilike', self)]"/>
+                    <filter name="user" string="User" domain="[('user_id', 'ilike', self)]"/>
+                    <group string="Group By" expand="1">
+                        <filter name="department" string="Department" context="{'group_by': 'department_id'}" />
+                        <filter name="user" string="User" context="{'group_by': 'user_id'}" />
+                        <filter name="handle_by" string="Handle By" context="{'group_by': 'handle_by_id'}" />
+                        <filter name="state" string="Status" context="{'group_by': 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="request_product_action_user" model="ir.actions.act_window">
+            <field name="name">Request Product</field>
+            <field name="res_model">request.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+        </record>
+
+        <menuitem
+            id="request_product_root_menu"
+            name="Product"
+            parent="purchase_request.parent_menu_purchase_request"
+            sequence="100"
+        />
+
+        <menuitem
+            id="my_request_menu"
+            name="My Request"
+            action="request_product_action_user"
+            groups="group_request_product_user"
+            parent="request_product_root_menu"
+            sequence="10"
+        />
+
+        <record id="request_product_action_all" model="ir.actions.act_window">
+            <field name="name">Request Product</field>
+            <field name="res_model">request.product</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="all_request_menu"
+            name="All Request"
+            action="request_product_action_all"
+            groups="group_request_product_all_request"
+            parent="request_product_root_menu"
+            sequence="10"
+        />
+
+    </data>
+
+</odoo>

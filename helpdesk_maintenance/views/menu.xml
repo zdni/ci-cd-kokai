@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="helpdesk_maintenance_menu"
+            name="Maintenance"
+            sequence="10"
+            web_icon="helpdesk_maintenance,static/description/icon.png"
+        />
+
+        <menuitem
+            id="helpdesk_menu"
+            name="Helpdesk"
+            parent="helpdesk_maintenance.helpdesk_maintenance_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="helpdesk_configuration_menu"
+            name="Configuration"
+            parent="helpdesk_maintenance.helpdesk_maintenance_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="helpdesk_ticket_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.view.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <form string="Ticket">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_response" type="object" class="oe_stat_button" icon="fa-list">
+                                <field name="response_count" string="Activity" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <field name="subject" />
+                        <group>
+                            <group>
+                                <field name="active" invisible="1" />
+                                <field name="user_id" readonly="1" />
+                                <field name="date" readonly="1" />
+                                <field name="team_id" attrs="{'readonly': [('id', '>', 0)]}" />
+                                <field name="process_date" attrs="{'invisible': [('process_date', '=', False)]}" />
+                                <field name="solve_date" attrs="{'invisible': [('solve_date', '=', False)]}" />
+                            </group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_attachment_preview" />
+                                <field name="priority" widget="priority" />
+                                <field name="tag_ids" widget="many2many_tags" attrs="{'readonly': [('id', '>', 0)]}" />
+                                <field name="type_id" attrs="{'readonly': [('id', '>', 0)]}" />
+                                <field name="stage_id" attrs="{'invisible': [('id', '=', 0)]}" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="detail" string="Detail">
+                                <field name="description" />
+                            </page>
+                            <page name="activity" string="Activities">
+                                <field name="response_ids">
+                                    <kanban>
+                                        <field name="user_id"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_card oe_kanban_global_click">
+                                                    <div>
+                                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="activity_id"/></strong>
+                                                    </div>
+                                                    <div>
+                                                        <strong class="o_kanban_record_subtitle oe_partner_heading"><field name="subject"/></strong>
+                                                    </div>
+                                                    <div class="o_kanban_record_bottom">
+                                                        <div class="oe_kanban_bottom_left">
+                                                            <field name="date"/>
+                                                        </div>
+                                                        <div class="oe_kanban_bottom_right">
+                                                            <field name="user_id" widget="many2one_avatar_user"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_view_tree" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.view.tree</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <tree string="Ticket">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="type_id" />
+                    <field name="subject" />
+                    <field name="date" />
+                    <field name="stage_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_view_kanban" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.view.kanban</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column o_opportunity_kanban" default_group_by="stage_id" archivable="false" sample="1">
+                    <field name="name" />
+                    <field name="priority"/>
+                    <field name="subject" />
+                    <field name="user_id" />
+                    <field name="team_id" />
+                    <field name="active" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div>
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                                <div>
+                                    <span class="o_kanban_record_subtitle"><field name="subject"/></span>
+                                </div>
+                                <div>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_view_search" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.view.search</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <search string="Ticket">
+                    <filter name="user" string="User" domain="[('user_id', 'ilike', self)]" />
+                    <filter name="team" string="Team" domain="[('team_id', 'ilike', self)]" />
+                    <group>
+                        <filter name="team" string="Team" context="{'group_by': 'team_id'}" />
+                        <filter name="to" string="To" context="{'group_by': 'department_id'}" />
+                        <filter name="from" string="From" context="{'group_by': 'department_user_id'}" />
+                        <filter name="priority" string="Priority" context="{'group_by': 'priority'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_action" model="ir.actions.act_window">
+            <field name="name">Ticket</field>
+            <field name="res_model">helpdesk.ticket</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="helpdesk_ticket_menu"
+            name="Ticket"
+            action="helpdesk_ticket_action"
+            parent="helpdesk_maintenance.helpdesk_menu"
+            sequence="10"
+        />
+
+        <record id="helpdesk_activity_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.activity.view.form</field>
+            <field name="model">helpdesk.activity</field>
+            <field name="arch" type="xml">
+                <form string="Activity">
+                    <header>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" />
+                            </h1>
+                        </div>
+                        <field name="subject" />
+                        <group string="Detail">
+                            <group>
+                                <field name="activity_id" />
+                                <field name="user_id" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="ticket_id" readonly="1" />
+                                <field name="date" />
+                            </group>
+                        </group>
+                        <group string="Activity">
+                            <field name="attachment_ids" widget="many2many_attachment_preview" />
+                            <field name="note" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_activity_view_tree" model="ir.ui.view">
+            <field name="name">helpdesk.activity.view.tree</field>
+            <field name="model">helpdesk.activity</field>
+            <field name="arch" type="xml">
+                <tree string="Activity">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="ticket_id" />
+                    <field name="date" />
+                    <field name="subject" optional="hide" />
+                    <field name="activity_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_activity_view_search" model="ir.ui.view">
+            <field name="name">helpdesk.activity.view.search</field>
+            <field name="model">helpdesk.activity</field>
+            <field name="arch" type="xml">
+                <search string="Activity">
+                    <filter name="user" string="User" domain="[('user_id', 'ilike', self)]" />
+                    <filter name="activity" string="Activity" domain="[('activity_id', 'ilike', self)]" />
+                    <filter name="my_activity" string="My Activity" domain="[('user_id', '=', uid)]" context="{'group_by': 'ticket_id'}" />
+                    <group>
+                        <filter name="user" string="User" context="{'group_by': 'user_id'}" />
+                        <filter name="ticket" string="Ticket" context="{'group_by': 'ticket_id'}" />
+                        <filter name="activity" string="Activity" context="{'group_by': 'activity_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="helpdesk_activity_action" model="ir.actions.act_window">
+            <field name="name">Activity</field>
+            <field name="res_model">helpdesk.activity</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="helpdesk_activity_menu"
+            name="Activity"
+            action="helpdesk_activity_action"
+            parent="helpdesk_maintenance.helpdesk_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

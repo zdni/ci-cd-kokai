@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_purchase_request_form_inherit_approval" model="ir.ui.view">
+            <field name="name">purchase.request.view.form.inherit</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_to_approve']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_rejected']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='assigned_to']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button string="Request Approval" states="draft,need_improvement" name="generate_approval_request" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+                    <button
+                        type="object"
+                        name="action_view_approval_request"
+                        class="oe_stat_button"
+                        attrs="{'invisible':[('approval_count', '=', 0)]}"
+                        icon="fa-list"
+                    >
+                        <field name="approval_count" widget="statinfo" string="Approval Request" />
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

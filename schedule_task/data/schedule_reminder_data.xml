@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="schedule_reminder_data_notification_one_hour" model="schedule.reminder">
+            <field name="name">Notification - 1 Hours</field>
+            <field name="type">notification</field>
+            <field name="duration">1</field>
+            <field name="interval">hours</field>
+        </record>
+    
+    </data>
+</odoo>

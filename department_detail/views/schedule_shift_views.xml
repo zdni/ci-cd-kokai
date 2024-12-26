@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="schedule_shift_view_tree" model="ir.ui.view">
+            <field name="name">schedule.shift.view.tree</field>
+            <field name="model">schedule.shift</field>
+            <field name="arch" type="xml">
+                <tree string="Shift" editable="bottom">
+                    <field name="name" optional="hide" />
+                    <field name="description" />
+                    <field name="start_time" widget="float_time" />
+                    <field name="end_time" widget="float_time" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="schedule_shift_action" model="ir.actions.act_window">
+            <field name="name">Shift</field>
+            <field name="res_model">schedule.shift</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="schedule_shift_menu"
+            name="Shift"
+            action="schedule_shift_action"
+            parent="hr.menu_human_resources_configuration"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="stock_equipment_view_form" model="ir.ui.view">
+            <field name="name">stock.equipment.view.form</field>
+            <field name="model">stock.equipment</field>
+            <field name="arch" type="xml">
+                <form string="Equipment">
+                    <header>
+                        <button string="Draft" name="action_draft" type="object" states="canceled" />
+                        <button string="Assigned" name="action_assigned" type="object" class="oe_highlight" states="draft" />
+                        <button string="Accepted" name="action_accepted" type="object" class="oe_highlight" attrs="{'invisible': &quot;['|', ('state', '!=', 'assigned'), ('recipient_id', '!=', uid)]&quot;}" />
+                        <button string="Return Equipment" name="action_returned" type="object" attrs="{'invisible': &quot;['|', ('state', '!=', 'accepted'), ('user_id', '!=', uid)]&quot;}" />
+                        <button string="Cancel" name="action_canceled" type="object" states="draft" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_part" string="Equipment" type="object" class="oe_stat_button" icon="fa-list" />
+                            <button name="action_show_return" string="Return" type="object" class="oe_stat_button" icon="fa-list" />
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1" />
+                                <field name="user_id" readonly="1" />
+                                <field name="used_by" attrs="{'readonly': [('state', '!=', 'draft')]}" widget="radio" />
+                                <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('used_by', '!=', 'employee')]}" />
+                                <field name="department_id" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('used_by', '!=', 'department')]}" />
+                                <field name="work_location_id" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('used_by', '!=', 'location')]}" />
+                                <field name="detail_used_by" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('used_by', '!=', 'other')]}" />
+                            </group>
+                            <group>
+                                <field name="assigned_time" />
+                                <field name="returned_time" attrs="{'invisible': [('returned_time', '=', False)]}" />
+                                <field name="location_id" />
+                                <field name="location_dest_id" readonly="1" />
+                                <field name="picking_id" attrs="{'invisible': [('state', 'in', ['draft', 'canceled'])]}" readonly="1" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="part_line" string="Product">
+                                <field name="part_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                    <tree>
+                                        <field name="equipment_id" invisible="1" />
+                                        <field name="product_id" />
+                                        <field name="qty" />
+                                        <field name="uom_id" />
+                                        <field name="condition" />
+                                        <field name="state" />
+                                    </tree>
+                                </field>
+                                <group>
+                                    <group>
+                                        <field colspan="2" name="notes" nolabel="1" placeholder="Define your notes ..."/>
+                                    </group>
+                                </group>
+                                <div class="clearfix"/>
+                            </page>
+                            <page name="receipint" string="Receipint">
+                                <group>
+                                    <field name="recipient_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                    <field name="recipient_approval" readonly="1" />
+                                    <field name="approval_date" readonly="1" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_equipment_view_tree" model="ir.ui.view">
+            <field name="name">stock.equipment.view.tree</field>
+            <field name="model">stock.equipment</field>
+            <field name="arch" type="xml">
+                <tree string="Equipment">
+                    <field name="name" />
+                    <field name="used_by" />
+                    <field name="employee_id" optional='hide' />
+                    <field name="department_id" optional='hide' />
+                    <field name="work_location_id" optional='hide' />
+                    <field name="detail_used_by" />
+                    <field name="assigned_time" />
+                    <field name="returned_time" optional='hide' />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_equipment_action" model="ir.actions.act_window">
+            <field name="name">Equipment</field>
+            <field name="res_model">stock.equipment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Click New to assign equipment used by Employee 
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="stock_equipment_menu"
+            name="Equipment"
+            action="stock_equipment_action"
+            sequence="10"
+            parent="employee_inventory.equipment_assign_menu"
+        />
+
+        <record id="equipment_part_view_form" model="ir.ui.view">
+            <field name="name">equipment.part.view.form</field>
+            <field name="model">equipment.part</field>
+            <field name="arch" type="xml">
+                <form string="Equipment Part">
+                    <header>
+                        <button string="Return Part" name="generate_returned_part" type="object"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="equipment_id" attrs="{'invisible': [('equipment_id', '=', False)], 'readonly': True}" />
+                                <field name="user_id" readonly="1" />
+                                <field name="detail_used_by" readonly="1" />
+                                <field name="assigned_time" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="returned_time" attrs="{'invisible': [('returned_time', '=', False)]}" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="qty" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="uom_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="condition" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="lot_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="return_ids" widget="many2many_tags" attrs="{'invisible': [('return_ids', '=', False)]}" readonly="1" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="equipment_part_view_tree" model="ir.ui.view">
+            <field name="name">equipment.part.view.tree</field>
+            <field name="model">equipment.part</field>
+            <field name="arch" type="xml">
+                <tree string="Equipment Part" create="False">
+                    <field name="user_id" />
+                    <field name="product_id" />
+                    <field name="condition" />
+                    <field name="detail_used_by" />
+                    <field name="assigned_time" />
+                    <field name="returned_time" optional='hide' />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="equipment_part_action" model="ir.actions.act_window">
+            <field name="name">Equipment Part</field>
+            <field name="res_model">equipment.part</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="equipment_part_menu"
+            name="Equipment Part"
+            action="equipment_part_action"
+            sequence="10"
+            parent="employee_inventory.equipment_assign_menu"
+        />
+
+
+        <record id="stock_equipment_return_view_form" model="ir.ui.view">
+            <field name="name">stock.equipment.return.view.form</field>
+            <field name="model">stock.equipment.return</field>
+            <field name="arch" type="xml">
+                <form string="Equipment Return">
+                    <header>
+                        <button string="Draft" name="action_draft" type="object" states="canceled" />
+                        <button string="Return Equipment" name="action_returned" type="object" states="draft" />
+                        <button string="Accepted" name="action_accepted" type="object" class="oe_highlight" attrs="{'invisible': &quot;['|', ('state', '!=', 'returned'), ('recipient_id', '!=', uid)]&quot;}" />
+                        <button string="Cancel" name="action_canceled" type="object" states="draft" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1" />
+                                <field name="user_id" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="returned_time" attrs="{'invisible': [('returned_time', '=', False)]}" />
+                                <field name="location_id" />
+                                <field name="location_dest_id" readonly="1" />
+                                <field name="picking_id" attrs="{'invisible': [('state', 'in', ['draft', 'canceled'])]}" readonly="1" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="part_line" string="Product">
+                                <field name="part_ids">
+                                    <tree>
+                                        <field name="return_id" invisible="1" />
+                                        <field name="part_id" invisible="1" />
+                                        <field name="product_id" />
+                                        <field name="qty" />
+                                        <field name="uom_id" />
+                                        <field name="condition" />
+                                        <field name="state" />
+                                    </tree>
+                                </field>
+                                <group>
+                                    <group>
+                                        <field colspan="2" name="notes" nolabel="1" placeholder="Define your notes ..."/>
+                                    </group>
+                                </group>
+                                <div class="clearfix"/>
+                            </page>
+                            <page name="receipint" string="Receipint">
+                                <group>
+                                    <field name="recipient_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                    <field name="recipient_approval" readonly="1" />
+                                    <field name="approval_date" readonly="1" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_equipment_return_view_tree" model="ir.ui.view">
+            <field name="name">stock.equipment.return.view.tree</field>
+            <field name="model">stock.equipment.return</field>
+            <field name="arch" type="xml">
+                <tree string="Equipment Return">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="recipient_id" />
+                    <field name="returned_time" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_equipment_return_action" model="ir.actions.act_window">
+            <field name="name">Equipment Return</field>
+            <field name="res_model">stock.equipment.return</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="stock_equipment_return_menu"
+            name="Equipment Return"
+            action="stock_equipment_return_action"
+            parent="employee_inventory.equipment_return_menu"
+            sequence="10"
+        />
+
+        <record id="equipment_part_return_view_form" model="ir.ui.view">
+            <field name="name">equipment.part.return.view.form</field>
+            <field name="model">equipment.part.return</field>
+            <field name="arch" type="xml">
+                <form string="Part Return">
+                    <header>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="return_id" attrs="{'invisible': [('return_id', '=', False)], 'readonly': True}" />
+                                <field name="part_id" attrs="{'invisible': [('part_id', '=', False)], 'readonly': True}" />
+                                <field name="user_id" readonly="1" />
+                                <field name="returned_time" attrs="{'invisible': [('returned_time', '=', False)]}" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="qty" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="uom_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="condition" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="lot_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="equipment_part_return_view_tree" model="ir.ui.view">
+            <field name="name">equipment.part.return.view.tree</field>
+            <field name="model">equipment.part.return</field>
+            <field name="arch" type="xml">
+                <tree string="Part Return" create="False">
+                    <field name="user_id" />
+                    <field name="product_id" />
+                    <field name="condition" />
+                    <field name="returned_time" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="equipment_part_return_action" model="ir.actions.act_window">
+            <field name="name">Part Return</field>
+            <field name="res_model">equipment.part.return</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="equipment_part_return_menu"
+            name="Part Return"
+            action="equipment_part_return_action"
+            parent="employee_inventory.equipment_return_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

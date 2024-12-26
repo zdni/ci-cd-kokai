@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_dimension,access_product_dimension,model_product_dimension,base.group_user,1,1,1,1
+access_product_specification,access_product_specification,model_product_specification,base.group_user,1,1,1,1
+access_standard_manufacturing,access_standard_manufacturing,model_standard_manufacturing,base.group_user,1,1,1,1
+access_manufacturing_type,access_manufacturing_type,model_manufacturing_type,base.group_user,1,1,1,1
+access_manufacturing_method,access_manufacturing_method,model_manufacturing_method,base.group_user,1,1,1,1
+access_product_part,access_product_part,model_product_part,base.group_user,1,1,1,1
+access_product_drawing,access_product_drawing,model_product_drawing,base.group_user,1,1,1,1

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="equipment_menu_root"
+            name="Equipment"
+            sequence="10"
+            parent="stock.menu_stock_root"
+        />
+
+        <menuitem
+            id="equipment_assign_menu"
+            name="Return"
+            sequence="10"
+            parent="employee_inventory.equipment_menu_root"
+        />
+
+        <menuitem
+            id="equipment_return_menu"
+            name="Return"
+            sequence="10"
+            parent="employee_inventory.equipment_menu_root"
+        />
+    
+    </data>
+
+</odoo>

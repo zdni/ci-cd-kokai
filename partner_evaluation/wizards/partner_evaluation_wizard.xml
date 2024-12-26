@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="partner_evaluation_wizard_view_form" model="ir.ui.view">
+            <field name="name">partner.evaluation.wizard.view.form</field>
+            <field name="model">partner.evaluation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Partner Evaluation">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="evaluation_date" />
+                            <field name="user_ids" widget="many2many_tags" />
+                            <field name="partner_id" />
+                        </group>
+                        <notebook>
+                            <page name="question" string="Questions">
+                                <field name="question_ids">
+                                    <tree>
+                                        <field name="evaluation_id" invisible="1" />
+                                        <field name="category_id" />
+                                        <field name="item_id" />
+                                        <field name="remark" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <group>
+                                <field name="conclusion" />
+                            </group>
+                            <group>
+                                <field name="note" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="partner_evaluation_wizard_action" model="ir.actions.act_window">
+            <field name="name">Partner Evaluation wizard</field>
+            <field name="res_model">partner.evaluation.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+        </record>
+    
+    </data>
+
+</odoo>

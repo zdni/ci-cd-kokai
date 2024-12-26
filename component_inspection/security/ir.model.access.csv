@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_inspection,approval_inspection,model_approval_inspection,base.group_user,1,1,1,1
+access_component_inspection,component_inspection,model_component_inspection,base.group_user,1,1,1,1
+access_inspection_line,inspection_line,model_inspection_line,base.group_user,1,1,1,1

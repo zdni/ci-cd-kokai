@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_purchase_request_form_inherit_custom" model="ir.ui.view">
+            <field name="name">purchase.request.view.form.inherit</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <field name="requested_by" position="after">
+                    <field name="department_id" />
+                    <field name="approver_id" />
+                    <field name="team_id" />
+                </field>
+                <field name="group_id" position="after">
+                    <field name="priority" widget="priority" />
+                    <field name="type_id" />
+                </field>
+                <field name="date_start" position="after">
+                    <field name="due_date" />
+                </field>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='name']" position="after">
+                    <field name="link" widget="url" />
+                    <field name="suggested" />
+                    <field name="reason" />
+                    <field name="drawing" />
+                </xpath>
+                <xpath expr="//button[@name='button_approved']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_draft']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='analytic_distribution']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='date_required']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='estimated_cost']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <field name="description" position="after">
+                    <field name="type" />
+                </field>
+                <xpath expr="//field[@name='description']" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+				<xpath expr="//field[@name='line_ids']" position="after">
+					<group colspan="4">
+						<field  colspan="2" name="description" nolabel="1" placeholder="Notes to purchasing..."/>
+					</group>
+				</xpath>
+                <xpath expr="//button[@name='button_in_progress']" position="attributes">
+                    <attribute name="groups"></attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_request_line_form_inherit_form" model="ir.ui.view">
+            <field name="name">purchase.request.line.view.form.inherit</field>
+            <field name="model">purchase.request.line</field>
+            <field name="inherit_id" ref="purchase_request.purchase_request_line_form"/>
+            <field name="arch" type="xml">
+                <field name='date_start' position="after">
+                    <field name="link" widget='url' />
+                    <field name="suggested" />
+                    <field name="reason" />
+                    <field name="drawing" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_purchase_request_line_details_inherit_custom" model="ir.ui.view">
+            <field name="name">purchase.request.line.view.form.inherit</field>
+            <field name="model">purchase.request.line</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_line_details"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="link" widget="url" />
+                    <field name="suggested" />
+                </field>
+            </field>
+        </record>
+
+        <menuitem
+            id="configuration_pr_menu"
+            name="Configuration"
+            parent="purchase_request.parent_menu_purchase_request"
+            sequence="10"
+        />
+
+        <record id="purchase_request_type_view_tree" model="ir.ui.view">
+            <field name="name">purchase.request.type.view.tree</field>
+            <field name="model">purchase.request.type</field>
+            <field name="arch" type="xml">
+                <tree string="PR Type" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_request_type_action" model="ir.actions.act_window">
+            <field name="name">PR Type</field>
+            <field name="res_model">purchase.request.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="pr_type_menu"
+            name="PR Type"
+            action="purchase_request_type_action"
+            parent="configuration_pr_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

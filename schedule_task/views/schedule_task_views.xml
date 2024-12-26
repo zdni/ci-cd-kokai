@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="schedule_task_view_form" model="ir.ui.view">
+            <field name="name">schedule.task.view.form</field>
+            <field name="model">schedule.task</field>
+            <field name="arch" type="xml">
+                <form string="Schedule Task">
+                    <header>
+                        <button string="Open Document" name="action_open_document" type="object" class="oe_highlight"/>
+                        <button string="Assign" name="action_assign" type="object" class="oe_highlight" states="draft"/>
+                        <button string="Start" name="automatic_start_timesheet" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['assign','process']), ('type', '=', 'notification')]}" />
+                        <button string="Transfer" name="generate_assign_to_user" type="object" class="oe_highlight" states="assign"/>
+                        <button string="Done" name="action_done" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['assign','process']), ('type', '=', 'notification')]}" />
+                        <button string="Cancel" name="action_cancel" type="object" states="draft,assign"/>
+                        <field name="state" widget="statusbar" class="o_field_statusbar" statusbar_visible="assign,process,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_timesheet" type="object" class="oe_stat_button" icon="fa-hourglass-start">
+                                <field name="timesheet_count" string="Timesheet" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" class="oe_inline" readonly="1" /></h1>
+                        </div>
+                        <field name="subject" />
+                        <notebook>
+                            <page name="detail" string="Details">
+                                <group>
+                                    <group>
+                                        <field name="is_read" invisible="1" />
+                                        <field name="_state_func" invisible="1" />
+                                        <field name="active" invisible="1" />
+                                        <field name="user_id" readonly="1" />
+                                        <field name="department_id" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="date" />
+                                    </group>
+                                    <group>
+                                        <field name="alarm_id" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="start_date" />
+                                        <field name="stop_date" />
+                                        <field name="hour_spent" widget="float_time" />
+                                        <field name="processing_time" widget="float_time" />
+                                    </group>
+                                </group>
+                                <group string="Description">
+                                    <field name="work_loc_id" options="{'no_create': True, 'no_open': True}" />
+                                    <field name="type" />
+                                    <field name="schedule_type_id" options="{'no_create': True, 'no_open': True}" />
+                                    <field name="description" />
+                                </group>
+                                <group attrs="{'invisible': [('assignment_id', '=', False)]}">
+                                    <field name="assignment_id" />
+                                    <field name="assign_by_id" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="schedule_task_view_tree" model="ir.ui.view">
+            <field name="name">schedule.task.view.tree</field>
+            <field name="model">schedule.task</field>
+            <field name="arch" type="xml">
+                <tree 
+                    string="Schedule Task" 
+                    decoration-success="processing_time &gt;= hour_spent"
+                    decoration-danger="hour_spent &gt; processing_time"
+                    decoration-muted="state == 'cancel'"
+                >
+                    <field name="name" />
+                    <field name="subject" />
+                    <field name="user_id" optional="hide" />
+                    <field name="date" />
+                    <field name="start_date" optional="hide" />
+                    <field name="stop_date" optional="hide" />
+                    <field name="processing_time" widget="float_time" />
+                    <field name="hour_spent" widget="float_time" />
+                    <field name="schedule_type_id" optional="hide" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="schedule_task_view_calendar" model="ir.ui.view">
+            <field name="name">schedule.task.view.calendar</field>
+            <field name="model">schedule.task</field>
+            <field name="arch" type="xml">
+                <calendar string="Schedule" date_start="start_date" date_stop="stop_date" mode="month" color="schedule_type_id" quick_add="False">
+                    <field name="subject" nolabel="1"/>
+                    <field name="schedule_type_id"/>
+                    <field name="alarm_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="schedule_task_view_search" model="ir.ui.view">
+            <field name="name">schedule.task.view.search</field>
+            <field name="model">schedule.task</field>
+            <field name="arch" type="xml">
+                <search string="Schedule">
+                    <filter invisible="1" name="unread" string="Unread" domain="[('is_read', '=', False)]"/>
+                    <filter name="process" string="In Progress" domain="[('is_read', '=', True), ('state', '=', 'process')]"/>
+                    <filter name="done" string="Done" domain="[('is_read', '=', True), ('state', '=', 'done')]"/>
+                    <filter invisible="1" name="overdue" string="Late Task" domain="[('state', 'in', ['assign', 'process']), ('date', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group string="Group By" expand="1">
+                        <filter name="date" string="Date" context="{'group_by': 'date:month'}" />
+                        <filter name="location" string="Location" context="{'group_by': 'work_loc_id'}" />
+                        <filter name="type" string="Type" context="{'group_by': 'schedule_type_id'}" />
+                        <filter name="assign_by" string="Assign By" domain="[('assign_by_id', '!=', False)]" context="{'group_by': 'assign_by_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="schedule_task_action_user" model="ir.actions.act_window">
+            <field name="name">My Tasks</field>
+            <field name="res_model">schedule.task</field>
+            <field name="view_mode">tree,calendar,gantt,form</field>
+            <field name="domain">[('user_id', '=', uid), ('type', '=', 'task')]</field>
+        </record>
+
+        <record id="schedule_task_view_gantt" model="ir.ui.view">
+            <field name="name">schedule.task.view.gantt</field>
+            <field name="model">schedule.task</field>
+            <field name="arch" type="xml">
+                <gantt string="Schedule" date_start="start_date" date_stop="stop_date">
+                    <field name="start_date" />
+                    <field name="stop_date" />
+                    <field name="description" />
+                </gantt>
+            </field>
+        </record>
+
+        <menuitem
+            id="my_schedule_task_menu"
+            name="My Tasks"
+            action="schedule_task_action_user"
+            sequence="10"
+            parent="schedule_task.schedule_task_menu"
+            groups="schedule_task.group_schedule_user"
+        />
+
+        <record id="notification_action_user" model="ir.actions.act_window">
+            <field name="name">My Notification</field>
+            <field name="res_model">schedule.task</field>
+            <field name="view_mode">tree,calendar,gantt,form</field>
+            <field name="domain">[('user_id', '=', uid), ('type', '=', 'notification')]</field>
+        </record>
+
+        <menuitem
+            id="my_notification_menu"
+            name="My Notification"
+            action="notification_action_user"
+            sequence="10"
+            parent="schedule_task.schedule_task_menu"
+            groups="schedule_task.group_schedule_user"
+        />
+
+        <record id="schedule_task_action_all" model="ir.actions.act_window">
+            <field name="name">All Tasks</field>
+            <field name="res_model">schedule.task</field>
+            <field name="view_mode">calendar,tree,form</field>
+        </record>
+
+        <menuitem
+            id="all_schedule_task_menu"
+            name="All Tasks"
+            action="schedule_task_action_all"
+            parent="schedule_task.schedule_task_menu"
+            sequence="10"
+            groups="schedule_task.group_schedule_user_all_task"
+        />
+
+    </data>
+
+</odoo>

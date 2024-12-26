@@ -1,0 +1,43 @@
+{
+    'name': 'CRM Management',
+    'version': '16.0',
+    'summary': 'This module for add CRM Management that complies with PT. Kokai Indo Abadi rules',
+    'author': 'github.com/zdni',
+    'license': 'LGPL-3',
+    'category': 'Sales',
+    'depends': [
+        'proof_approval', 
+        'crm', 
+        'crm_iap_enrich', 
+        'engineering_aspects',
+        'many2many_attachment_preview',
+        'minutes_of_meeting',
+        'sale_crm',
+        'schedule_task',
+        'sequence_reset_period',
+        'sale_product_configurator',
+    ],
+    'data': [
+        'data/approval_category_data.xml',
+        'data/data.xml',
+        'data/ir_sequence_data.xml',
+        
+        'security/ir.model.access.csv',
+
+        'views/menu.xml',
+        'views/contract_issue_views.xml',
+        'views/contract_review_views.xml',
+        'views/crm_lead_views.xml',
+        'views/hr_department_views.xml',
+        'views/inquiry_review_views.xml',
+        'views/sale_order_views.xml',
+        'views/stage_history_views.xml',
+        'views/tracking_requirement_values_template.xml',
+
+        'wizards/schedule_meeting_wizard.xml',
+        'wizards/stage_change_wizard.xml',
+        'wizards/submit_issue_wizard.xml',
+    ],
+    'auto_install': False,
+    'application': False,
+}

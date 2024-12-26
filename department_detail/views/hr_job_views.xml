@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_hr_job_form_inherit_skill" model="ir.ui.view">
+            <field name="name">hr.job.view.form.inherit</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="skill" string="Skill">
+                        <field name="skill_ids" context="{'default_job_id': active_id}">
+                            <tree editable="bottom">
+                                <field name="job_id" invisible="1" />
+                                <field name="name" />
+                                <field name="level" />
+                                <field name="description" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_employee_form_inherit_employee_type" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="job_id" position="after">
+                    <field name="employee_type_id" />
+                </field>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

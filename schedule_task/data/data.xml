@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="mail_activity_type_data_notification" model="mail.activity.type">
+            <field name="sequence">100</field>
+            <field name="delay_count">0</field>
+            <field name="delay_unit">days</field>
+            <field name="icon">fa-bell</field>
+            <field name="res_model">schedule.task</field>
+            <field name="category">default</field>
+            <field name="name">Notification</field>
+        </record>
+    
+    </data>
+</odoo>

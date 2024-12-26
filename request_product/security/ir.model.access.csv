@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_request_product,access_request_product,model_request_product,base.group_user,1,0,0,0
+access_request_product_user,access_request_product_user,model_request_product,request_product.group_request_product_user,1,1,1,0
+access_request_product_all_request,access_request_product_all_request,model_request_product,request_product.group_request_product_all_request,1,1,1,0
+access_request_product_manager,access_request_product_manager,model_request_product,request_product.group_request_product_manager,1,1,1,1
+access_request_product_line,access_request_product_line,model_request_product_line,base.group_user,1,1,1,1
