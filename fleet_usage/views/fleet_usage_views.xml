@@ -9,6 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Fleet Usage">
                     <header>
+                        <button string="Draft" states="cancel" name="action_draft" type="object"/>
+                        <button string="Request Approval" name="action_requested" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Cancel" states="draft" name="action_cancel" type="object"/>
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -43,12 +46,12 @@
                                     <tree editable="bottom">
                                         <field name="usage_id" invisible="1" />
                                         <field name="equipment_id" />
-                                        <field name="out_checked_by_id" />
-                                        <field name="out" />
-                                        <field name="out_remarks" />
-                                        <field name="come_checked_by_id" />
+                                        <field name="come_checked_by_id" optional="hide" />
                                         <field name="come" />
                                         <field name="come_remarks" />
+                                        <field name="out_checked_by_id" optional="hide" />
+                                        <field name="out" />
+                                        <field name="out_remarks" />
                                     </tree>
                                 </field>
                             </page>
@@ -57,10 +60,10 @@
                                     <tree editable="bottom">
                                         <field name="usage_id" invisible="1" />
                                         <field name="part" />
-                                        <field name="out_checked_by_id" />
-                                        <field name="out_remarks" />
-                                        <field name="come_checked_by_id" />
+                                        <field name="come_checked_by_id" optional="hide" />
                                         <field name="come_remarks" />
+                                        <field name="out_checked_by_id" optional="hide" />
+                                        <field name="out_remarks" />
                                     </tree>
                                 </field>
                             </page>
