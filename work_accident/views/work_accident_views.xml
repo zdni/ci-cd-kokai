@@ -57,7 +57,7 @@
             <field name="name">work.accident.view.tree</field>
             <field name="model">work.accident</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Work Accident">
+                <tree string="Work Accident">
                     <field name="name" />
                     <field name="date" />
                     <field name="employee_id" />
@@ -105,7 +105,7 @@
             <field name="name">body.part.view.tree</field>
             <field name="model">body.part</field>
             <field name="arch" type="xml">
-                <tree string="Body Part">
+                <tree editable="bottom" string="Body Part">
                     <field name="name" />
                 </tree>
             </field>
