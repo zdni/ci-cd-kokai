@@ -35,6 +35,7 @@ class PriceQuery(models.Model):
         ('medium', 'Medium'),
         ('high', 'High'),
     ], string='Priority', required=True, default='high')
+    has_processed = fields.Boolean('Has Processed', default=False)
 
     @api.model_create_multi
     def create(self, vals):
@@ -137,40 +138,42 @@ class PriceQuery(models.Model):
                     })
                 variant_value_ids.append((4, product_template_variant_value_ids.id))
             # generate product.product
-            # try:
-            product = self.env['product.product'].create({
-                'active': True,
-                'can_be_expensed': False,
-                'is_critical': True,
-                'is_product_variant': True,
-                'potential_product': line.state == 'potential',
-                'purchase_ok': True,
-                'name': line.product_tmpl_id.name,
-                'sale_ok': True,
-                'list_price': 0,
-                'lst_price': 0,
-                'standard_price': 0,
-                'product_template_attribute_value_ids': variant_value_ids,
-                'product_tmpl_id': line.product_tmpl_id.id,
-                'uom_id': line.uom_id.id,
-                'uom_po_id': line.uom_id.id,
-                'detailed_type': line.product_tmpl_id.detailed_type,
-                'categ_id': line.product_tmpl_id.categ_id.id,
-            })
-            # add to inquiry
-            self.inquiry_id.write({ 'order_line': [(0,0, {
-                'product_id': product.id,
-                'product_uom_qty': line.qty,
-                'product_uom': line.uom_id.id,
-                'price_unit': line.price_unit,
-                'drawing_id': line.drawing_id.id,
-                'specification_ids': [(0,0, {
-                    'type_id': specification.type_id.id,
-                    'specification_id': specification.specification_id.id,
-                }) for specification in line.specification_ids]
-            })] })
-            # except:
-            #     raise ValidationError("Can't create Product Variant")
+            try:
+                product = self.env['product.product'].create({
+                    'active': True,
+                    'can_be_expensed': False,
+                    'is_critical': True,
+                    'is_product_variant': True,
+                    'potential_product': line.state == 'potential',
+                    'purchase_ok': True,
+                    'name': line.product_tmpl_id.name,
+                    'sale_ok': True,
+                    'list_price': 0,
+                    'lst_price': 0,
+                    'standard_price': 0,
+                    'product_template_attribute_value_ids': variant_value_ids,
+                    'product_tmpl_id': line.product_tmpl_id.id,
+                    'uom_id': line.uom_id.id,
+                    'uom_po_id': line.uom_id.id,
+                    'detailed_type': line.product_tmpl_id.detailed_type,
+                    'categ_id': line.product_tmpl_id.categ_id.id,
+                })
+                # add to inquiry
+                self.inquiry_id.write({ 'order_line': [(0,0, {
+                    'product_id': product.id,
+                    'product_uom_qty': line.qty,
+                    'product_uom': line.uom_id.id,
+                    'price_unit': line.price_unit,
+                    'drawing_id': line.drawing_id.id,
+                    'specification_ids': [(0,0, {
+                        'type_id': specification.type_id.id,
+                        'specification_id': specification.specification_id.id,
+                    }) for specification in line.specification_ids],
+                    'pq_line_id': line.id,
+                })] })
+            except:
+                raise ValidationError("Can't create Product Variant")
+        self.write({ 'has_processed': True })
 
 
 
