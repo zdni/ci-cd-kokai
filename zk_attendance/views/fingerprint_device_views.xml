@@ -61,7 +61,7 @@
             id="fingerprint_device_menu"
             name="Device"
             action="fingerprint_device_action"
-            parent="zk_attendance.attendance_menu"
+            parent="employee_attendance.attendance_menu"
             sequence="10"
         />
     

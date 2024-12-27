@@ -5,14 +5,14 @@
     
         <menuitem
             id="helpdesk_maintenance_menu"
-            name="Maintenance"
+            name="Helpdesk"
             sequence="10"
             web_icon="helpdesk_maintenance,static/description/icon.png"
         />
 
         <menuitem
             id="helpdesk_menu"
-            name="Helpdesk"
+            name="Ticket"
             parent="helpdesk_maintenance.helpdesk_maintenance_menu"
             sequence="10"
         />

@@ -18,7 +18,7 @@ FINGERPRINTS = {
     "42": { "name" : "Gilang Yanuar Rahman", "department": "QHSE"},
     "47": { "name" : "M. Rizal Nurman Wahyu P.", "department": ""},
     "49": { "name" : "Kosasih", "department": "QHSE"},
-    "81": { "name" : "81", "department": ""},
+    "81": { "name" : "Sabbili Ramadhan", "department": "Inventory & Logistic"},
     "93": { "name" : "Widiya Febriany", "department": "HRGA"},
     "94": { "name" : "Meifi Khunsul Khotimah", "department": "HRGA"},
     "95": { "name" : "Anung Ari Setyawan", "department": "Production"},
@@ -26,6 +26,7 @@ FINGERPRINTS = {
     "108": { "name" : "Agus Gunawan", "department": "Production"},
     "122": { "name" : "122", "department": ""},
     "123": { "name" : "123", "department": ""},
+    "124": { "name" : "Windu Adi Vida Pratama", "department": "HRGA"},
     "130": { "name" : "130", "department": ""},
     "221": { "name" : "221", "department": ""},
     "230": { "name" : "Tiara Rizqiah", "department": "QHSE"},
@@ -147,7 +148,10 @@ FINGERPRINTS = {
     "400": { "name" : "Al Zidni Kasim", "department": "HRGA"},
     "401": { "name" : "M. Fairuz Ikhwani", "department": "HRGA"},
     "402": { "name" : "Annisa", "department": "QHSE"},
-    "403": { "name" : "Indah Ranika", "department": "Sales & Marketing"}
+    "403": { "name" : "Indah Ranika", "department": "Sales & Marketing"},
+    "404": { "name" : "Alfin Rahman", "department": "HRGA"},
+    "405": { "name" : "Muhammad Ibnu Dzaky A.M", "department": "HRGA"},
+    "406": { "name" : "Nurindah", "department": "Sales & Marketing"},
 }
 
 class EmployeeAttendanceWizard(models.TransientModel):

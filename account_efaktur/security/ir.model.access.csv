@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_account_efaktur,access_account_efaktur,model_account_efaktur,base.group_user,1,1,1,1
-access_assign_efaktur_wizard,access_assign_efaktur_wizard,model_assign_efaktur_wizard,base.group_user,1,1,1,1
-access_generate_efaktur_wizard,access_generate_efaktur_wizard,model_generate_efaktur_wizard,base.group_user,1,1,1,1
-access_auto_numbering_efaktur_wizard,access_auto_numbering_efaktur_wizard,model_auto_numbering_efaktur_wizard,base.group_user,1,1,1,1
