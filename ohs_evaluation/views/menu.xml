@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="ohs_evaluation_root_menu"
+            name="Evaluation"
+            sequence="10"
+            web_icon="ohs_evaluation,static/description/icon.png"
+        />
+    
+    </data>
+
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="view_move_form_inherit_efaktur" model="ir.ui.view">
+            <field name="name">account.move.view.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_date_due" position="after">
+                    <field name="efaktur_input" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}" />
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="is_union" attrs="{'invisible': [('move_type', '=', 'out_invoice')]}" />
+                    <field name="prefix_union" attrs="{'invisible': [('move_type', '=', 'out_invoice')]}" />
+                    <field name="efaktur_id" domain="[('is_used','=',False)]" attrs="{'invisible': [('move_type', '=', 'out_invoice')]}" />
+                </field>
+                <xpath expr="//notebook" position="inside">
+                    <page name="efaktur" string="E-Faktur">
+                        <group>
+                            <group>
+                                <field name="tax_period" />
+                                <field name="tax_year" />
+                            </group>
+                            <group>
+                                <field name="is_efaktur_exported" />
+                                <field name="date_efaktur_exported" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree_inherit_efaktur" model="ir.ui.view">
+            <field name="name">account.move.view.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="invoice_date_due" position="after">
+                    <field name="efaktur_input" attrs="{'invisible': [('move_type', '=', 'out_invoice')]}" />
+                </field>
+                <field name="invoice_partner_display_name" position="after">
+                    <field name="efaktur_id" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}" />
+                </field>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

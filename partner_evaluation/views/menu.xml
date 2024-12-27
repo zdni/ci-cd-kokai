@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <menuitem
+            id="evaluation_menu"
+            name="Evaluation"
+            sequence="10"
+            parent="qhse_program.configuration_menu"
+        />
+    
+    </data>
+
+</odoo>

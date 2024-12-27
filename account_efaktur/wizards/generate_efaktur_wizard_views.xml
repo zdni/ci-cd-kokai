@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="generate_efaktur_wizard_view_form" model="ir.ui.view">
+            <field name="name">generate.efaktur.wizard.view.form</field>
+            <field name="model">generate.efaktur.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Serial Number Faktur">
+                    <sheet>
+                        <group>
+                            <field name="year" placeholder="xxxx"/>
+                            <field name="start_serial" placeholder="xxx-xx-xxxxxxxx"/>
+                            <field name="end_serial" placeholder="xxx-xx-xxxxxxxx"/>
+                        </group>
+                        <footer>
+                            <button string="Confirm" name="confirm_button" type="object" class="btn-primary"/>
+                            <button string="Cancel" class="btn-default" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="generate_efaktur_wizard_action" model="ir.actions.act_window">
+            <field name="name">Generate Serial Number Faktur</field>
+            <field name="res_model">generate.efaktur.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="generate_efaktur_wizard_menu"
+            name="Generate Serial Number Faktur"
+            action="generate_efaktur_wizard_action"
+            parent="account_efaktur.efaktur_root_menu"
+            sequence="10"
+        />
+
+    </data>
+</odoo>

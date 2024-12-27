@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="document_control_view_form" model="ir.ui.view">
+            <field name="name">document.control.view.form</field>
+            <field name="model">document.control</field>
+            <field name="arch" type="xml">
+                <form string="Document Control">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1" />
+                                <field name="department_id" />
+                                <field name="name" />
+                                <field name="edition" />
+                            </group>
+                            <group>
+                                <field name="issue_date" />
+                                <field name="received_date" />
+                                <field name="description" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="document_control_view_tree" model="ir.ui.view">
+            <field name="name">document.control.view.tree</field>
+            <field name="model">document.control</field>
+            <field name="arch" type="xml">
+                <tree string="Document Control">
+                    <field name="department_id" />
+                    <field name="name" />
+                    <field name="edition" />
+                    <field name="issue_date" />
+                    <field name="received_date" />
+                    <field name="description" optional='show' />
+                </tree>
+            </field>
+        </record>
+
+        <record id="document_control_action" model="ir.actions.act_window">
+            <field name="name">Document Control</field>
+            <field name="res_model">document.control</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="document_control_menu"
+            name="Document Control"
+            action="document_control_action"
+            parent="quality_assurance.quality_assurance_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

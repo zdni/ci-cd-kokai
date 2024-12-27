@@ -35,6 +35,7 @@
                                         <field name="date_end" />
                                     </group>
                                     <group string="Location">
+                                        <field name="media" />
                                         <field name="location_id" />
                                         <field name="area_id" domain="[('location_id', '=', location_id)]"/>
                                         <field name="detail_location" />

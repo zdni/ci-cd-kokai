@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="assign_efaktur_wizard_view_form" model="ir.ui.view">
+            <field name="name">assign.efaktur.wizard.view.form</field>
+            <field name="model">assign.efaktur.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Assign E-Faktur">
+                    <sheet>
+                        <group>
+                            <field name="efaktur_id" domain="[('is_used','=',False)]"/>
+                            <field name="invoice_ids"/>
+                        </group>
+                        <footer>
+                            <button string="Confirm" icon="fa-check-circle" name="confirm_button" type="object" class="btn-primary"/>
+                            <button string="Cancel" icon="fa-times" class="btn-default" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="assign_efaktur_wizard_action" model="ir.actions.act_window">
+            <field name="name">Assign E-Faktur</field>
+            <field name="res_model">assign.efaktur.wizard</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+
+    </data>
+</odoo>
