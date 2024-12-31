@@ -12,7 +12,9 @@ class ProductTemplate(models.Model):
         for record in self:
             for product in record.mapped('product_variant_ids'):
                 query = f"DELETE FROM stock_card_line WHERE product_id={product.id}"
+                self.env.cr.execute(query)
                 query = f"UPDATE stock_card_line SET has_count=False WHERE product_id={product.id}"
+                self.env.cr.execute(query)
 
     def generate_stock_card(self):
         for record in self:
@@ -31,7 +33,9 @@ class ProductProduct(models.Model):
     def refresh_stock_card(self):
         for record in self:
             query = f"DELETE FROM stock_card_line WHERE product_id={record.id}"
+            self.env.cr.execute(query)
             query = f"UPDATE stock_card_line SET has_count=False WHERE product_id={record.id}"
+            self.env.cr.execute(query)
 
     def generate_stock_card(self):
         for record in self:
