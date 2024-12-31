@@ -23,6 +23,7 @@ class ProductTemplate(models.Model):
         self.generate_stock_card()
         action = self.env.ref('stock_card.stock_card_line_action').sudo().read()[0]
         action['domain'] = [('product_tmpl_id', '=', self.id)]
+        return action
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -40,6 +41,7 @@ class ProductProduct(models.Model):
         self.generate_stock_card()
         action = self.env.ref('stock_card.stock_card_line_action').sudo().read()[0]
         action['domain'] = [('product_id', '=', self.id)]
+        return action
 
 
 class StockMove(models.Model):
