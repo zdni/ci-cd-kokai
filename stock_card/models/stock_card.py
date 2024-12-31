@@ -153,7 +153,7 @@ class StockCardLine(models.Model):
                 'date': move.date,
                 'information': information,
                 'description': description,
-                'loc_id': loc_id,
+                'loc_id': loc_id.id,
                 'location_id': move.location_id.id,
                 'location_dest_id': move.location_dest_id.id,
                 'picking_id': move.picking_id.id,
