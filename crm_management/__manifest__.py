@@ -30,6 +30,7 @@
         'views/crm_lead_views.xml',
         'views/hr_department_views.xml',
         'views/inquiry_review_views.xml',
+        'views/res_partner_views.xml',
         'views/sale_order_views.xml',
         'views/stage_history_views.xml',
         'views/tracking_requirement_values_template.xml',
