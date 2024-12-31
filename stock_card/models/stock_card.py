@@ -151,6 +151,7 @@ class StockCardLine(models.Model):
                 final_qty = init_qty + (incoming_qty - output_qty)
 
             self.env['stock.card.line'].sudo().create({
+                'product_tmpl_id': product.product_tmpl_id.id,
                 'product_id': product.id,
                 'date': move.date,
                 'information': information,
