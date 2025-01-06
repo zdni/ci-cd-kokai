@@ -13,6 +13,7 @@
                             <field name="ref_id" invisible="1" />
                             <field name="stage_id" />
                             <field name="reason" />
+                            <field name="send_notif" />
                         </group>
                     </sheet>
                     <footer>
