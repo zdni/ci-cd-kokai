@@ -69,7 +69,7 @@ class ImportProductVariant(models.TransientModel):
                         'name': row_vals[0],
                         'product_tmpl_id': product_tmpl_id.id,
                         'product_template_variant_value_ids': variant_value_ids,
-                        'combination_indices': ','.join(combination_indices)
+                        'combination_indices': ','.join(str(combination_indices))
                     }
                     self.env['product.product'].create(vals)
 
