@@ -35,8 +35,8 @@ class ImportProductVariant(models.TransientModel):
                         raise UserError(_(f"Product {row_vals[1]} not Found"))
                     
                     variant_value_ids = []
+                    value_ids = []
                     variants = row_vals[2].split(' || ')
-                    combination_indices = []
                     for variant in variants:
                         attribute_name = variant.split(': ')[0]
                         variant_name = variant.split(': ')[1]
@@ -63,15 +63,13 @@ class ImportProductVariant(models.TransientModel):
                         if not product_template_variant_value_ids:
                             raise UserError(f"Product {row_vals[1]}, Attribute {attribute_name}, f{product_attribute_value.name}, product_template_variant_value_ids not Found")
                         variant_value_ids.append((4, product_template_variant_value_ids.id))
-                        combination_indices.append(product_template_variant_value_ids.id)
+                        value_ids.append(product_template_variant_value_ids.id)
 
                     vals = {
                         'name': row_vals[0],
                         'product_tmpl_id': product_tmpl_id.id,
-                        'product_template_variant_value_ids': variant_value_ids,
-                        'combination_indices': ','.join(str(combination_indices))
+                        'product_template_attribute_value_ids': [(6, 0, value_ids)],
                     }
-                    _logger.warning(vals)
                     self.env['product.product'].create(vals)
 
         except UserError as e:
