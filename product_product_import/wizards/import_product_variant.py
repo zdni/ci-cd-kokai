@@ -68,6 +68,7 @@ class ImportProductVariant(models.TransientModel):
                         'product_tmpl_id': product_tmpl_id.id,
                         'product_template_variant_value_ids': variant_value_ids,
                     }
+                    _logger.warning(vals)
                     self.env['product.product'].create(vals)
 
         except UserError as e:
