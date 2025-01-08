@@ -8,6 +8,8 @@
     'depends': ['stock'],
     'data': [
         'security/ir.model.access.csv',
+        
+        'wizards/import_product_attribute_views.xml',
         'wizards/import_product_variant_views.xml',
     ],
     'auto_install': False,
