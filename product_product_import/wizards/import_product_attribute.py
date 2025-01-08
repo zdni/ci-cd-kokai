@@ -30,14 +30,14 @@ class ImportProductAttribute(models.TransientModel):
                     if len(row_vals) < int(2):
                         raise UserError(_("Please ensure that you selected the correct file"))
 
-                    attribute = self.env['product.attribute'].search([ ('id', '=', row_vals[0]) ])
+                    attribute = self.env['product.attribute'].search([ ('id', '=', int(row_vals[0])) ])
                     if not attribute:
                         raise UserError(f"Attribute f{row_vals[0]} not Found")
                     
                     values = row_vals[1].split(" || ")
                     for value in values:
                         vals = {
-                            'attribute_id': row_vals[0],
+                            'attribute_id': int(row_vals[0]),
                             'name': value
                         }
                         try:
