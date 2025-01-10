@@ -26,4 +26,4 @@ class HRJob(models.Model):
 class HREmployee(models.Model):
     _inherit = 'hr.employee'
 
-    employee_type_id = fields.Many2one('hr.contract.type', string='Employee Type', related='job_id.contract_type_id')
+    employee_type_id = fields.Many2one('hr.contract.type', string='Employee Type')

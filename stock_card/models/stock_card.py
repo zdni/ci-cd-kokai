@@ -12,7 +12,9 @@ class ProductTemplate(models.Model):
         for record in self:
             for product in record.mapped('product_variant_ids'):
                 query = f"DELETE FROM stock_card_line WHERE product_id={product.id}"
+                self.env.cr.execute(query)
                 query = f"UPDATE stock_card_line SET has_count=False WHERE product_id={product.id}"
+                self.env.cr.execute(query)
 
     def generate_stock_card(self):
         for record in self:
@@ -23,6 +25,7 @@ class ProductTemplate(models.Model):
         self.generate_stock_card()
         action = self.env.ref('stock_card.stock_card_line_action').sudo().read()[0]
         action['domain'] = [('product_tmpl_id', '=', self.id)]
+        return action
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -30,7 +33,9 @@ class ProductProduct(models.Model):
     def refresh_stock_card(self):
         for record in self:
             query = f"DELETE FROM stock_card_line WHERE product_id={record.id}"
+            self.env.cr.execute(query)
             query = f"UPDATE stock_card_line SET has_count=False WHERE product_id={record.id}"
+            self.env.cr.execute(query)
 
     def generate_stock_card(self):
         for record in self:
@@ -40,6 +45,7 @@ class ProductProduct(models.Model):
         self.generate_stock_card()
         action = self.env.ref('stock_card.stock_card_line_action').sudo().read()[0]
         action['domain'] = [('product_id', '=', self.id)]
+        return action
 
 
 class StockMove(models.Model):
@@ -149,11 +155,12 @@ class StockCardLine(models.Model):
                 final_qty = init_qty + (incoming_qty - output_qty)
 
             self.env['stock.card.line'].sudo().create({
+                'product_tmpl_id': product.product_tmpl_id.id,
                 'product_id': product.id,
                 'date': move.date,
                 'information': information,
                 'description': description,
-                'loc_id': loc_id,
+                'loc_id': loc_id.id,
                 'location_id': move.location_id.id,
                 'location_dest_id': move.location_dest_id.id,
                 'picking_id': move.picking_id.id,

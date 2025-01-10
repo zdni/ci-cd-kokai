@@ -7,7 +7,6 @@
     'category': 'Human Resources',
     'depends': ['approvals', 'fleet', 'stock', 'sequence_reset_period'],
     'data': [
-        'data/approval_category_data.xml',
         'data/ir_sequence.xml',
 
         'security/ir.model.access.csv',

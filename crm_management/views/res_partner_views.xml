@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="res_partner_view_team_inherit_quadrant" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="sales_team.res_partner_view_team"/>
+            <field name="arch" type="xml">
+                <field name="team_id" position="after">
+                    <field name="quadrant" />
+                </field>
+            </field>
+        </record>
+    
+    </data>
+    
+
+</odoo>

@@ -13,7 +13,7 @@ class HREmployee(models.Model):
 
     def action_show_stock_equipment(self):
         self.ensure_one()
-        if len(self.equipment_count) == 0:
+        if self.equipment_count == 0:
             return
         equipments = self.mapped('equipment_ids')
         action = self.env.ref('employee_inventory.stock_equipment_action').sudo().read()[0]
@@ -34,7 +34,7 @@ class HRDepartment(models.Model):
 
     def action_show_stock_equipment(self):
         self.ensure_one()
-        if len(self.equipment_count) == 0:
+        if self.equipment_count == 0:
             return
         equipments = self.mapped('equipment_ids')
         action = self.env.ref('employee_inventory.stock_equipment_action').sudo().read()[0]

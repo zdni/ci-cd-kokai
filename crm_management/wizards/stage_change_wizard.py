@@ -7,6 +7,7 @@ class StageChangeWizard(models.TransientModel):
     ref_id = fields.Many2one('crm.lead', string='Reference', required=True)
     stage_id = fields.Many2one('crm.stage', string='Stage', required=True)
     reason = fields.Text('Reason', default='-')
+    send_notif = fields.Boolean('Send Notification to Team')
 
     def button_process(self):
         self.ensure_one()
@@ -27,6 +28,7 @@ class StageChangeWizard(models.TransientModel):
                 'history_ids': [(0, 0, history)],
                 'state': 'new',
             })
-            lead.notification_change_stage()
+            if self.send_notif:
+                lead.notification_change_stage()
         else:
             raise ValidationError("Change Stage can't be Processed!")

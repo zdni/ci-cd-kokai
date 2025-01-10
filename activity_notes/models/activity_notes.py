@@ -13,6 +13,7 @@ class AccountAnalyticLine(models.Model):
     is_end = fields.Boolean('Is End', default=False)
     before_timesheet = fields.Image('Before Timesheet', max_width=100, max_height=100)
     after_timesheet = fields.Image('After Timesheet', max_width=100, max_height=100)
+    # account_id = fields.Many2one('account.analytic.account', string='Account', default=1, required=True, store=True, copy=True, ondelete='restrict', index=True)
 
     def action_start_timer(self):
         self.ensure_one()
