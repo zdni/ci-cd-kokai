@@ -62,7 +62,7 @@ class ImportProductTemplate(models.TransientModel):
                         vals['detailed_type'] = PRODUCT_TYPE[row_vals[3]]
                     
                     if row_vals[4] != '':
-                        categ_id = self.env['product.category'].search([ ('display_name', '=', row_vals[4]) ], limit=1)
+                        categ_id = self.env['product.category'].search([ ('name', '=', row_vals[4]) ], limit=1)
                         if not categ_id:
                             raise UserError(f"{row_vals[4]} not Found")
                         vals['categ_id'] = categ_id.id
