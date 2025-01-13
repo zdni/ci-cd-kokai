@@ -15,6 +15,11 @@ class ImportProductTemplate(models.TransientModel):
     file = fields.Binary('File Excel')
 
     def action_import(self):
+        PRODUCT_TYPE = {
+            'Consumable': 'consu',
+            'Service': 'service',
+            'Storable Product': 'product',
+        }
         try:
             try:
                 file_pointer = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
@@ -24,66 +29,69 @@ class ImportProductTemplate(models.TransientModel):
                 sheet = workbook.sheet_by_index(0)
             except:
                 raise UserError(_("File not Valid"))
+            
+            name = ''
+            categ_id = False
+            uom_id = False
+            attribute_line_ids = []
+            
+            vals = {}
             for rec in range(sheet.nrows):
                 if rec >= 1:
                     row_vals = sheet.row_values(rec)
-                    if len(row_vals) < int(2):
+                    if len(row_vals) < int(1):
                         raise UserError(_("Please ensure that you selected the correct file"))
                     
-                    # check if product template exist
-                    product_tmpl = self.env['product.template'].search([ ('name', '=', row_vals[1]) ], limit=1)
-                    if not product_tmpl:
-                        product_tmpl = self.env['product.template'].create({
-                            'name': row_vals[0],
-                            'detailed_type': row_vals[1], # 'product'
-                            'categ_id': row_vals[2], # id category,
-                            'default_code': row_vals[3],
-                            'is_critical': row_vals[4] == 'True',
-                            'sale_ok': True,
-                            'purchase_ok': True,
-                        })
-                    
-                    product_tmpl_id = self.env['product.template'].search([ ('name', '=', row_vals[1]) ], limit=1)
-                    if not product_tmpl_id:
-                        raise UserError(_(f"Product {row_vals[1]} not Found"))
-                    
-                    variant_value_ids = []
-                    value_ids = []
-                    variants = row_vals[2].split(' || ')
-                    for variant in variants:
-                        attribute_name = variant.split(': ')[0]
-                        variant_name = variant.split(': ')[1]
-                        attribute = self.env['product.attribute'].search([ ('name', '=', attribute_name) ], limit=1)
-                        if not attribute:
-                            raise UserError(_(f"Product {row_vals[1]}, Attribute {attribute_name} not Found"))
-                        
-                        product_tmpl_attr = self.env['product.template.attribute.line'].search([
-                            ('product_tmpl_id', '=', product_tmpl_id.id),
-                            ('attribute_id', '=', attribute.id),
-                        ])
-                        if not product_tmpl_attr:
-                            raise UserError(f"Product {row_vals[1]} don't have attribute {attribute_name}")
-                        product_attribute_value = self.env['product.attribute.value'].search([ ('name', '=', variant_name), ('attribute_id', '=', attribute.id) ], limit=1)
-                        if not product_attribute_value:
-                            raise UserError(f"Product {row_vals[1]}, Attribute {attribute_name}, Variant {variant_name} not Found")
+                    if name != '' and row_vals[0] != '':
+                        vals['attribute_line_ids'] = attribute_line_ids
+                        _logger.warning(vals)
+                        self.env['product.template'].create(vals)
+                        attribute_line_ids = []
 
-                        product_template_variant_value_ids = self.env['product.template.attribute.value'].search([
-                            ('attribute_id', '=', attribute.id),
-                            ('product_attribute_value_id', '=', product_attribute_value.id),
-                            ('product_tmpl_id', '=', product_tmpl_id.id),
-                            ('attribute_line_id', '=', product_tmpl_attr.id),
-                        ], limit=1)
-                        if not product_template_variant_value_ids:
-                            raise UserError(f"Product {row_vals[1]}, Attribute {attribute_name}, f{product_attribute_value.name}, product_template_variant_value_ids not Found")
-                        variant_value_ids.append((4, product_template_variant_value_ids.id))
-                        value_ids.append(product_template_variant_value_ids.id)
+                    if row_vals[0] != '':
+                        name = row_vals[0]
+                        vals['name'] = name
 
-                    vals = {
-                        'name': row_vals[0],
-                        'product_tmpl_id': product_tmpl_id.id,
-                        'product_template_attribute_value_ids': [(6, 0, value_ids)],
-                    }
-                    self.env['product.product'].create(vals)
+                    if row_vals[1] != '':
+                        vals['sale_ok'] = row_vals[1]
+
+                    if row_vals[2] != '':
+                        vals['purchase_ok'] = row_vals[2]
+
+                    if row_vals[3] != '':
+                        vals['detailed_type'] = PRODUCT_TYPE[row_vals[3]]
+                    
+                    if row_vals[4] != '':
+                        categ_id = self.env['product.category'].search([ ('display_name', '=', row_vals[4]) ], limit=1)
+                        if not categ_id:
+                            raise UserError(f"{row_vals[4]} not Found")
+                        vals['categ_id'] = categ_id.id
+
+                    if row_vals[5] != '':
+                        uom_id = self.env['uom.uom'].search([ ('name', '=', row_vals[5]) ], limit=1)
+                        if not uom_id:
+                            raise UserError(f"{row_vals[5]} not Found")
+                        vals['uom_id'] = uom_id.id
+
+                    if row_vals[7] != '' and row_vals[8] != '':
+                        value_ids = []
+                        attribute_id = self.env['product.attribute'].search([ ('name', '=', row_vals[7]) ], limit=1)
+                        if not attribute_id:
+                            raise UserError(f"{row_vals[7]} not Found")
+                        variants = row_vals[8].split(',')
+                        for variant in variants:
+                            value = self.env['product.attribute.value'].search([ 
+                                ('attribute_id', '=', attribute_id.id),
+                                ('name', '=', variant),
+                            ], limit=1)
+                            if not value:
+                                raise UserError(f"{variant} in {attribute_id.name} not Found")
+                            value_ids.append(value.id)
+
+                        attribute_line_ids.append((0,0,{
+                            'attribute_id': attribute_id.id,
+                            'value_ids': value_ids
+                        }))
 
         except UserError as e:
             raise UserError(str(e))
