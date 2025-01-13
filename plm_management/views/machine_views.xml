@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="machine_tool_view_form" model="ir.ui.view">
+            <field name="name">machine.tool.view.form</field>
+            <field name="model">machine.tool</field>
+            <field name="arch" type="xml">
+                <form string="Machine">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" /></h1>
+                        </div>
+                        <group string="Detail">
+                            <group>
+                                <field name="tag_ids" />
+                                <field name="model_id" />
+                                <field name="location_id" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="note" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="machine_tool_view_tree" model="ir.ui.view">
+            <field name="name">machine.tool.view.tree</field>
+            <field name="model">machine.tool</field>
+            <field name="arch" type="xml">
+                <tree string="Machine">
+                    <field name="name" />
+                    <field name="model_id" />
+                    <field name="location_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="machine_tool_action" model="ir.actions.act_window">
+            <field name="name">Machine</field>
+            <field name="res_model">machine.tool</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="machine_tool_menu"
+            name="Machine"
+            action="machine_tool_action"
+            parent="plm_management.setting_menu"
+            sequence="10"
+        />
+
+        <record id="machine_type_view_tree" model="ir.ui.view">
+            <field name="name">machine.type.view.tree</field>
+            <field name="model">machine.type</field>
+            <field name="arch" type="xml">
+                <tree string="Machine Type" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="machine_type_action" model="ir.actions.act_window">
+            <field name="name">Machine Type</field>
+            <field name="res_model">machine.type</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="machine_type_menu"
+            name="Machine Type"
+            action="machine_type_action"
+            parent="plm_management.setting_menu"
+            sequence="10"
+        />
+
+        <record id="machine_model_view_tree" model="ir.ui.view">
+            <field name="name">machine.model.view.tree</field>
+            <field name="model">machine.model</field>
+            <field name="arch" type="xml">
+                <tree string="Machine Model" editable="bottom">
+                    <field name="name" />
+                    <field name="type_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="machine_model_action" model="ir.actions.act_window">
+            <field name="name">Machine Model</field>
+            <field name="res_model">machine.model</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="machine_model_menu"
+            name="Machine Model"
+            action="machine_model_action"
+            parent="plm_management.setting_menu"
+            sequence="10"
+        />
+
+        <record id="machine_tag_view_tree" model="ir.ui.view">
+            <field name="name">machine.tag.view.tree</field>
+            <field name="model">machine.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Machine Tag" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="machine_tag_action" model="ir.actions.act_window">
+            <field name="name">Machine Tag</field>
+            <field name="res_model">machine.tag</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="machine_tag_menu"
+            name="Machine Tags"
+            action="machine_tag_action"
+            parent="plm_management.setting_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

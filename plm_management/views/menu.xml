@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="plm_management_menu"
+            name="PLM"
+            sequence="10"
+            web_icon="plm_management,static/description/icon.png"
+        />
+
+        <menuitem
+            id="engineering_menu"
+            name="Engineering"
+            parent="plm_management.plm_management_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="manufacture_menu"
+            name="Manufacture"
+            parent="plm_management.plm_management_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="setting_menu"
+            name="Setting"
+            parent="plm_management.plm_management_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>
