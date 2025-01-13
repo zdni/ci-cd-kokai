@@ -34,6 +34,8 @@ class WorkActivity(models.Model):
     end_date = fields.Datetime('End Date')
     hour_spent = fields.Float('Hour Spent')
     timesheet_id = fields.Many2one('account.analytic.line', string='Timesheet')
+    img_before_activity = fields.Image('Image Before Activity', max_width=100, max_height=100)
+    img_after_activity = fields.Image('Image After Activity', max_width=100, max_height=100)
 
     @api.model_create_multi
     def create(self, vals):
