@@ -20,7 +20,7 @@
                                 <field name="activity_id" />
                             </group>
                             <group>
-                                <field name="department_id" options="{'no_create': True}" groups="department_detail.group_hr_department_administrator" />
+                                <field name="department_id" options="{'no_create': True}" groups="department_detail.group_hr_department_manager" />
                                 <field name="processing_time" widget="timesheet_uom" />
                             </group>
                         </group>
@@ -63,7 +63,7 @@
             id="department_activity_menu"
             name="Activity"
             action="department_activity_action"
-            parent="hr.menu_hr_department_kanban"
+            parent="hr.menu_hr_root"
             sequence="20"
             groups="department_detail.group_hr_department_manager"
         />
