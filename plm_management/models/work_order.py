@@ -45,6 +45,8 @@ class WorkActivity(models.Model):
 
     def generate_timesheet(self):
         for record in self:
-            vals = {}
+            vals = {
+                
+            }
             timesheet = self.env['account.analytic.line'].create(vals)
             record.write({ 'timesheet_id': timesheet.id })
