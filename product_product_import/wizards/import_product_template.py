@@ -85,7 +85,7 @@ class ImportProductTemplate(models.TransientModel):
                                 ('name', '=', variant),
                             ], limit=1)
                             if not value:
-                                raise UserError(f"{variant} in {attribute_id.name} not Found")
+                                raise UserError(f"{variant} in {attribute_id.name} for {name} not Found")
                             value_ids.append(value.id)
 
                         attribute_line_ids.append((0,0,{
