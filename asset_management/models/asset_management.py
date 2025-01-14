@@ -16,6 +16,8 @@ class EquipmentAsset(models.Model):
     _inherit = ['mail.activity.mixin', 'mail.thread']
 
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+    responsible_id = fields.Many2one('res.users', string='Responsible')
+
     name = fields.Char('Name', required=True)
     category_id = fields.Many2one('equipment.category', string='Category')
     used_by = fields.Selection([
@@ -29,3 +31,4 @@ class EquipmentAsset(models.Model):
     work_location_id = fields.Many2one('hr.work.location', string='Work Location', tracking=True)
     detail_used_by = fields.Char('Detail Used By')
     note = fields.Html('Note')
+    equipment_image = fields.Image('Equipment Image', max_width=100, max_height=100)
