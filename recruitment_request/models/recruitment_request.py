@@ -24,7 +24,7 @@ class RecruitmentRequest(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     
-    stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True, group_expand='_read_group_stage_ids', default=_default_stage, copy=False)
+    stage_id = fields.Many2one('recruitment.request.stage', string='Stage', ondelete='restrict', tracking=True, group_expand='_read_group_stage_ids', default=_default_stage, copy=False)
     
     name = fields.Char('Name', default='New Request')
     request_by_id = fields.Many2one('res.users', string='Request By', default=lambda self: self.env.user.id)

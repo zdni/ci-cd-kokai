@@ -5,7 +5,7 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Inventory',
-    'depends': ['stock'],
+    'depends': ['stock', 'hr'],
     'data': [
         'data/ir_sequence.xml',
     ],
