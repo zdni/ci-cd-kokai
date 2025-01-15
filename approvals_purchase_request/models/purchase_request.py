@@ -1,4 +1,7 @@
-from odoo import _, api, Command, fields, models
+from odoo import _, api, fields, models
+
+import base64
+import requests
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -9,6 +12,10 @@ class PurchaseRequest(models.Model):
     approval_ids = fields.One2many(comodel_name='approval.request', inverse_name='purchase_request_id', string='Approval Request', readonly=True, copy=False, tracking=True)
     approval_count = fields.Integer('Approval Count', compute='_compute_approval_count', readonly=True)
     state = fields.Selection(selection_add=[ ('need_improvement', 'Need Improvement') ], ondelete={'need_improvement': 'cascade'})
+
+    qrcode_request_by = fields.Binary('Qrcode Request By', compute='_compute_qrcode_request_by', store=True)
+    qrcode_approved_by = fields.Binary('Qrcode Approved By', compute='_compute_qrcode_approved_by', store=True)
+    qrcode_director = fields.Binary('Qrcode Director', compute='_compute_qrcode_director', store=True)
 
     @api.depends('approval_ids')
     def _compute_approval_count(self):
@@ -70,6 +77,9 @@ class PurchaseRequest(models.Model):
             'res_id': self.id,
         })
         notification.action_assign()
+        self._compute_qrcode_request_by()
+        self._compute_qrcode_approved_by()
+        self._compute_qrcode_director()
 
     def action_need_improvement(self):
         self.ensure_one()
@@ -90,3 +100,39 @@ class PurchaseRequest(models.Model):
             'res_id': self.id,
         })
         notification.action_assign()
+
+    def _compute_qrcode_request_by(self):
+        for record in self:
+            barcode = ""
+            try:
+                approval = record.approval_ids[record.approval_count-1]
+                link = f"https://odoo.valve.id/requested?requested={approval.id}"
+                barcode = base64.b64encode(requests.get(f"https://odoo.valve.id/api/qrcode?text={link}").content).replace(b"\n", b"")
+            except Exception as e:
+                _logger.warning("Can't load the image from URL")
+                logging.exception(e)
+            record.write({ 'qrcode_request_by': barcode })
+
+    def _compute_qrcode_approved_by(self):
+        for record in self:
+            barcode = ""
+            try:
+                approver = record.approval_ids[record.approval_count-1].approver_ids[0]
+                link = f"https://odoo.valve.id/approval?proof={approver.id}"
+                barcode = base64.b64encode(requests.get(f"https://odoo.valve.id/api/qrcode?text={link}").content).replace(b"\n", b"")
+            except Exception as e:
+                _logger.warning("Can't load the image from URL")
+                logging.exception(e)
+            record.write({ 'qrcode_approved_by': barcode })
+
+    def _compute_qrcode_director(self):
+        for record in self:
+            barcode = ""
+            try:
+                approver = record.approval_ids[record.approval_count-1].approver_ids[0]
+                link = f"https://odoo.valve.id/approval?proof={approver.id}"
+                barcode = base64.b64encode(requests.get(f"https://odoo.valve.id/api/qrcode?text={link}").content).replace(b"\n", b"")
+            except Exception as e:
+                _logger.warning("Can't load the image from URL")
+                logging.exception(e)
+            record.write({ 'qrcode_director': barcode })

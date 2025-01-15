@@ -9,8 +9,6 @@ _logger = logging.getLogger(__name__)
 class PurchaseRequest(models.Model):
     _inherit = 'purchase.request'
 
-    barcode = fields.Binary('Barcode', compute='compute_barcode', store=True)
-
     def action_print_pdf(self):
         _logger.warning('action_print_pdf')
         if self:
@@ -58,13 +56,7 @@ class PurchaseRequest(models.Model):
         else:
             raise ValidationError('There is no Purchase Request to print')
 
-    def compute_barcode(self):
-        for record in self:
-            barcode = self.get_barcode()
-            record.write({ 'barcode': barcode })
-
     def action_print_py3o(self):
-        self.compute_barcode()
         _logger.warning("report_purchase_request.action_report_purchase_request_py3o")
         return self.env.ref("report_purchase_request.action_report_purchase_request_py3o").report_action(self, config=False)
 
@@ -82,14 +74,3 @@ class PurchaseRequest(models.Model):
         self.ensure_one()
         type = dict(self._fields['type'].selection).get(self.type)
         return type
-
-    def get_barcode(self):
-        data = ""
-        try:
-            data = base64.b64encode(requests.get('https://odoo.valve.id/api/qrcode?text=zidni').content).replace(b"\n", b"")
-            # data = base64.b64encode(requests.get('https://quickchart.io/qr?text=Hello%20world&size=200').content).replace(b"\n", b"")
-            _logger.warning(data)
-        except Exception as e:
-            _logger.warning("Can't load the image from URL")
-            logging.exception(e)
-        return data

@@ -43,7 +43,9 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                         raise UserError(_(f"Product {row_vals[1]} not Found"))
 
                     value_ids = []
+                    value_str_ids = []
                     variants = row_vals[3].split(' || ')
+                    _logger.warning(variants)
                     for variant in variants:
                         attribute_name = variant.split(': ')[0]
                         variant_name = variant.split(': ')[1]
@@ -68,14 +70,17 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                             ('attribute_line_id', '=', product_tmpl_attr.id),
                         ], limit=1)
                         if not product_template_variant_value_ids:
-                            raise UserError(f"Product {row_vals[1]}, Attribute {attribute_name}, f{product_attribute_value.name}, product_template_variant_value_ids not Found")
+                            raise UserError(f"Product {row_vals[1]}, Attribute {attribute_name}, {product_attribute_value.name}, product_template_variant_value_ids not Found")
                         value_ids.append(product_template_variant_value_ids.id)
+                        value_str_ids.append(str(product_template_variant_value_ids.id))
 
                     product = False
                     product = self.env['product.product'].search([
                         ('product_tmpl_id', '=', product_tmpl_id.id),
-                        ('product_template_attribute_value_ids', '=', value_ids),
+                        ('combination_indices', '=', ','.join(value_str_ids)),
                     ], limit=1)
+                    _logger.warning("product: ")
+                    _logger.warning(product)
                     if not product:
                         vals = {
                             'name': row_vals[2],
@@ -87,22 +92,24 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                     if not product:
                         raise UserError(f"Can't create {row_vals[2]}")
 
-                    lot = self.env['stock.lot'].search([
-                        ('name', '=', row_vals[4]),
-                        ('product_id', '=', product.id),
-                        ('company_id', '=', self.env.company.id),
-                    ])
-                    if not lot:
-                        lot = self.env['stock.lot'].create({
-                            'name': row_vals[4],
-                            'product_id': product.id,
-                            'company_id': self.env.company.id,
-                        })
+                    lot_id = ''
+                    if row_vals[4] != '':
+                        lot_id = self.env['stock.lot'].search([
+                            ('name', '=', row_vals[4]),
+                            ('product_id', '=', product.id),
+                            ('company_id', '=', self.env.company.id),
+                        ], limit=1).id
+                        if not lot_id:
+                            lot_id = self.env['stock.lot'].create({
+                                'name': row_vals[4],
+                                'product_id': product.id,
+                                'company_id': self.env.company.id,
+                            }).id
 
                     vals = {
                         'location_id': location.id,
                         'product_id': product.id,
-                        'lot_id': lot.id,
+                        'lot_id': lot_id,
                         'product_uom_id': product.uom_id.id,
                         'inventory_date': row_vals[7],
                     }
