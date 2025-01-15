@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AmendmentDocument(models.Model):
@@ -18,11 +19,13 @@ class AmendmentDocument(models.Model):
     line_ids = fields.One2many('amendment.line', 'amendment_id', string='Content')
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('review', 'Review'),
         ('requested', 'Requested'),
         ('approved', 'Approved'),
         ('need_improvement', 'Need Improvement'),
         ('cancel', 'Cancel'),
     ], string='State', required=True, default='draft', tracking=True)
+    team_id = fields.Many2one('department.team', string='Team')
     current_edition = fields.Integer('Current Edition', related='document_id.edition')
     new_edition = fields.Integer('New Edition', compute='_compute_new_edition')
     @api.depends('current_edition')
@@ -54,6 +57,23 @@ class AmendmentDocument(models.Model):
     def action_draft(self):
         self.ensure_one()
         self.write({ 'state': 'draft' })
+
+    def action_review(self):
+        self.ensure_one()
+        assignment = self.env['assignment.task'].sudo().create({
+            'assigned_to': 'team',
+            'team_ids': [self.team_id.id],
+            'user_id': self.env.user.id,
+            'subject': f"Permintaan Amandemen Dokumen",
+            'description': f"Pemberitahuan untuk team terkait mengenai permintaan amandemen dokumen untuk {self.document_id.name}. Mohon untuk segera diproses.",
+            'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
+            'model': 'amendment.document',
+            'res_id': self.id,
+        })
+        if not assignment:
+            raise ValidationError("Can't Assignment Task! Please contact Administrator!")
+        assignment.action_assign()
+        self.write({ 'state': 'review' })
 
     def action_requested(self):
         self.ensure_one()
@@ -122,7 +142,7 @@ class AmendmentLine(models.Model):
 
     amendment_id = fields.Many2one('amendment.document', string='Amendment')
     before_amendment = fields.Text('Before Amendment', required=True, tracking=True)
-    after_amendment = fields.Text('After Amendment', required=True, tracking=True)
+    after_amendment = fields.Text('After Amendment', tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('requested', 'Requested'),

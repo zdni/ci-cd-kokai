@@ -14,6 +14,7 @@
         'department_user', 
         'qhse_program', 
         'sequence_reset_period',
+        'schedule_task',
     ],
     'data': [
         'data/data.xml',
