@@ -57,15 +57,13 @@ class RecruitmentRequest(models.Model):
         ('blocked', 'Blocked'),
         ('done', 'Ready for next Stage'),
     ], string='Kanban State', required=True, default='normal')
-
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('request', 'Approval Request'),
+        ('new', 'New'),
+        ('requested', 'Request Approval'),
         ('approved', 'Approved'),
         ('need_improvement', 'Need Improvement'),
-        ('refused', 'Refused'),
-        ('cancel', 'Cancel'),
-    ], string='Status', default='draft')
+    ], string='State', default='new')
+    team_id = fields.Many2one('department.team', string='Team')
 
     applications_ids = fields.One2many('hr.applicant', 'request_id', string='Applications')
     applications_count = fields.Integer('Applications Count', compute='_compute_applications_count', store=True)
@@ -76,8 +74,6 @@ class RecruitmentRequest(models.Model):
 
     def action_show_applications(self):
         self.ensure_one()
-        if self.applications_count == 0:
-            return
         action = self.env.ref('hr_recruitment.crm_case_categ0_act_job').sudo().read()[0]
         action['domain'] = [('id', 'in', self.applications_ids.ids)]
         return action
@@ -121,7 +117,7 @@ class RecruitmentRequest(models.Model):
 
     def generate_approval_request(self):
         self.ensure_one()
-        category_pr = self.env.ref('component_inspection.approval_category_data_component_inspection')
+        category_pr = self.env.ref('recruitment_request.approval_category_data_recruitment_request')
         vals = {
             'name': 'Request Approval for ' + self.name,
             'recruitment_request_id': self.id,
@@ -136,19 +132,14 @@ class RecruitmentRequest(models.Model):
         request = self.approval_ids[self.approval_count-1]
         request.action_confirm()
 
-    def action_draft(self):
-        self.ensure_one()
-        self.write({ 'state': 'draft' })
-
     def action_request(self):
         self.ensure_one()
         assignment = self.env['assignment.task'].sudo().create({
-            'department_ids': [self.env.ref('department_detail.hr_management_data_hr_ga').id, self.env.ref('department_detail.hr_management_data_finance').id, self.env.ref('department_detail.hr_management_data_management').id],
+            'assigned_to': 'team',
+            'team_ids': [self.team_id.id],
             'user_id': self.env.user.id,
-            'employee_type_ids': [self.env.ref('department_detail.hr_contract_type_head_of_department').id, self.env.ref('department_detail.hr_contract_type_senior_staff').id],
-            'assigned_to': 'department',
             'subject': f"Permintaan Rekrutmen Karyawan",
-            'description': f"Pemberitahuan untuk departemen terkait mengenai permintaan rekrutmen karyawan untuk posisi {self.job_id.name} sebanyak {self.target} orang. Mohon untuk segera diproses.",
+            'description': f"Pemberitahuan untuk team terkait mengenai permintaan rekrutmen karyawan untuk posisi {self.job_id.name} sebanyak {self.target} orang. Mohon untuk segera diproses.",
             'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
             'model': 'recruitment.request',
             'res_id': self.id,
@@ -156,7 +147,6 @@ class RecruitmentRequest(models.Model):
         if not assignment:
             raise ValidationError("Can't Assignment Task! Please contact Administrator!")
         assignment.action_assign()
-        self.write({ 'state': 'request', 'request_date': fields.Datetime.now() })
 
     def action_approved(self):
         self.ensure_one()
@@ -176,7 +166,11 @@ class RecruitmentRequest(models.Model):
             'res_id': self.id,
         })
         notification.action_assign()
-        self.write({ 'state': 'approved' })
+        self.write({ 
+            'state': 'approved', 
+            'stage_id': self.env.ref('recruitment_request.recruitment_request_stage_data_request').id,
+        })
+        self.action_request()
 
     def action_need_improvement(self):
         self.ensure_one()

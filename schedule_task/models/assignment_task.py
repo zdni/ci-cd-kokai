@@ -30,9 +30,11 @@ class AssignmentTask(models.Model):
     assigned_to = fields.Selection([
         ('all', 'All'),
         ('department', 'Department'),
+        ('team', 'Team'),
         ('employee', 'Employee'),
     ], string='Assigned To', default='all', required=True)
     department_ids = fields.Many2many('hr.department', string='Department', default=lambda self: [self.env.user.department_id.id], tracking=True)
+    team_ids = fields.Many2many('department.team', string='Team')
     employee_type_ids = fields.Many2many('hr.contract.type', string='Employee Type', tracking=True)
     user_ids = fields.Many2many('res.users', string='Assigned to', tracking=True)
     schedule_type_id = fields.Many2one('mail.activity.type', string='Task Type', required=True, tracking=True)
@@ -160,6 +162,12 @@ class AssignmentTask(models.Model):
                 ('employee_id.employee_type_id', 'in', self.employee_type_ids.ids),
                 ('active', '=', True),
             ])
+        if self.assigned_to == 'team':
+            for team in self.team_ids:
+                user_ids = []
+                for member in team.member_ids:
+                    user_ids.append(member.id)
+                users = self.env['res.users'].search([ ('id', 'in', user_ids) ])
         if self.assigned_to == 'employee':
             users = self.env['res.users'].search([
                 ('id', 'in', self.user_ids.ids),

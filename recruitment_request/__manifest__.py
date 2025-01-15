@@ -14,6 +14,7 @@
         'approvals_position',
         'approvals_refused_reason',
         'proof_approval',
+        'schedule_task',
     ],
     'data': [
         'data/approval_category_data.xml',

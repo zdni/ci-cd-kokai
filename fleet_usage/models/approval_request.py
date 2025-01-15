@@ -17,7 +17,7 @@ class ApprovalCategory(models.Model):
 class ApprovalRequest(models.Model):
     _inherit = 'approval.request'
 
-    fleet_usage_id = fields.Many2one('approval.inspection', string='Fleet Usage')
+    fleet_usage_id = fields.Many2one('fleet.usage', string='Fleet Usage')
     has_fleet_usage = fields.Selection(related='category_id.has_fleet_usage')
 
     @api.depends('approver_ids.status', 'approver_ids.required')

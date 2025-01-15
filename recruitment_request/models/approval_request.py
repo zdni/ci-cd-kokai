@@ -12,12 +12,12 @@ CATEGORY_SELECTION = [
 class ApprovalCategory(models.Model):
     _inherit = 'approval.category'
 
-    has_recruitment_request = fields.Selection(CATEGORY_SELECTION, string='Has Component Inspection', default='no')
+    has_recruitment_request = fields.Selection(CATEGORY_SELECTION, string='Has Recruitment Request', default='no')
 
 class ApprovalRequest(models.Model):
     _inherit = 'approval.request'
 
-    recruitment_request_id = fields.Many2one('approval.inspection', string='Component Inspection')
+    recruitment_request_id = fields.Many2one('recruitment.request', string='Recruitment Request')
     has_recruitment_request = fields.Selection(related='category_id.has_recruitment_request')
 
     @api.depends('approver_ids.status', 'approver_ids.required')

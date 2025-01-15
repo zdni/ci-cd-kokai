@@ -30,6 +30,7 @@
                                         <field name="handle_by" />
                                         <field name="assigned_to" />
                                         <field name="department_ids" widget="many2many_tags" groups="schedule_task.group_assignment_manager" attrs="{'invisible': [('assigned_to', '!=', 'department')]}" options="{'no_create': True, 'no_open': True}" />
+                                        <field name="team_ids" widget="many2many_tags" groups="schedule_task.group_assignment_manager" attrs="{'invisible': [('assigned_to', '!=', 'team')]}" options="{'no_create': True, 'no_open': True}" />
                                         <field name="employee_type_ids" widget="many2many_tags" attrs="{'invisible': [('assigned_to', '!=', 'department')]}" options="{'no_create': True, 'no_open': True}" />
                                         <field name="user_ids" widget="many2many_tags" attrs="{'invisible': [('assigned_to', '!=', 'employee')]}" options="{'no_create': True, 'no_open': True}" />
                                         <field name="alarm_id" options="{'no_create': True, 'no_open': True}" />
