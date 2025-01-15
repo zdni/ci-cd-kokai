@@ -115,7 +115,7 @@ class ScheduleTask(models.Model):
         self.write({
             'timesheet_ids': [(0, 0, {
                 'user_id': self.env.user.id, 
-                'name': 'Timesheet for ' + self.name,
+                'name': self.subject,
                 'schedule_id': self.id,
                 'start_date': fields.Datetime.now(),
                 'date': fields.Date.today(),
