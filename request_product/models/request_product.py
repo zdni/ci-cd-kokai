@@ -11,9 +11,9 @@ class ScheduleTask(models.Model):
 
     def automatic_start_timesheet(self):
         res = super(ScheduleTask, self).automatic_start_timesheet()
-        request_product = self.env[self.model].browse(self.res_id)
-        if request_product:
-            request_product.action_process()
+        # request_product = self.env[self.model].browse(self.res_id)
+        # if request_product:
+        #     request_product.action_process()
         return res
 
 
