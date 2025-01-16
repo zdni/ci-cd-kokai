@@ -19,6 +19,8 @@
         'data/ir_sequence.xml',
         'data/approval_category_data.xml',
 
+        'security/ir.model.access.csv',
+
         'views/hr_leave_views.xml',
     ],
     'auto_install': False,
