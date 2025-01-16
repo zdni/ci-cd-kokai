@@ -19,8 +19,8 @@ class HrEmployee(models.Model):
     tin = fields.Char('Taxpayer Identification Number (TIN)')
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+# class ResUsers(models.Model):
+#     _inherit = 'res.users'
 
-    contract_state_id = fields.Many2one('hr.contract.state', string='Contract State', related='employee_id.contract_state_id')
-    tin = fields.Char('Taxpayer Identification Number (TIN)', related='employee_id.tin')
+#     contract_state_id = fields.Many2one('hr.contract.state', string='Contract State', related='employee_id.contract_state_id')
+#     tin = fields.Char('Taxpayer Identification Number (TIN)', related='employee_id.tin')

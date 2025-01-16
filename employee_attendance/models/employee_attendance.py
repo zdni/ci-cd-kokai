@@ -41,7 +41,7 @@ class HREmployee(models.Model):
         return action
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+# class ResUsers(models.Model):
+#     _inherit = 'res.users'
 
-    attendance_ids = fields.One2many('employee.attendance', 'user_id', string='Attendance')
+#     attendance_ids = fields.One2many('employee.attendance', 'user_id', string='Attendance')

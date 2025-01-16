@@ -21,23 +21,23 @@ class HrEmployee(models.Model):
         return action
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+# class ResUsers(models.Model):
+#     _inherit = 'res.users'
 
-    have_leave_quota = fields.Boolean('Have Leave Quota', related='employee_id.have_leave_quota')
-    leave_period_ids = fields.One2many('hr.leave.period', 'user_id', string='Leave Period')
-    leave_ids = fields.One2many('hr.leave', 'user_id', string='Leave')
-    leave_count = fields.Integer('Leave Count', compute='_compute_leave_count')
-    @api.depends('leave_ids')
-    def _compute_leave_count(self):
-        for record in self:
-            record.leave_count = len(record.leave_ids)
+#     have_leave_quota = fields.Boolean('Have Leave Quota', related='employee_id.have_leave_quota')
+#     leave_period_ids = fields.One2many('hr.leave.period', 'user_id', string='Leave Period')
+#     leave_ids = fields.One2many('hr.leave', 'user_id', string='Leave')
+#     leave_count = fields.Integer('Leave Count', compute='_compute_leave_count')
+#     @api.depends('leave_ids')
+#     def _compute_leave_count(self):
+#         for record in self:
+#             record.leave_count = len(record.leave_ids)
 
-    def action_show_leave(self):
-        self.ensure_one()
-        action = self.env.ref('hr_leave.hr_leave_action').read()[0]
-        action['domain'] = [('id', 'in', self.leave_ids.ids)]
-        return action
+#     def action_show_leave(self):
+#         self.ensure_one()
+#         action = self.env.ref('hr_leave.hr_leave_action').read()[0]
+#         action['domain'] = [('id', 'in', self.leave_ids.ids)]
+#         return action
 
 
 class HrLeavePeriod(models.Model):
