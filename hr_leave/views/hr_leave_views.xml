@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="hr_leave_view_form" model="ir.ui.view">
+            <field name="name">hr.leave.view.form</field>
+            <field name="model">hr.leave</field>
+            <field name="arch" type="xml">
+                <form string="Leave">
+                    <header>
+                        <button string="Draft" name="action_draft" type="object" states="cancel" />
+                        <button string="Request" name="action_request" type="object" class="oe_highlight" states="draft" />
+                        <button string="Cancel" name="action_cancel" type="object" states="draft" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_approval" type="object" string="Approval" class="oe_stat_button" icon="fa-list"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1" /></h1>
+                        </div>
+                        <group>
+                            <group string="User">
+                                <field name="user_id" readonly="1" />
+                                <field name="request_date" readonly="1" />
+                                <field name="type_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            </group>
+                            <group string="Detail">
+                                <field name="reason" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="start_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="end_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="total_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            </group>
+                            <group string="Additional">
+                                <field name="attachment_type" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="attachment_name" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('attachment_type', '!=', 'other')]}" />
+                                <field name="attachment_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="note" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_leave_view_tree" model="ir.ui.view">
+            <field name="name">hr.leave.view.tree</field>
+            <field name="model">hr.leave</field>
+            <field name="arch" type="xml">
+                <tree string="Leave">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name="type_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_leave_action" model="ir.actions.act_window">
+            <field name="name">Leave</field>
+            <field name="res_model">hr.leave</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="hr_leave_menu"
+            name="Leave"
+            action="hr_leave_action"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="10"
+        />
+
+
+        <record id="hr_leave_type_view_form" model="ir.ui.view">
+            <field name="name">hr.leave.type.view.form</field>
+            <field name="model">hr.leave.type</field>
+            <field name="arch" type="xml">
+                <form string="Leave Type">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="salary_rule" />
+                            </group>
+                            <group>
+                                <field name="is_reduce" />
+                                <field name="limit" attrs="{'invisible': [('is_reduce', '=', True)]}" />
+                                <field name="reduce_type" attrs="{'invisible': [('is_reduce', '=', False)]}" />
+                                <field name="total_used" attrs="{'invisible': ['&amp;', ('is_reduce', '=', False), ('reduce_type', '!=', 'fixed')]}" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_leave_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.leave.type.view.tree</field>
+            <field name="model">hr.leave.type</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Type">
+                    <field name="name" />
+                    <field name="is_reduce" />
+                    <field name="salary_rule" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_leave_type_action" model="ir.actions.act_window">
+            <field name="name">Leave Type</field>
+            <field name="res_model">hr.leave.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="hr_leave_type_menu"
+            name="Leave Type"
+            action="hr_leave_type_action"
+            parent="hr.menu_human_resources_configuration"
+            sequence="10"
+        />
+
+
+        <record id="view_employee_form_inherit_leave" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_show_leave" type="object" class="oe_stat_button" icon="fa-list">
+                        <field name="leave_count" string="Leave" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page name="leave_period" string="Leave Period">
+                        <field name="leave_period_ids">
+                            <tree editable="bottom">
+                                <field name="employee_id" invisible="1" />
+                                <field name="start_period" />
+                                <field name="end_period" />
+                                <field name="limit" />
+                                <field name="reduce" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

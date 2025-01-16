@@ -12,7 +12,8 @@ class HROvertime(models.Model):
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user.id)
 
     name = fields.Char('Name', default='Overtime Request')
-    start_date = fields.Datetime('Start Date')
+    date = fields.Date('Date', default=fields.Date.today())
+    start_date = fields.Datetime('Start Date', default=fields.Datetime.now())
     end_date = fields.Datetime('End Date')
     reason = fields.Text('Reason')
     employee_id = fields.Many2one('hr.employee', string='Employee', related='user_id.employee_id')
@@ -24,6 +25,10 @@ class HROvertime(models.Model):
         ('cancel', 'Cancel'),
     ], string='Status', default='draft', tracking=True)
     abs = fields.Char('Abs')
+    overtime_type = fields.Selection([
+        ('normal', 'Normal'),
+        ('prorate', 'Prorate'),
+    ], string='Overtime Type', tracking=True, required=True, default='normal')
     hour_spent = fields.Float('Hour Spent', compute='_compute_hour_spent', store=True)
     @api.depends('start_date', 'end_date')
     def _compute_hour_spent(self):
@@ -119,7 +124,6 @@ class HREmployee(models.Model):
 
     hr_overtime_ids = fields.One2many('hr.overtime', 'employee_id', string='Overtime')
     overtime_count = fields.Integer('Overtime Count', compute='_compute_overtime_count', store=True)
-    limit_overtime = fields.Integer('Limit Overtime', default=12)
     @api.depends('hr_overtime_ids')
     def _compute_overtime_count(self):
         for record in self:

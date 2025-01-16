@@ -1,16 +1,14 @@
 {
-    'name': 'Department of User',
+    'name': 'Payroll Configuration',
     'version': '16.0',
-    'summary': 'Department of User',
+    'summary': 'Payroll Configuration',
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Human Resources',
-    'depends': [ 'hr' ],
+    'depends': ['hr'],
     'data': [
         'security/ir.model.access.csv',
-
-        'views/hr_employee_views.xml',
-        'views/res_users_views.xml'
+        'views/hr_allowance_views.xml',
     ],
     'auto_install': False,
     'application': False,

@@ -21,12 +21,14 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="date" />
-                            <field name="assessor_id" />
-                            <field name="location_id" />
-                            <field name="type" />
-                            <field name="description" />
-                            <field name="handling_action" />
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="observation_time" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="assessor_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="location_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="area_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="type" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="description" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="handling_action" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">

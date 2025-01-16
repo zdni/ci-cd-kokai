@@ -25,14 +25,16 @@
                         </div>
                         <group>
                             <group>
-                                <field name="start_date" />
-                                <field name="end_date" />
-                                <field name="reason" placeholder="Reason of Overtime..." />
+                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="start_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="end_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="reason" placeholder="Reason of Overtime..." attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             </group>
                             <group>
                                 <field name="user_id" readonly="1" />
                                 <field name="employee_id" invisible="1" />
                                 <field name="hour_spent" />
+                                <field name="overtime_type" />
                             </group>
                         </group>
                     </sheet>
@@ -84,11 +86,6 @@
                     <button name="action_show_overtime" type="object" class="oe_stat_button" icon="fa-list">
                         <field name="overtime_count" string="Overtime" widget="statinfo"/>
                     </button>
-                </xpath>
-                <xpath expr="//page[@name='hr_settings']//group" position="inside">
-                    <group string="Overtime">
-                        <field name="limit_overtime" />
-                    </group>
                 </xpath>
             </field>
         </record>

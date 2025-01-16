@@ -7,12 +7,13 @@
     'category': 'Human Resources',
     'depends': [
         'approval_portal',
-        'hr_recruitment', 
-        'department_user', 
-        'department_detail',
         'approvals',
         'approvals_position',
         'approvals_refused_reason',
+        'department_detail',
+        'department_user', 
+        'hr_recruitment', 
+        'hr_payroll_configuration',
         'proof_approval',
         'schedule_task',
     ],
@@ -25,7 +26,6 @@
 
         'security/ir.model.access.csv',
 
-        'views/hr_allowance_views.xml',
         'views/recruitment_request_views.xml',
     ],
     'auto_install': False,

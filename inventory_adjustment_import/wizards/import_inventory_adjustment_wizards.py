@@ -45,7 +45,6 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                     value_ids = []
                     value_str_ids = []
                     variants = row_vals[3].split(' || ')
-                    _logger.warning(variants)
                     for variant in variants:
                         attribute_name = variant.split(': ')[0]
                         variant_name = variant.split(': ')[1]
@@ -79,8 +78,6 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                         ('product_tmpl_id', '=', product_tmpl_id.id),
                         ('combination_indices', '=', ','.join(value_str_ids)),
                     ], limit=1)
-                    _logger.warning("product: ")
-                    _logger.warning(product)
                     if not product:
                         vals = {
                             'name': row_vals[2],
@@ -105,18 +102,28 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                                 'product_id': product.id,
                                 'company_id': self.env.company.id,
                             }).id
-
-                    vals = {
-                        'location_id': location.id,
-                        'product_id': product.id,
-                        'lot_id': lot_id,
-                        'product_uom_id': product.uom_id.id,
-                        'inventory_date': row_vals[7],
-                    }
-                    quant = self.env['stock.quant'].create(vals)
-                    quant.write({ 'inventory_quantity': int(row_vals[5]) })
-                    quant.action_set_inventory_quantity()
-                    quant.action_apply_inventory()
+                        
+                        if product.tracking == 'lot':
+                            lot_id = '' # generate lot
+                        
+                        vals = {
+                            'location_id': location.id,
+                            'product_id': product.id,
+                            'lot_id': lot_id,
+                            'product_uom_id': product.uom_id.id,
+                            'inventory_date': row_vals[7],
+                        }
+                        if product.tracking == 'serial':
+                            for i in range(0, int(row_vals[5])):
+                                self.create_inventory_adjustment(1, vals)
+                        else:
+                            self.create_inventory_adjustment(int(row_vals[5]), vals)
 
         except UserError as e:
             raise UserError(str(e))
+
+    def create_inventory_adjustment(self, qty, vals):
+        quant = self.env['stock.quant'].create(vals)
+        quant.write({ 'inventory_quantity': qty })
+        quant.action_set_inventory_quantity()
+        quant.action_apply_inventory()

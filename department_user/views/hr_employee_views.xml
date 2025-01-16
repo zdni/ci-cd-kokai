@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <record id="hr_contract_state_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.state.view.tree</field>
+            <field name="model">hr.contract.state</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Status" editable="bottom">
+                    <field name="name" />
+                    <field name="salary_type" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_contract_state_action" model="ir.actions.act_window">
+            <field name="name">Contract Status</field>
+            <field name="res_model">hr.contract.state</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="hr_contract_state_menu"
+            name="Contract Status"
+            action="hr_contract_state_action"
+            parent="hr.menu_config_recruitment"
+            sequence="10"
+        />
+
+
+        <record id="res_users_view_form_profile_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+            <field name="arch" type="xml">
+                <field name="passport_id" position="after">
+                    <field name="tin" />
+                </field>
+                <field name="employee_type" position="after">
+                    <field name="contract_state_id" />
+                </field>
+            </field>
+        </record>
+    
+        <record id="view_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="passport_id" position="after">
+                    <field name="tin" />
+                </field>
+                <field name="employee_type" position="after">
+                    <field name="contract_state_id" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+
+</odoo>
