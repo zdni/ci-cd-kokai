@@ -8,6 +8,8 @@
     'depends': ['qhse_program'],
     'data': [
         'data/ir_sequence.xml',
+        'security/ir.model.access.csv',
+        'views/safety_observation_views.xml',
     ],
     'auto_install': False,
     'application': False,
