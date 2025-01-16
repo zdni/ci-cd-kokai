@@ -131,8 +131,23 @@ class HREmployee(models.Model):
 
     def action_show_overtime(self):
         self.ensure_one()
-        if self.overtime_count == 0:
-            return
         action = self.env.ref('hr_overtime.hr_overtime_action').read()[0]
         action['domain'] = [('id', 'in', self.hr_overtime_ids.ids)]
         return action
+
+
+# class ResUsers(models.Model):
+#     _inherit = 'res.users'
+
+#     hr_overtime_ids = fields.One2many('hr.overtime', 'user_id', string='Overtime')
+#     overtime_count = fields.Integer('Overtime Count', compute='_compute_overtime_count', store=True)
+#     @api.depends('hr_overtime_ids')
+#     def _compute_overtime_count(self):
+#         for record in self:
+#             record.overtime_count = len(record.hr_overtime_ids)
+
+#     def action_show_overtime(self):
+#         self.ensure_one()
+#         action = self.env.ref('hr_overtime.hr_overtime_action').read()[0]
+#         action['domain'] = [('id', 'in', self.hr_overtime_ids.ids)]
+#         return action

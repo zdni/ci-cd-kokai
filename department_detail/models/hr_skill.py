@@ -27,3 +27,9 @@ class HREmployee(models.Model):
     _inherit = 'hr.employee'
 
     employee_type_id = fields.Many2one('hr.contract.type', string='Employee Type')
+
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    employee_type_id = fields.Many2one('hr.contract.type', string='Employee Type', related='employee_id.employee_type_id')

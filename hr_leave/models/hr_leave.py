@@ -21,11 +21,31 @@ class HrEmployee(models.Model):
         return action
 
 
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    have_leave_quota = fields.Boolean('Have Leave Quota', related='employee_id.have_leave_quota')
+    leave_period_ids = fields.One2many('hr.leave.period', 'user_id', string='Leave Period')
+    leave_ids = fields.One2many('hr.leave', 'user_id', string='Leave')
+    leave_count = fields.Integer('Leave Count', compute='_compute_leave_count')
+    @api.depends('leave_ids')
+    def _compute_leave_count(self):
+        for record in self:
+            record.leave_count = len(record.leave_ids)
+
+    def action_show_leave(self):
+        self.ensure_one()
+        action = self.env.ref('hr_leave.hr_leave_action').read()[0]
+        action['domain'] = [('id', 'in', self.leave_ids.ids)]
+        return action
+
+
 class HrLeavePeriod(models.Model):
     _name = 'hr.leave.period'
     _description = 'Hr Leave Period'
     _inherit = ['mail.activity.mixin', 'mail.thread']
 
+    user_id = fields.Many2one('res.users', string='User', required=True, tracking=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, tracking=True)
     start_period = fields.Date('Start Period', tracking=True)
     end_period = fields.Date('End Period', tracking=True)

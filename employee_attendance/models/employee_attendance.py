@@ -11,6 +11,7 @@ class EmployeeAttendance(models.Model):
     
     name = fields.Char('Name', related='value_id.name')
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    user_id = fields.Many2one('res.users', string='User', required=True)
     date = fields.Datetime('Date', required=True)
     attendance_time = fields.Datetime('Attendance Time', required=True)
     value_id = fields.Many2one('attendance.value', string='Value', required=True)
@@ -38,3 +39,9 @@ class HREmployee(models.Model):
         action = self.env.ref('employee_attendance.employee_attendance_action').sudo().read()[0]
         action['domain'] = [('employee_id', '=', self.id)]
         return action
+
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    attendance_ids = fields.One2many('employee.attendance', 'user_id', string='Attendance')
