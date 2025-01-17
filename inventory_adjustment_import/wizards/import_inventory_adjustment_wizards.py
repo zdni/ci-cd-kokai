@@ -97,33 +97,31 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                             ('product_id', '=', product.id),
                             ('company_id', '=', self.env.company.id),
                         ], limit=1).id
-                        if not lot_id:
-                            lot_id = self.env['stock.lot'].create({
-                                'name': row_vals[4],
-                                'product_id': product.id,
-                                'company_id': self.env.company.id,
-                            }).id
-                        
-                        if product.tracking == 'lot':
-                            lot_id = '' # generate lot
-                        
-                        vals = {
-                            'location_id': location.id,
+
+                    if not lot_id:
+                        lot_id = self.env['stock.lot'].create({
+                            'name': row_vals[4],
                             'product_id': product.id,
-                            'lot_id': lot_id,
-                            'product_uom_id': product.uom_id.id,
-                            'inventory_date': row_vals[7],
-                        }
-                        # if product.tracking == 'serial':
-                        #     for i in range(0, int(row_vals[5])):
-                        #         self.create_inventory_adjustment(1, vals)
-                        # else:
-                        #     self.create_inventory_adjustment(int(row_vals[5]), vals)
-                        # self.create_inventory_adjustment(int(row_vals[5]), vals)
-                        quant = self.env['stock.quant'].create(vals)
-                        quant.write({ 'inventory_quantity': int(row_vals[5]) })
-                        quant.action_set_inventory_quantity()
-                        quant.action_apply_inventory()
+                            'company_id': self.env.company.id,
+                        }).id
+                    
+                    if product.tracking == 'lot':
+                        lot_id = '' # generate lot
+                    
+                    vals = {
+                        'location_id': location.id,
+                        'product_id': product.id,
+                        'lot_id': lot_id,
+                        'product_uom_id': product.uom_id.id,
+                        'inventory_date': row_vals[7],
+                    }
+                    if product.tracking == 'serial':
+                        for i in range(0, int(row_vals[5])):
+                            self.create_inventory_adjustment(1, vals)
+                    else:
+                        self.create_inventory_adjustment(int(row_vals[5]), vals)
+                    self.create_inventory_adjustment(int(row_vals[5]), vals)
+
 
         except UserError as e:
             raise UserError(str(e))
