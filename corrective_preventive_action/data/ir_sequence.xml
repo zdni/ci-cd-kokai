@@ -3,28 +3,28 @@
 
     <data noupdate="1">
     
-        <record id="seq_approval_inspection" model="ir.sequence">
-            <field name="name">Approval Inspection</field>
-            <field name="code">approval.inspection</field>
+        <record id="seq_report_summary_cpar" model="ir.sequence">
+            <field name="name">Report Summary CPAR</field>
+            <field name="code">report.summary.cpar</field>
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
             <field name="number_next">1</field>
             <field name="use_date_range">1</field>
             <field name="range_reset">monthly</field>
-            <field name="prefix">/APP-INS/%(year)s/%(month)s</field>
+            <field name="prefix">SCPAR/%(year)s/%(month)s/</field>
         </record>
-    
-        <record id="seq_component_inspection" model="ir.sequence">
-            <field name="name">Component Inspection</field>
-            <field name="code">component.inspection</field>
+
+        <record id="seq_summary_cpar" model="ir.sequence">
+            <field name="name">Summary CPAR</field>
+            <field name="code">summary.cpar</field>
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
             <field name="number_next">1</field>
             <field name="use_date_range">1</field>
             <field name="range_reset">monthly</field>
-            <field name="prefix">/COMP-INS/%(year)s/%(month)s</field>
+            <field name="prefix">LCPAR/%(year)s/%(month)s/</field>
         </record>
-    
+
     </data>
 
 </odoo>

@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_leave,hr_leave,model_hr_leave,base.group_user,1,1,1,1
+access_hr_leave_period,hr_leave_period,model_hr_leave_period,base.group_user,1,1,1,1
+access_hr_leave_type,hr_leave_type,model_hr_leave_type,base.group_user,1,1,1,1
+access_hr_leave_used,hr_leave_used,model_hr_leave_used,base.group_user,1,1,1,1

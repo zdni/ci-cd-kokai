@@ -33,7 +33,8 @@
                                 <field name="issued_date" />
                                 <field name="received_date" />
                                 <field name="user_id" />
-                                <field name="attachment_id" />
+                                <field name="attachment_id"/>
+                                <field name="attachment_ids" widget="many2many_attachment_preview"/>
                             </group>
                         </group>
                     </sheet>

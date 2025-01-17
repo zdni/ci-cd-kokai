@@ -1,5 +1,10 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from datetime import datetime
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 class HrEmployee(models.Model):
@@ -19,25 +24,6 @@ class HrEmployee(models.Model):
         action = self.env.ref('hr_leave.hr_leave_action').read()[0]
         action['domain'] = [('id', 'in', self.leave_ids.ids)]
         return action
-
-
-# class ResUsers(models.Model):
-#     _inherit = 'res.users'
-
-#     have_leave_quota = fields.Boolean('Have Leave Quota', related='employee_id.have_leave_quota')
-#     leave_period_ids = fields.One2many('hr.leave.period', 'user_id', string='Leave Period')
-#     leave_ids = fields.One2many('hr.leave', 'user_id', string='Leave')
-#     leave_count = fields.Integer('Leave Count', compute='_compute_leave_count')
-#     @api.depends('leave_ids')
-#     def _compute_leave_count(self):
-#         for record in self:
-#             record.leave_count = len(record.leave_ids)
-
-#     def action_show_leave(self):
-#         self.ensure_one()
-#         action = self.env.ref('hr_leave.hr_leave_action').read()[0]
-#         action['domain'] = [('id', 'in', self.leave_ids.ids)]
-#         return action
 
 
 class HrLeavePeriod(models.Model):
@@ -64,7 +50,7 @@ class HrLeaveType(models.Model):
     _description = 'Hr Leave Type'
     
     name = fields.Char('Name')
-    is_reduce = fields.Binary('Is Reduce')
+    is_reduce = fields.Boolean('Is Reduce')
     limit = fields.Integer('Limit')
     reduce_type = fields.Selection([
         ('dynamically', 'Dynamically'),
@@ -88,33 +74,34 @@ class HRLeave(models.Model):
 
     name = fields.Char('Name')
     type_id = fields.Many2one('hr.leave.type', string='Type', tracking=True)
-    request_date = fields.Date('Request Date')
-    start_date = fields.Datetime('Start Date', default=fields.Datetime.now())
-    end_date = fields.Datetime('End Date')
-    total_date = fields.Integer('Total Date', compute='_compute_total_date')
-    reason = fields.Html('Reason')
+    request_date = fields.Date('Request Date', tracking=True)
+    start_date = fields.Datetime('Start Date', default=fields.Datetime.now(), tracking=True)
+    end_date = fields.Datetime('End Date', tracking=True)
+    total_date = fields.Float('Total Date', compute='_compute_total_date', store=True, tracking=True)
+    reason = fields.Html('Reason', tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('request', 'Request'),
         ('approved', 'Approved'),
         ('refused', 'Refused'),
         ('cancel', 'Cancel'),
-    ], string='State', required=True, default='draft')
+    ], string='State', required=True, default='draft', tracking=True)
     attachment_type = fields.Selection([
         ('doctor_note', 'Doctor\' Note'),
         ('receipt', 'Receipt'),
         ('other', 'Other'),
-    ], string='Attachment Type', required=True, default='doctor_note')
-    attachment_name = fields.Char('Attachment Name')
-    attachment_id = fields.Many2one('ir.attachment', string='Attachment')
-    note = fields.Html('Note')
-    approval_id = fields.Many2one('approval.request', string='Approval')
+    ], string='Attachment Type', required=True, default='doctor_note', tracking=True)
+    attachment_name = fields.Char('Attachment Name', tracking=True)
+    attachment_id = fields.Many2one('ir.attachment', string='Attachment', tracking=True)
+    note = fields.Html('Note', tracking=True)
+    approval_id = fields.Many2one('approval.request', string='Approval', tracking=True)
     leave_used_ids = fields.One2many('hr.leave.used', 'leave_id', string='Leave Used')
 
     @api.depends('start_date', 'end_date')
     def _compute_total_date(self):
         for record in self:
-            record.total_date = ((record.end_date - record.start_date).seconds/(3600*24))
+            if record.end_date and record.start_date:
+                record.total_date = (record.end_date - record.start_date).days + ((record.end_date - record.start_date).seconds/(3600))
 
     def _compute_leave_used(self):
         self.ensure_one()
@@ -185,7 +172,7 @@ class HRLeave(models.Model):
         }
         request = self.env['approval.request'].create(vals)
         request.action_confirm()
-        self.write({ 'state': 'request', 'request_date': fields.Date.today() })
+        self.write({ 'state': 'request', 'request_date': fields.Date.today(), 'approval_id': request.id })
 
     def action_approved(self):
         self.ensure_one()

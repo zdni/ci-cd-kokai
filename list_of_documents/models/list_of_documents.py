@@ -35,6 +35,7 @@ class ListOfDocuments(models.Model):
         ('wi', 'Work Instruction'),
     ], string='Type', default='qr', required=True)
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', tracking=True)
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachment')
 
     @api.depends('amendment_ids.state')
     def _compute_amendment_count(self):
