@@ -45,7 +45,6 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                     value_ids = []
                     value_str_ids = []
                     variants = row_vals[3].split(' || ')
-                    value_ids_sort = []
                     for variant in variants:
                         attribute_name = variant.split(': ')[0]
                         variant_name = variant.split(': ')[1]
@@ -73,12 +72,12 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                             raise UserError(f"Product {row_vals[1]}, Attribute {attribute_name}, {product_attribute_value.name}, product_template_variant_value_ids not Found")
                         value_ids.append(product_template_variant_value_ids.id)
                         value_str_ids.append(str(product_template_variant_value_ids.id))
-                        value_ids_sort = value_ids.sort()
+                        value_ids.sort()
 
                     product = False
                     product = self.env['product.product'].search([
                         ('product_tmpl_id', '=', product_tmpl_id.id),
-                        ('combination_indices', '=', ','.join(f"{i}" for i in value_ids_sort)),
+                        ('combination_indices', '=', ','.join(f"{i}" for i in value_ids)),
                     ], limit=1)
                     if not product:
                         vals = {
