@@ -114,11 +114,16 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                             'product_uom_id': product.uom_id.id,
                             'inventory_date': row_vals[7],
                         }
-                        if product.tracking == 'serial':
-                            for i in range(0, int(row_vals[5])):
-                                self.create_inventory_adjustment(1, vals)
-                        else:
-                            self.create_inventory_adjustment(int(row_vals[5]), vals)
+                        # if product.tracking == 'serial':
+                        #     for i in range(0, int(row_vals[5])):
+                        #         self.create_inventory_adjustment(1, vals)
+                        # else:
+                        #     self.create_inventory_adjustment(int(row_vals[5]), vals)
+                        # self.create_inventory_adjustment(int(row_vals[5]), vals)
+                        quant = self.env['stock.quant'].create(vals)
+                        quant.write({ 'inventory_quantity': int(row_vals[5]) })
+                        quant.action_set_inventory_quantity()
+                        quant.action_apply_inventory()
 
         except UserError as e:
             raise UserError(str(e))
