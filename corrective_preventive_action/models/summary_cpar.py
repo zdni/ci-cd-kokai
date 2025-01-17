@@ -10,25 +10,46 @@ class SummaryCpar(models.Model):
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user.id)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     
-    name = fields.Char('Name')
-    finding_number = fields.Char('Finding Number')
-    date = fields.Date('Date')
-    ncr_number = fields.Char('NCR Number')
-    pic_id = fields.Many2one('res.users', string='PIC')
-    finding_type = fields.Char('Finding Type')
-    product_impact = fields.Char('Product Impact')
-    qms_specification = fields.Char('QMS Specification')
-    clause = fields.Char('clause')
-    description = fields.Text('Requirement Description')
-    objective_evidence = fields.Char('Objective Evidence')
-    define_problem = fields.Text('Define Problem')
-    root_cause = fields.Char('Root Cause')
-    counter_measure = fields.Char('Counter Measure')
-    completion_date = fields.Date('Completion Date')
+    name = fields.Char('Name', tracking=True)
+    finding_number = fields.Char('Finding Number', tracking=True)
+    date = fields.Date('Date', tracking=True)
+    ncr_number = fields.Char('NCR Number', tracking=True)
+    pic_id = fields.Many2one('res.users', string='PIC', tracking=True)
+    finding_type = fields.Char('Finding Type', tracking=True)
+    product_impact = fields.Selection([
+        ('direct', 'Direct'),
+        ('indirect', 'Indirect'),
+        ('no', 'No Impact'),
+    ], string='Product Impact', default='direct', required=True, tracking=True)
+    qms_specification_id = fields.Many2one('standard.manufacturing', string='QMS Specification', tracking=True)
+    clause = fields.Char('clause', tracking=True)
+    description = fields.Text('Requirement Description', tracking=True)
+    objective_evidence = fields.Char('Objective Evidence', tracking=True)
+    define_problem = fields.Text('Define Problem', tracking=True)
+    root_cause = fields.Char('Root Cause', tracking=True)
+    counter_ids = fields.One2many('counter.measure.cpar', 'summary_id', string='Counter Measure', tracking=True)
+    completion_date = fields.Date('Completion Date', tracking=True)
     state = fields.Selection([
-        ('draft', 'Draft'),
-    ], string='State')
-    remarks = fields.Text('Remarks')
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    ], string='State', default='open', required=True, tracking=True)
+    remarks = fields.Text('Remarks', tracking=True)
+
+
+class CounterMeasureCpar(models.Model):
+    _name = 'counter.measure.cpar'
+    _description = 'Counter Measure Cpar'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='CPAR', tracking=True)
+    name = fields.Char('Counter', tracking=True)
+    due_date = fields.Date('Due Date', tracking=True)
+    completion_date = fields.Date('Completion Date', tracking=True)
+    state = fields.Selection([
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    ], string='State', default='open', required=True, tracking=True)
+
 
 
 class ReportSummaryCpar(models.Model):
@@ -36,11 +57,11 @@ class ReportSummaryCpar(models.Model):
     _description = 'Report Summary Corrective - Preventive Action'
     _inherit = ['mail.activity.mixin', 'mail.thread']
 
-    name = fields.Char('Name')
-    description = fields.Text('description')
-    date = fields.Date('Date')
-    summary_ids = fields.Many2many('summary.cpar', string='List Summary')
-    approval_id = fields.Many2one('approval.request', string='Approval')
+    name = fields.Char('Name', tracking=True)
+    description = fields.Text('description', tracking=True)
+    date = fields.Date('Date', tracking=True)
+    summary_ids = fields.Many2many('summary.cpar', string='List Summary', tracking=True)
+    approval_id = fields.Many2one('approval.request', string='Approval', tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('request', 'Request'),
@@ -48,7 +69,7 @@ class ReportSummaryCpar(models.Model):
         ('refused', 'Refused'),
         ('cancel', 'Cancel'),
     ], string='State', default='draft')
-    requested_by_id = fields.Many2one('res.users', string='Requested By', default=lambda self: self.env.user.id)
+    requested_by_id = fields.Many2one('res.users', string='Requested By', default=lambda self: self.env.user.id, tracking=True)
 
     def action_draft(self):
         self.ensure_one()

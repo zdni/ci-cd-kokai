@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem
+            id="standard_manufacturing_menu"
+            name="Standard Manufacturing"
+            action="engineering_aspects.standard_manufacturing_action"
+            parent="qhse_program.configuration_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="manufacturing_type_menu"
+            name="Manufacturing Type"
+            action="engineering_aspects.manufacturing_type_action"
+            parent="qhse_program.configuration_menu"
+            sequence="10"
+        />
+
+        <menuitem
+            id="manufacturing_method_menu"
+            name="Manufacturing Method"
+            action="engineering_aspects.manufacturing_method_action"
+            parent="qhse_program.configuration_menu"
+            sequence="10"
+        />
+
+    </data>
+
+</odoo>

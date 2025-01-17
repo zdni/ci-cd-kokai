@@ -15,6 +15,7 @@
         'qhse_program',
         'schedule_task',
         'sequence_reset_period',
+        'engineering_aspects',
     ],
     'data': [
         'data/data.xml',
@@ -22,6 +23,7 @@
 
         'security/ir.model.access.csv',
 
+        'views/menu.xml',
         'views/summary_cpar_views.xml',
     ],
     'auto_install': False,

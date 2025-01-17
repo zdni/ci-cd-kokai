@@ -31,17 +31,29 @@
                                 <field name="product_impact" />
                             </group>
                             <group>
-                                <field name="qms_specification" />
+                                <field name="qms_specification_id" />
                                 <field name="clause" />
                                 <field name="description" />
                                 <field name="objective_evidence" />
                                 <field name="define_problem" />
                                 <field name="root_cause" />
-                                <field name="counter_measure" />
                                 <field name="completion_date" />
                                 <field name="remarks" />
                             </group>
                         </group>
+                        <notebook>
+                            <page name="counter" string="Counter Measure">
+                                <field name="counter_ids" context="{'default_summary_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="summary_id" invisible="1" />
+                                        <field name="name" />
+                                        <field name="due_date" />
+                                        <field name="completion_date" />
+                                        <field name="state" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
