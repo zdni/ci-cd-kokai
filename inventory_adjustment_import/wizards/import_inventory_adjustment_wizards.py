@@ -13,6 +13,97 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
     _description = 'Import Inventory Adjustment Wizard'
 
     file = fields.Binary('File Excel')
+    check = fields.Selection([
+        ('all', 'All'),
+        ('location', 'Location'),
+        ('template', 'Product Template'),
+        ('attribute', 'Product Attribute'),
+        ('variant', 'Product Variant'),
+    ], string='Check', default='all')
+
+    def checking_value(self):
+        try:
+            try:
+                file_pointer = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
+                file_pointer.write(binascii.a2b_base64(self.file))
+                file_pointer.seek(0)
+                workbook = xlrd.open_workbook(file_pointer.name)
+                sheet = workbook.sheet_by_index(0)
+            except:
+                raise UserError(_("File not Valid"))
+            error = {}
+            if self.check == 'all':
+                error = {
+                    'Location': '',
+                    'Product Template': '',
+                    'Attribute': '',
+                    'Product Attribute': '',
+                    'Variant': '',
+                    'Product Variant': '',
+                }
+            if self.check == 'location':
+                error['Location'] = ''
+            if self.check == 'template':
+                error['Product Template'] = ''
+            if self.check == 'attribute':
+                error['Attribute'] = ''
+                error['Product Attribute'] = ''
+            if self.check == 'variant':
+                error['Variant'] = ''
+                error['Product Variant'] = ''
+
+            i = 0
+            for rec in range(sheet.nrows):
+                i += 1
+                if rec >= 1:
+                    row_vals = sheet.row_values(rec)
+                    if len(row_vals) < int(2):
+                        raise UserError(_("Please ensure that you selected the correct file"))
+
+                    if self.check in ['all', 'location']:
+                        location = self.env['stock.location'].search([
+                            ('complete_name', '=', row_vals[0]),
+                            ('company_id', '=', self.env.company.id)
+                        ], limit=1)
+                        if not location:
+                            error['Location'] += f"{i}) {row_vals[0]} || "
+                    
+                    product_tmpl_id = self.env['product.template'].search([ ('name', '=', row_vals[1]) ], limit=1)
+                    if not product_tmpl_id and self.check in ['all', 'template']:
+                        error['Product Template'] += f"{i}) {row_vals[1]} || "
+
+                    if self.check in ['all', 'attribute', 'variant']:
+                        variants = row_vals[3].split(' || ')
+                        for variant in variants:
+                            attribute_name = variant.split(': ')[0]
+                            variant_name = variant.split(': ')[1]
+                            attribute = self.env['product.attribute'].search([ ('name', '=', attribute_name) ], limit=1)
+                            if not attribute and self.check in ['all', 'attribute']:
+                                error['Attribute'] += f"{i}) {attribute_name} || "
+                            
+                            product_tmpl_attr = self.env['product.template.attribute.line'].search([
+                                ('product_tmpl_id', '=', product_tmpl_id.id),
+                                ('attribute_id', '=', attribute.id),
+                            ])
+                            if not product_tmpl_attr and self.check in ['all', 'attribute']:
+                                error['Product Attribute'] += f"{i}) {row_vals[1]} - {attribute_name} || "
+
+                            product_attribute_value = self.env['product.attribute.value'].search([ ('name', '=', variant_name), ('attribute_id', '=', attribute.id) ], limit=1)
+                            if not product_attribute_value and self.check in ['all', 'variant']:
+                                error['Variant'] += f"{i}) {attribute.name} - {variant_name} || "
+
+                            product_template_variant_value_ids = self.env['product.template.attribute.value'].search([
+                                ('attribute_id', '=', attribute.id),
+                                ('product_attribute_value_id', '=', product_attribute_value.id),
+                                ('product_tmpl_id', '=', product_tmpl_id.id),
+                                ('attribute_line_id', '=', product_tmpl_attr.id),
+                            ], limit=1)
+                            if not product_template_variant_value_ids and self.check in ['all', 'variant']:
+                                error['Product Variant'] += f"{i}) {row_vals[1]} - {attribute_name} - {product_attribute_value.name} || "
+            raise UserError(str(error))
+        except UserError as e:
+            raise UserError(str(e))
+        
 
     def action_import(self):
         try:

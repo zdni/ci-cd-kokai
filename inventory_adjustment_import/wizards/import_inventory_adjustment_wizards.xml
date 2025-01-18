@@ -11,10 +11,12 @@
                     <sheet>
                         <group>
                             <field name="file" />
+                            <field name="check" />
                         </group>
                     </sheet>
                     <footer>
                         <button string="Import" type="object" name="action_import" class="btn-primary"/>
+                        <button string="Check" type="object" name="checking_value"/>
                         <button string="Cancel" special="cancel" class="btn-secondary"/>
                     </footer>
                 </form>
