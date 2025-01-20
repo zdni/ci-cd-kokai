@@ -101,6 +101,14 @@ class PurchaseRequest(models.Model):
         })
         notification.action_assign()
 
+    def generate_qrcode(self):
+        self.ensure_one()
+        _logger.warning('start generate_qrcode')
+        self._compute_qrcode_request_by()
+        self._compute_qrcode_approved_by()
+        self._compute_qrcode_director()
+        _logger.warning('done generate_qrcode')
+
     def _compute_qrcode_request_by(self):
         for record in self:
             barcode = ""
@@ -111,6 +119,7 @@ class PurchaseRequest(models.Model):
             except Exception as e:
                 _logger.warning("Can't load the image from URL")
                 logging.exception(e)
+            _logger.warning(barcode)
             record.write({ 'qrcode_request_by': barcode })
 
     def _compute_qrcode_approved_by(self):

@@ -10,6 +10,7 @@
         'security/ir.model.access.csv',
 
         'views/fingerprint_device_views.xml',
+        'views/hr_employee_views.xml',
 
         'reports/report.xml',
 
