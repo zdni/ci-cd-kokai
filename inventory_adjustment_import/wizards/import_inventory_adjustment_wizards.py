@@ -55,8 +55,8 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
             i = 0
             for rec in range(sheet.nrows):
                 i += 1
-                _logger.warning(i)
                 if rec >= 1:
+                    _logger.warning(i)
                     row_vals = sheet.row_values(rec)
                     if len(row_vals) < int(2):
                         raise UserError(_("Please ensure that you selected the correct file"))
