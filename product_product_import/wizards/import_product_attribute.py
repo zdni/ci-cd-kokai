@@ -13,8 +13,10 @@ class ImportProductAttribute(models.TransientModel):
     _description = 'Import Product Attribute'
 
     file = fields.Binary('File Excel')
+    is_create = fields.Boolean('Create when Value not Found?')
 
     def action_import(self):
+        value_has_create = []
         try:
             try:
                 file_pointer = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
@@ -30,19 +32,37 @@ class ImportProductAttribute(models.TransientModel):
                     if len(row_vals) < int(2):
                         raise UserError(_("Please ensure that you selected the correct file"))
 
-                    attribute = self.env['product.attribute'].search([ ('id', '=', int(row_vals[0])) ])
+                    attribute = self.env['product.attribute'].search([ ('name', '=', row_vals[0]) ], limit=1)
                     if not attribute:
-                        raise UserError(f"Attribute f{row_vals[0]} not Found")
+                        if self.is_create:
+                            attribute = self.env['product.attribute'].create({
+                                'name': row_vals[0],
+                                'display_type': 'radio',
+                                'create_variant': 'dynamic',
+                            })
+                        else:
+                            raise UserError(f"Attribute {row_vals[0]} not Found")
                     
                     values = row_vals[1].split(" || ")
                     for value in values:
+                        # check if value has created
+                        has_created = self.env['product.attribute.value'].search([
+                            ('attribute_id', '=', attribute.id),
+                            ('name', '=', value),
+                        ], limit=1)
+                        if has_created:
+                            value_has_create.append(f"{attribute.name} - {value}")
+                            continue
                         vals = {
-                            'attribute_id': int(row_vals[0]),
+                            'attribute_id': attribute.id,
                             'name': value
                         }
                         try:
                             self.env['product.attribute.value'].create(vals)
-                        except:
-                            raise UserError(f"Can't create {value}")
+                        except UserError as e:
+                            raise UserError(f"Can't create {value}, \n {str(e)}")
         except UserError as e:
             raise UserError(str(e))
+        
+        # if len(value_has_create) > 0:
+        #     raise UserError(f"Has Created: {' || '.join(value_has_create)}")

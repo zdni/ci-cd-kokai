@@ -11,6 +11,7 @@
                     <sheet>
                         <group>
                             <field name="file" />
+                            <field name="is_create" />
                         </group>
                     </sheet>
                     <footer>
