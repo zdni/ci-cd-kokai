@@ -91,7 +91,7 @@ class PriceQuery(models.Model):
             'stop_date': fields.Datetime.now(),
             'state': 'draft',
             'type': 'notification',
-            'model': 'approval.inspection',
+            'model': 'price.query',
             'res_id': self.id,
         })
         notification.action_assign()

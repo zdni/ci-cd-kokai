@@ -5,7 +5,7 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Human Resources',
-    'depends': ['approvals', 'fleet', 'stock', 'sequence_reset_period'],
+    'depends': ['approvals', 'fleet', 'stock', 'sequence_reset_period', 'schedule_task'],
     'data': [
         'data/approval_category_data.xml',
         'data/ir_sequence.xml',

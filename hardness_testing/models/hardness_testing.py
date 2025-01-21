@@ -98,7 +98,7 @@ class HardnessTesting(models.Model):
             'stop_date': fields.Datetime.now(),
             'state': 'draft',
             'type': 'notification',
-            'model': 'approval.inspection',
+            'model': 'hardness.testing',
             'res_id': self.id,
         })
         notification.action_assign()
@@ -118,7 +118,7 @@ class HardnessTesting(models.Model):
             'stop_date': fields.Datetime.now(),
             'state': 'draft',
             'type': 'notification',
-            'model': 'approval.inspection',
+            'model': 'hardness.testing',
             'res_id': self.id,
         })
         notification.action_assign()

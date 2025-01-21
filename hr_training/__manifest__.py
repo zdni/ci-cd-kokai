@@ -7,7 +7,16 @@
     'website': '',
     'license': 'LGPL-3',
     'category': 'Human Resources',
-    'depends': ['hr', 'approval_portal', 'approvals', 'approvals_position', 'approvals_refused_reason', 'proof_approval', 'sequence_reset_period'],
+    'depends': [
+        'hr',
+        'approval_portal',
+        'approvals',
+        'approvals_position',
+        'approvals_refused_reason',
+        'proof_approval',
+        'sequence_reset_period',
+        'schedule_task'
+    ],
     'data': [
         'data/approval_category_data.xml',
         'data/ir_sequence.xml',
