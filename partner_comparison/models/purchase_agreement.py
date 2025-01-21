@@ -140,6 +140,7 @@ class PurchaseAgreement(models.Model):
                 'date_order': fields.Datetime.now(),
                 'user_id': self.env.user.id,
                 'request_id': self.request_id.id,
+                'origin': self.request_id.name,
                 'order_line': [(0,0,{
                     'agreement_id': line.id,
                     'product_id': line.product_id.id,
@@ -149,6 +150,7 @@ class PurchaseAgreement(models.Model):
                     'taxes_id': line.tax_ids,
                     'discount': line.discount,
                     'discount_fixed': line.discount_fixed,
+                    'purchase_request_lines': [(4,line.line_id.id)]
                 }) for line in order_line],
             })
             self.action_done()

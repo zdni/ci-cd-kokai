@@ -99,7 +99,7 @@
                                 <field name="is_reduce" />
                                 <field name="limit" attrs="{'invisible': [('is_reduce', '=', True)]}" />
                                 <field name="reduce_type" attrs="{'invisible': [('is_reduce', '=', False)]}" />
-                                <field name="total_used" attrs="{'invisible': ['&amp;', ('is_reduce', '=', False), ('reduce_type', '!=', 'fixed')]}" />
+                                <field name="total_used" attrs="{'invisible': [('reduce_type', '!=', 'fixed')]}" />
                             </group>
                         </group>
                     </sheet>

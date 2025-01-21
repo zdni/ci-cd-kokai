@@ -14,7 +14,7 @@
                                 <field name="name" />
                                 <field name="type" />
                                 <field name="wage_type" />
-                                <field name="basic_wage" />
+                                <field name="code" />
                             </group>
                             <group>
                                 <field name="description" />

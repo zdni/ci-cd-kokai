@@ -3,14 +3,43 @@
 
     <data noupdate="1">
     
+        <record id="attendance_value_data_absent" model="attendance.value">
+            <field name="name">Absent</field>
+            <field name="value">0</field>
+        </record>
         <record id="attendance_value_data_attendance" model="attendance.value">
             <field name="name">Attend</field>
             <field name="value">1</field>
         </record>
-        <record id="attendance_value_data_not_attendance" model="attendance.value">
-            <field name="name">Not Attend</field>
-            <field name="value">0</field>
+        <record id="attendance_value_data_leave" model="attendance.value">
+            <field name="name">Leave</field>
+            <field name="value">2</field>
         </record>
+        <record id="attendance_value_data_permit" model="attendance.value">
+            <field name="name">Permit</field>
+            <field name="value">3</field>
+        </record>
+        <record id="attendance_value_data_sick_with_letter" model="attendance.value">
+            <field name="name">Sick - with Letter</field>
+            <field name="value">4</field>
+        </record>
+        <record id="attendance_value_data_sick_no_letter" model="attendance.value">
+            <field name="name">Sick - no Letter</field>
+            <field name="value">5</field>
+        </record>
+        <record id="attendance_value_data_late" model="attendance.value">
+            <field name="name">Late</field>
+            <field name="value">6</field>
+        </record>
+        <record id="attendance_value_data_outstation" model="attendance.value">
+            <field name="name">Outstation</field>
+            <field name="value">7</field>
+        </record>
+        <record id="attendance_value_data_half-day" model="attendance.value">
+            <field name="name">Half-day</field>
+            <field name="value">8</field>
+        </record>
+        
     
     </data>
 

@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
-                    <button string="Generate Agreement" name="generate_purchase_agreement" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('agreement_count', '>', 0)]}" />
+                    <button string="Generate Agreement" name="generate_purchase_agreement" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'in_progress'), ('agreement_count', '>', 0)]}" />
                     <button string="Generate PO" name="generate_order" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('agreement_count', '=', 0)]}" />
                     <button string="Sent" name="action_sent" type="object" class="oe_highlight" states="approved,comparison" />
                     <button string="Reply" name="action_notif_for_team" type="object" class="oe_highlight" states="sent" />
@@ -25,7 +25,7 @@
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page name="potential_partner" string="Potential Vendor">
-                        <field name="potential_partner_ids" attrs="{'readonly': [('state', 'in', ['comparison', 'in_progress', 'done'])]}">
+                        <field name="potential_partner_ids" attrs="{'readonly': [('state', 'in', ['done', 'rejected'])]}">
                             <tree editable="bottom">
                                 <field name="name"></field>
                                 <field name="phone"></field>

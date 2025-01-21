@@ -5,7 +5,7 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Human Resources',
-    'depends': [ 'hr' ],
+    'depends': [ 'hr', 'hr_grade' ],
     'data': [
         'security/ir.model.access.csv',
 

@@ -169,6 +169,35 @@ class EmployeeAttendanceWizard(models.TransientModel):
     employee_ids = fields.Many2many('hr.employee', string='Employee')
     device_id = fields.Many2one('fingerprint.device', string='Device', required=True)
 
+    def action_sync(self):
+        self.ensure_one()
+
+        if not self.device_id:
+            raise ValidationError("Choose Fingerprint Device to connect!")
+        
+        attendances = c.DeviceUsers.get_attendance(self.device_id)
+        attendances = c.DeviceUsers.get_attendance(self.device_id)
+        for attendance in attendances:
+            pin = attendance[0]
+            fingerprint = self.env['hr.employee.fingerprint'].search([
+                ('pin', '=', pin),
+                ('fingerprint_id', '=', self.device_id.id)
+            ], limit=1)
+            if not fingerprint:
+                continue
+                
+            attendance_date = attendance[1].date()
+            punch = attendance[2]
+            self.env['employee.attendance'].create({
+                'employee_id': fingerprint.employee_id.id,
+                'date': attendance_date,
+                'attendance_time': datetime.strptime(attendance[1], '%Y-%m-%d %H:%M:%S'),
+                'value_id': self.env.ref('employee_attendance.attendance_value_data_attendance').id,
+                'company_id': self.env.company.id,
+                'punch': punch,
+            })
+
+
     def action_confirm(self):
         self.ensure_one()
         data = {}
@@ -187,11 +216,21 @@ class EmployeeAttendanceWizard(models.TransientModel):
 
             employee_name = user_id
             department = ""
-            if FINGERPRINTS.get(user_id):
-                employee_name = FINGERPRINTS[user_id]['name']
-                department = FINGERPRINTS[user_id]['department']
-            display_name = f"{department} - {employee_name}"
+            # if FINGERPRINTS.get(user_id):
+            #     employee_name = FINGERPRINTS[user_id]['name']
+            #     department = FINGERPRINTS[user_id]['department']
+            # display_name = f"{department} - {employee_name}"
 
+            fingerprint = self.env['hr.employee.fingerprint'].search([
+                ('pin', '=', user_id),
+                ('fingerprint_id', '=', self.device_id.id)
+            ], limit=1)
+            if not fingerprint:
+                continue
+                
+            employee_name = fingerprint.employee_id.name
+            department = fingerprint.employee_id.department_id.name
+            display_name = f"{department} - {employee_name}"
 
             attendance_date = attendance[1].date()
             punch = attendance[2]

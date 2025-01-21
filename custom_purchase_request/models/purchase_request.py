@@ -78,6 +78,8 @@ class PurchaseRequest(models.Model):
                 'subject': f"Permintaan Proses Purchase Request {self.name}",
                 'description': f"Permintaan Proses Purchase Request {self.name}",
                 'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
+                'model': 'purchase.request',
+                'res_id': self.id,
             })
             schedule.action_assign()
 
