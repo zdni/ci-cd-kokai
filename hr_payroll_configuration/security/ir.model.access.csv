@@ -4,3 +4,6 @@ access_hr_contract_allowance,access_hr_contract_allowance,model_hr_contract_allo
 access_hr_payslip,access_hr_payslip,model_hr_payslip,base.group_user,1,1,1,1
 access_hr_payslip_line,access_hr_payslip_line,model_hr_payslip_line,base.group_user,1,1,1,1
 access_hr_payslip_leave,access_hr_payslip_leave,model_hr_payslip_leave,base.group_user,1,1,1,1
+access_average_effective_rate,access_average_effective_rate,model_average_effective_rate,base.group_user,1,1,1,1
+access_aer_category,access_aer_category,model_aer_category,base.group_user,1,1,1,1
+access_aer_range,access_aer_range,model_aer_range,base.group_user,1,1,1,1

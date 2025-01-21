@@ -45,3 +45,46 @@ class HRAllowanceType(models.Model):
         if is_get:
             safe_eval(self.code, localdict, mode="exec", nocopy=True)
         return value
+
+
+class AerCategory(models.Model):
+    _name = 'aer.category'
+    _description = 'Average Effective Rate Category'
+
+    name = fields.Char('Name')
+    aer_id = fields.Many2one('average.effective.rate', string='AER')
+    marital = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('cohabitant', 'Legal Cohabitant'),
+        ('widower', 'Widower'),
+        ('divorced', 'Divorced'),
+    ], string='Marital', default='single')
+    children = fields.Integer('Children')
+
+
+class AverageEffectiveRate(models.Model):
+    _name = 'average.effective.rate'
+    _description = 'Average Effective Rate for Income Tax'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    name = fields.Char('Name')
+    category_ids = fields.One2many('aer.category', 'aer_id', string='Category')
+    line_ids = fields.One2many('aer.range', 'aer_id', string='Line')
+
+
+class AerRange(models.Model):
+    _name = 'aer.range'
+    _description = 'AER Line'
+
+    aer_id = fields.Many2one('average.effective.rate', string='AER')
+    start_range = fields.Float('Start Range')
+    end_range = fields.Float('End Range')
+    rate = fields.Float('Rate (%)', default=0)
+
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    aer_id = fields.Many2one('average.effective.rate', string='AER')
+    aer_category_id = fields.Many2one('aer.category', string='AER Category', domain="[('aer_id', '=', aer_id)]")

@@ -55,6 +55,97 @@
             parent="hr.menu_human_resources_configuration"
             sequence="10"
         />
+
+
+        <menuitem
+            id="aer_root_menu"
+            name="AER"
+            parent="hr.menu_human_resources_configuration"
+            sequence="10"
+        />
+
+        <record id="average_effective_rate_view_form" model="ir.ui.view">
+            <field name="name">average.effective.rate.view.form</field>
+            <field name="model">average.effective.rate</field>
+            <field name="arch" type="xml">
+                <form string="AER">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="category_ids" widget="many2many_tags" />
+                        </group>
+                        <notebook>
+                            <page name="line" string="Range">
+                                <field name="line_ids" context="{'default_aer_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="aer_id" optional='hide' />
+                                        <field name="start_range" />
+                                        <field name="end_range" />
+                                        <field name="rate" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    
+        <record id="average_effective_rate_view_tree" model="ir.ui.view">
+            <field name="name">average.effective.rate.view.tree</field>
+            <field name="model">average.effective.rate</field>
+            <field name="arch" type="xml">
+                <tree string="AER" >
+                    <field name="name" />
+                    <field name="category_ids" widget="many2many_tags" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="average_effective_rate_action" model="ir.actions.act_window">
+            <field name="name">AER</field>
+            <field name="res_model">average.effective.rate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="average_effective_rate_menu"
+            name="AER"
+            action="average_effective_rate_action"
+            parent="hr_payroll_configuration.aer_root_menu"
+            sequence="10"
+        />
+    
+        <record id="aer_category_view_tree" model="ir.ui.view">
+            <field name="name">aer.category.view.tree</field>
+            <field name="model">aer.category</field>
+            <field name="arch" type="xml">
+                <tree string="AER Category" >
+                    <field name="name" />
+                    <field name="aer_id" />
+                    <field name="marital" />
+                    <field name="children" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="aer_category_action" model="ir.actions.act_window">
+            <field name="name">AER Category</field>
+            <field name="res_model">aer.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="aer_category_menu"
+            name="AER Category"
+            action="aer_category_action"
+            parent="hr_payroll_configuration.aer_root_menu"
+            sequence="10"
+        />
     
     </data>
 
