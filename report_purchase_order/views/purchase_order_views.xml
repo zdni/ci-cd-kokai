@@ -15,7 +15,7 @@
                     <field name="contactperson_id" />
                     <field name="received_id" />
                 </field>
-                <field position="after">
+                <field name="date_order" position="after">
                     <field name="approver_id" />
                 </field>
                 <field name="payment_term_id" position="replace">
