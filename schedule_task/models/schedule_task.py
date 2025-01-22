@@ -14,6 +14,10 @@ class ScheduleTask(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
 
     assignment_id = fields.Many2one('assignment.task', string='Assignment', tracking=True)
+    handle_by = fields.Selection([
+        ('all', 'All'),
+        ('just_one', 'Just One'),
+    ], string='Handle By', required=True, default='all', related='assignment_id.handle_by')
     name = fields.Char('Name', default='New')
     subject = fields.Char('Subject', tracking=True)
     department_id = fields.Many2one('hr.department', string='Department', related='user_id.department_id', tracking=True)
@@ -31,6 +35,7 @@ class ScheduleTask(models.Model):
     hour_spent = fields.Float('Hour Spent')
     processing_time = fields.Float('Processing Time', compute='_compute_processing_time', store=True)
     timesheet_count = fields.Integer('Timesheet Count', compute='_compute_timesheet_count', store=True)
+    running_timesheet_count = fields.Integer('Running Timesheet Count', compute='_compute_timesheet_count', store=True)
     timesheet_ids = fields.One2many('account.analytic.line', 'schedule_id', string='Timesheet')
     reason = fields.Char('Cancel Reason', tracking=True)
 
@@ -40,6 +45,7 @@ class ScheduleTask(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('assign', 'Assign'),
+        ('accept', 'Accept'),
         ('process', 'Process'),
         ('done', 'Done'),
         ('cancel', 'Cancel'),
@@ -78,17 +84,12 @@ class ScheduleTask(models.Model):
         for val in vals:
             val['name'] = self.env['ir.sequence'].next_by_code('schedule.task')
         return super(ScheduleTask, self).create(vals)
-    
-    @api.depends('res_model', 'res_id')
-    def _compute_res_name(self):
-        for schedule in self:
-            schedule.res_name = schedule.res_model and \
-                self.env[schedule.res_model].browse(schedule.res_id).display_name
 
-    @api.depends('timesheet_ids')
+    @api.depends('timesheet_ids', 'timesheet_ids.running')
     def _compute_timesheet_count(self):
         for record in self:
             record.timesheet_count = len(record.timesheet_ids)
+            record.running_timesheet_count = sum([1 if timesheet.running else 0 for timesheet in record.timesheet_ids])
 
     @api.depends('start_date', 'stop_date')
     def _compute_processing_time(self):
@@ -155,6 +156,11 @@ class ScheduleTask(models.Model):
     def action_assign(self):
         self.ensure_one()
         self.write({'state': 'assign', 'is_read': False})
+
+    def action_accept(self):
+        self.ensure_one()
+        self.assignment_id.schedule_ids.action_cancel_has_finished()
+        self.write({'state': 'accept'})
 
     def _compute_assignment_state(self):
         if self.assignment_id.handle_by == 'just_one':

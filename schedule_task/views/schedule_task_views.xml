@@ -11,7 +11,9 @@
                     <header>
                         <button string="Open Document" name="action_open_document" type="object" class="oe_highlight"/>
                         <button string="Assign" name="action_assign" type="object" class="oe_highlight" states="draft"/>
-                        <button string="Start" name="automatic_start_timesheet" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['assign','process']), ('type', '=', 'notification')]}" />
+                        <button string="Accept" name="action_accept" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'assign']), ('handle_by', '=', 'all')]}" />
+                        <button string="Start" name="automatic_start_timesheet" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['assign','accept','process']), ('type', '=', 'notification'), ('running_timesheet_count', '>', 0)]}" />
+                        <button string="Stop" name="action_end_timesheet" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['assign','accept','process']), ('type', '=', 'notification'), ('running_timesheet_count', '=', 0)]}" />
                         <button string="Transfer" name="generate_assign_to_user" type="object" class="oe_highlight" states="assign"/>
                         <button string="Done" name="action_done" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['assign','process']), ('type', '=', 'notification')]}" />
                         <button string="Cancel" name="action_cancel" type="object" states="draft,assign"/>
@@ -34,6 +36,8 @@
                                     <group>
                                         <field name="is_read" invisible="1" />
                                         <field name="_state_func" invisible="1" />
+                                        <field name="handle_by" invisible="1" />
+                                        <field name="running_timesheet_count" invisible="1" />
                                         <field name="active" invisible="1" />
                                         <field name="user_id" readonly="1" />
                                         <field name="department_id" options="{'no_create': True, 'no_open': True}" />
