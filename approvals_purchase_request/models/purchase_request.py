@@ -46,6 +46,7 @@ class PurchaseRequest(models.Model):
         if approver:
             approver.sudo().write({ 'user_id': self.approver_id.id })
         request.action_confirm()
+        self._compute_qrcode_request_by()
 
     def action_view_approval_request(self):
         action = (self.env.ref('approvals.approval_request_action_all').sudo().read()[0])
