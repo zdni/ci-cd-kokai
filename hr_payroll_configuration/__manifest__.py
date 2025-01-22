@@ -8,7 +8,10 @@
     'depends': ['hr', 'department_user', 'hr_contract', 'account', 'hr_leave', 'opsway_2many_clickable_tag'],
     'data': [
         'security/ir.model.access.csv',
+
         'views/hr_allowance_views.xml',
+        'views/hr_contract_views.xml',
+        'views/hr_payslip_views.xml',
     ],
     'auto_install': False,
     'application': False,

@@ -86,5 +86,5 @@ class AerRange(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    aer_id = fields.Many2one('average.effective.rate', string='AER')
-    aer_category_id = fields.Many2one('aer.category', string='AER Category', domain="[('aer_id', '=', aer_id)]")
+    aer_category_id = fields.Many2one('aer.category', string='AER Category')
+    aer_id = fields.Many2one('average.effective.rate', string='AER', related='aer_category_id.aer_id')
