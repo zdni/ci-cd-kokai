@@ -20,14 +20,19 @@ class ListOfDocuments(models.Model):
     amendment_ids = fields.One2many('amendment.document', 'document_id', string='Amendments')
     amendment_count = fields.Integer('Amendment Count', compute="_compute_amendment_count")
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user.id)
-    state = fields.Selection([
+    stage = fields.Selection([
         ('draft', 'Draft'),
         ('requested', 'Requested'),
         ('approved', 'Approved'),
         ('amendment', 'Amendment'),
         ('refused', 'Refused'),
         ('canceled', 'Canceled'),
-    ], string='State', default='draft', required=True, tracking=True)
+    ], string='Stage', default='approved', required=True, tracking=True)
+    state = fields.Selection([
+        ('new', 'New'),
+        ('revision', 'Revision'),
+        ('obsolete', 'Obsolete'),
+    ], string='State', default='new', required=True, tracking=True, compute='_compute_state', store=True)
     type = fields.Selection([
         ('qm', 'Quality Manual'),
         ('qp', 'Quality Procedure'),
@@ -49,3 +54,12 @@ class ListOfDocuments(models.Model):
         action = self.env.ref('list_of_documents.amendment_document_action').sudo().read()[0]
         action['domain'] = [('id', 'in', self.amendment_ids.ids)]
         return action
+
+    def action_obsolete(self):
+        self.ensure_one()
+        self.write({ 'state': 'obsolete' })
+    
+    @api.depends('edition')
+    def _compute_state(self):
+        for record in self:
+            record.state = 'revision' if record.edition > 0 else 'new'

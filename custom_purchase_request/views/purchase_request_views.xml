@@ -55,6 +55,9 @@
                 <xpath expr="//button[@name='button_in_progress']" position="attributes">
                     <attribute name="groups"></attribute>
                 </xpath>
+                <xpath expr="//notebook//page[1]//field[@name='line_ids']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'not in', ['draft','need_improvement'])]}</attribute>
+                </xpath>
             </field>
         </record>
 

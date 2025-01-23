@@ -53,6 +53,13 @@
             action='qhse_program.qhse_team_action'
             sequence="10"
         />
+
+        <menuitem
+            id="nc_menu"
+            name="Non Conforming"
+            parent="qhse_program.qhse_program_menu"
+            sequence="10"
+        />
     
     </data>
     

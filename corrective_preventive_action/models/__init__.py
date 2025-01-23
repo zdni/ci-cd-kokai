@@ -1,2 +1,2 @@
 from . import approval_request
-from . import summary_cpar
+from . import corrective_preventive_action

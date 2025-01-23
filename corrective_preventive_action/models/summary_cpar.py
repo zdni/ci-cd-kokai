@@ -1,4 +1,97 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+
+class CparType(models.Model):
+    _name = 'cpar.type'
+    _description = 'CAR Type'
+
+    name = fields.Char('Name')
+    alias = fields.Char('Alias')
+
+
+class CparStandard(models.Model):
+    _name = 'cpar.standard'
+    _description = 'CPAR Standard'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='Summary')
+    standard_id = fields.Many2one('standard.manufacturing', string='QMS Specification', tracking=True)
+    section = fields.Char('Section', tracking=True, compute='_compute_section', store=True)
+    name = fields.Char('Clause', tracking=True)
+    @api.depends('name')
+    def _compute_section(self):
+        for record in self:
+            if record.name:
+                record.section = record.name[:1]
+
+
+class RootCauseCpar(models.Model):
+    _name = 'root.cause.cpar'
+    _description = 'Root Cause CPAR'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='Summary', tracking=True)
+    name = fields.Text('Root Cause', tracking=True)
+
+
+class CorrectionCpar(models.Model):
+    _name = 'correction.cpar'
+    _description = 'Correction CPAR'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='Summary', tracking=True)
+    root_id = fields.Many2one('root.cause.cpar', string='Root Cause', tracking=True)
+    name = fields.Text('Correction Action', tracking=True)
+    pic_id = fields.Many2one('res.users', string='PIC', tracking=True)
+    due_date = fields.Date('Due Date', tracking=True)
+    completion_date = fields.Date('Completion Date', tracking=True)
+    state = fields.Selection([
+        ('open', 'Open'),
+        ('submit', 'Submit'),
+        ('need_improvement', 'Need Improvement'),
+        ('closed', 'Closed'),
+    ], string='State', required=True, default='open', tracking=True)
+
+
+class CorrectiveCpar(models.Model):
+    _name = 'corrective.cpar'
+    _description = 'Corrective CPAR'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='Summary', tracking=True)
+    root_id = fields.Many2one('root.cause.cpar', string='Root Cause', tracking=True)
+    name = fields.Text('Corrective Action', tracking=True)
+    pic_id = fields.Many2one('res.users', string='PIC', tracking=True)
+    due_date = fields.Date('Due Date', tracking=True)
+    completion_date = fields.Date('Completion Date', tracking=True)
+    state = fields.Selection([
+        ('open', 'Open'),
+        ('submit', 'Submit'),
+        ('need_improvement', 'Need Improvement'),
+        ('closed', 'Closed'),
+    ], string='State', required=True, default='open', tracking=True)
+
+
+class HistoryStateCpar(models.Model):
+    _name = 'history.state.cpar'
+    _description = 'History State CPAR'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='Summary', tracking=True)
+    name = fields.Char('State', tracking=True)
+    old_state = fields.Char('Old State', tracking=True)
+    date = fields.Date('Date', default=fields.Date.today(), tracking=True)
+
+
+class CommentCpar(models.Model):
+    _name = 'comment.cpar'
+    _description = 'Comment CPAR'
+    _inherit = ['mail.activity.mixin', 'mail.thread']
+
+    summary_id = fields.Many2one('summary.cpar', string='Summary', tracking=True)
+    name = fields.Text('Comment')
+    user_id = fields.Many2one('res.users', string='User', tracking=True)
+    date = fields.Date('Date', default=fields.Date.today(), tracking=True)
 
 
 class SummaryCpar(models.Model):
@@ -11,62 +104,80 @@ class SummaryCpar(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     
     name = fields.Char('Name', tracking=True)
-    finding_number = fields.Char('Finding Number', tracking=True)
     date = fields.Date('Date', tracking=True)
-    ncr_number = fields.Char('NCR Number', tracking=True)
-    pic_id = fields.Many2one('res.users', string='PIC', tracking=True)
+    car_no = fields.Char('CAR No.', tracking=True)
+    department_id = fields.Many2one('hr.department', string='Department')
+    issued_to_ids = fields.Many2many('res.users', string='Issued To', domain="[('department_id', '=', department_id)]")
+    type_id = fields.Many2one('cpar.type', string='Source of CAR')
+    document_ids = fields.Many2many('list.of.documents', string='Controlling Documents')
     finding_type = fields.Selection([
         ('major', 'Major'),
         ('minor', 'Minor'),
-        ('observe', 'OFI/Observe'),
+        ('concern', 'Concern'),
+        ('ofi', 'OFI'),
         ('critical', 'Critical'),
     ], string='Finding Type', default='major', required=True, tracking=True)
     product_impact = fields.Selection([
-        ('direct', 'Direct'),
-        ('indirect', 'Indirect'),
+        ('direct', 'Direct Impact'),
+        ('indirect', 'Indirect Impact'),
         ('no', 'No Impact'),
     ], string='Product Impact', default='direct', required=True, tracking=True)
-    qms_specification_id = fields.Many2one('standard.manufacturing', string='QMS Specification', tracking=True)
-    section = fields.Char('Section', tracking=True)
-    clause = fields.Char('Clause', tracking=True)
+    standard_ids = fields.One2many('cpar.standard', 'summary_id', string='Standard Specification')
     description = fields.Text('Requirement Description', tracking=True)
-    objective_evidence = fields.Char('Objective Evidence', tracking=True)
-    define_problem = fields.Text('Define Problem', tracking=True)
-    root_cause = fields.Text('Root Cause', tracking=True)
-    counter_ids = fields.One2many('counter.measure.cpar', 'summary_id', string='Counter Measure', tracking=True)
-    completion_date = fields.Date('Completion Date', tracking=True)
+    objective_evidence = fields.Html('Objective Evidence', tracking=True)
+    description_nc = fields.Html('Description of Non-Conformance', tracking=True)
+    root_ids = fields.One2many('root.cause.cpar', 'summary_id', string='Root Cause')
+    correction_ids = fields.One2many('correction.cpar', 'summary_id', string='Correction Action')
+    corrective_ids = fields.One2many('corrective.cpar', 'summary_id', string='Corrective Action')
+    comment_ids = fields.One2many('comment.cpar', 'summary_id', string='Comments (if any) where the CAR was completed')
+    action_verify = fields.Text('Action Performed to verify the effectiveness of CAR', tracking=True)
+    history_ids = fields.One2many('history.state.cpar', 'summary_id', string='History State')
     state = fields.Selection([
         ('open', 'Open'),
+        ('submit', 'Submit'),
+        ('need_improvement', 'Need Improvement'),
         ('closed', 'Closed'),
-    ], string='State', default='open', required=True, tracking=True, compute='_compute_state', store=True)
+    ], string='State', default='open', required=True, tracking=True)
     remarks = fields.Text('Remarks', tracking=True)
 
-    @api.depends('counter_ids.state')
-    def _compute_state(self):
-        for record in self:
-            record.state = 'closed' if all(counter.state == 'closed' for counter in record.counter_ids) else 'open'
+    def action_open(self):
+        self.ensure_one()
+        self.write({ 'state': 'open' })
+
+    def action_submit(self):
+        self.ensure_one()
+        self.write({ 'state': 'submit' })
+
+    def action_need_improvement(self):
+        self.ensure_one()
+        self.write({ 'state': 'need_improvement' })
+
+    def action_closed(self):
+        self.ensure_one()
+        self.write({ 'state': 'closed' })
 
     @api.model_create_multi
     def create(self, vals):
         for val in vals:
-            val['name'] = self.env['ir.sequence'].next_by_code('summary.cpar')
+            prefix = 'CAR'
+            type = self.env['cpar.type'].search([ ('id', '=', val['type_id']) ], limit=1)
+            if type:
+                prefix = type.alias
+            val['name'] = f"{prefix}/{self.env['ir.sequence'].next_by_code('summary.cpar')}"
         return super(SummaryCpar, self).create(vals)
 
-
-class CounterMeasureCpar(models.Model):
-    _name = 'counter.measure.cpar'
-    _description = 'Counter Measure Cpar'
-    _inherit = ['mail.activity.mixin', 'mail.thread']
-
-    summary_id = fields.Many2one('summary.cpar', string='CPAR', tracking=True)
-    name = fields.Char('Counter', tracking=True)
-    due_date = fields.Date('Due Date', tracking=True)
-    completion_date = fields.Date('Completion Date', tracking=True)
-    state = fields.Selection([
-        ('open', 'Open'),
-        ('closed', 'Closed'),
-    ], string='State', default='open', required=True, tracking=True)
-
+    def write(self, vals):
+        if vals.get('state', False):
+            try:
+                self.env['history.state.cpar'].create({
+                    'name': vals['state'],
+                    'summary_id': self.id,
+                    'old_state': self.state,
+                    'date': fields.Date.today(),
+                })
+            except UserError as e:
+                raise UserError(str(e))
+        return super(SummaryCpar, self).write(vals)
 
 
 class ReportSummaryCpar(models.Model):

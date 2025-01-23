@@ -8,6 +8,10 @@
             <field name="model">list.of.documents</field>
             <field name="arch" type="xml">
                 <form string="Document">
+                    <header>
+                        <button string="Obsolete" name="action_obsolete" type="object" states="new,revision" />
+                        <field name="stage" widget="statusbar" />
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_show_amendment" type="object" class="oe_stat_button" icon="fa-object-group">
@@ -34,7 +38,7 @@
                                 <field name="received_date" />
                                 <field name="user_id" />
                                 <field name="attachment_id"/>
-                                <field name="attachment_ids" widget="many2many_attachment_preview"/>
+                                <field name="state" readonly="1"/>
                             </group>
                         </group>
                     </sheet>

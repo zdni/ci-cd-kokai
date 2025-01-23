@@ -103,6 +103,8 @@ class PurchaseAgreement(models.Model):
     discount = fields.Float(string="Discount (%)", digits="Discount")
     discount_fixed = fields.Float(string="Discount (Fixed)", digits="Discount")
 
+    attachment_id = fields.Many2one('ir.attachment', string='File')
+
     @api.model_create_multi
     def create(self, vals):
         for val in vals:

@@ -7,6 +7,7 @@ class PurchaseRequest(models.Model):
 
     state = fields.Selection(selection_add=[('comparison', 'Vendor Comparison'), ('sent', 'Sent')], string='Status', ondelete={'comparison': 'cascade', 'sent': 'cascade'})
     sent_to_ids = fields.Many2many('res.users', string='Sent Agreement To')
+    sent_to_id = fields.Many2one('hr.department', string='Sent Agreement To')
     potential_partner_ids = fields.Many2many('res.partner', string='Potential Vendor')
     agreement_ids = fields.One2many('purchase.agreement', 'request_id', string='Agreement')
     agreement_count = fields.Integer('Agreement Count', compute='_compute_agreement_count')
@@ -72,6 +73,7 @@ class PurchaseRequest(models.Model):
             'description': f"",
             'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
             'user_ids': self.sent_to_ids.ids,
+            # 'user_ids': self.sent_to_id.member_ids.ids,
             'model': 'purchase.request',
             'res_id': self.id,
         })

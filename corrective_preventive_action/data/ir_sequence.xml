@@ -3,26 +3,15 @@
 
     <data noupdate="1">
     
-        <record id="seq_report_summary_cpar" model="ir.sequence">
-            <field name="name">Report Summary CPAR</field>
-            <field name="code">report.summary.cpar</field>
-            <field name="padding">4</field>
+        <record id="seq_corrective_action" model="ir.sequence">
+            <field name="name">Corrective Action</field>
+            <field name="code">car.report</field>
+            <field name="padding">3</field>
             <field name="company_id" eval="False"/>
             <field name="number_next">1</field>
             <field name="use_date_range">1</field>
-            <field name="range_reset">monthly</field>
-            <field name="prefix">SCPAR/%(year)s/%(month)s/</field>
-        </record>
-
-        <record id="seq_summary_cpar" model="ir.sequence">
-            <field name="name">Summary CPAR</field>
-            <field name="code">summary.cpar</field>
-            <field name="padding">4</field>
-            <field name="company_id" eval="False"/>
-            <field name="number_next">1</field>
-            <field name="use_date_range">1</field>
-            <field name="range_reset">monthly</field>
-            <field name="prefix">LCPAR/%(year)s/%(month)s/</field>
+            <field name="range_reset">yearly</field>
+            <field name="prefix">%(year)s/</field>
         </record>
 
     </data>

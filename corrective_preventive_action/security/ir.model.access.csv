@@ -1,4 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_summary_cpar,access_summary_cpar,model_summary_cpar,base.group_user,1,1,1,1
-access_report_summary_cpar,access_report_summary_cpar,model_report_summary_cpar,base.group_user,1,1,1,1
-access_counter_measure_cpar,access_counter_measure_cpar,model_counter_measure_cpar,base.group_user,1,1,1,1
+access_car_type,access_car_type,model_car_type,base.group_user,1,1,1,1
+access_car_standard,access_car_standard,model_car_standard,base.group_user,1,1,1,1
+access_root_cause_car,access_root_cause_car,model_root_cause_car,base.group_user,1,1,1,1
+access_correction_car,access_correction_car,model_correction_car,base.group_user,1,1,1,1
+access_corrective_car,access_corrective_car,model_corrective_car,base.group_user,1,1,1,1
+access_history_state_car,access_history_state_car,model_history_state_car,base.group_user,1,1,1,1
+access_comment_car,access_comment_car,model_comment_car,base.group_user,1,1,1,1
+access_car_report,access_car_report,model_car_report,base.group_user,1,1,1,1

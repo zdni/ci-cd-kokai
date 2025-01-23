@@ -11,6 +11,7 @@
         'approvals_position',
         'approvals_refused_reason',
         'hr',
+        'list_of_documents',
         'proof_approval',
         'qhse_program',
         'schedule_task',
@@ -23,8 +24,8 @@
 
         'security/ir.model.access.csv',
 
+        'views/corrective_preventive_action_views.xml',
         'views/menu.xml',
-        'views/summary_cpar_views.xml',
     ],
     'auto_install': False,
     'application': False,
