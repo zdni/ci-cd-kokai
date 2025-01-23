@@ -23,23 +23,26 @@
                             <h1><field name="name" readonly="1" /></h1>
                         </div>
                         <group>
-                            <group>
+                            <group string="NCR">
                                 <field name="finding_number" />
                                 <field name="ncr_number" />
                                 <field name="pic_id" />
                                 <field name="finding_type" />
                                 <field name="product_impact" />
                             </group>
-                            <group>
+                            <group string="Standard Specification">
                                 <field name="qms_specification_id" />
+                                <field name="section" />
                                 <field name="clause" />
                                 <field name="description" />
-                                <field name="objective_evidence" />
-                                <field name="define_problem" />
-                                <field name="root_cause" />
-                                <field name="completion_date" />
-                                <field name="remarks" />
                             </group>
+                        </group>
+                        <group string="Detail">
+                            <field name="objective_evidence" />
+                            <field name="define_problem" />
+                            <field name="root_cause" />
+                            <field name="completion_date" />
+                            <field name="remarks" />
                         </group>
                         <notebook>
                             <page name="counter" string="Counter Measure">
@@ -69,10 +72,11 @@
             <field name="model">summary.cpar</field>
             <field name="arch" type="xml">
                 <tree string="Corrective and Preventive Action">
+                    <field name="ncr_number" />
                     <field name="finding_number" />
                     <field name="pic_id" />
                     <field name="finding_type" />
-                    <field name="clause" />
+                    <field name="section" />
                     <field name="state" />
                 </tree>
             </field>

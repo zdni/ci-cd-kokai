@@ -15,25 +15,42 @@ class SummaryCpar(models.Model):
     date = fields.Date('Date', tracking=True)
     ncr_number = fields.Char('NCR Number', tracking=True)
     pic_id = fields.Many2one('res.users', string='PIC', tracking=True)
-    finding_type = fields.Char('Finding Type', tracking=True)
+    finding_type = fields.Selection([
+        ('major', 'Major'),
+        ('minor', 'Minor'),
+        ('observe', 'OFI/Observe'),
+        ('critical', 'Critical'),
+    ], string='Finding Type', default='major', required=True, tracking=True)
     product_impact = fields.Selection([
         ('direct', 'Direct'),
         ('indirect', 'Indirect'),
         ('no', 'No Impact'),
     ], string='Product Impact', default='direct', required=True, tracking=True)
     qms_specification_id = fields.Many2one('standard.manufacturing', string='QMS Specification', tracking=True)
-    clause = fields.Char('clause', tracking=True)
+    section = fields.Char('Section', tracking=True)
+    clause = fields.Char('Clause', tracking=True)
     description = fields.Text('Requirement Description', tracking=True)
     objective_evidence = fields.Char('Objective Evidence', tracking=True)
     define_problem = fields.Text('Define Problem', tracking=True)
-    root_cause = fields.Char('Root Cause', tracking=True)
+    root_cause = fields.Text('Root Cause', tracking=True)
     counter_ids = fields.One2many('counter.measure.cpar', 'summary_id', string='Counter Measure', tracking=True)
     completion_date = fields.Date('Completion Date', tracking=True)
     state = fields.Selection([
         ('open', 'Open'),
         ('closed', 'Closed'),
-    ], string='State', default='open', required=True, tracking=True)
+    ], string='State', default='open', required=True, tracking=True, compute='_compute_state', store=True)
     remarks = fields.Text('Remarks', tracking=True)
+
+    @api.depends('counter_ids.state')
+    def _compute_state(self):
+        for record in self:
+            record.state = 'closed' if all(counter.state == 'closed' for counter in record.counter_ids) else 'open'
+
+    @api.model_create_multi
+    def create(self, vals):
+        for val in vals:
+            val['name'] = self.env['ir.sequence'].next_by_code('summary.cpar')
+        return super(SummaryCpar, self).create(vals)
 
 
 class CounterMeasureCpar(models.Model):
@@ -70,6 +87,12 @@ class ReportSummaryCpar(models.Model):
         ('cancel', 'Cancel'),
     ], string='State', default='draft')
     requested_by_id = fields.Many2one('res.users', string='Requested By', default=lambda self: self.env.user.id, tracking=True)
+
+    @api.model_create_multi
+    def create(self, vals):
+        for val in vals:
+            val['name'] = self.env['ir.sequence'].next_by_code('summary.cpar')
+        return super(ReportSummaryCpar, self).create(vals)
 
     def action_draft(self):
         self.ensure_one()

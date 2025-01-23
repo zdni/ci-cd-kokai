@@ -5,21 +5,26 @@ class StandardManufacturing(models.Model):
     _description = 'Standard Manufacturing of Product'
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char('Name', tracking=True)
+    name = fields.Char('Name', tracking=True, compute='_compute_name', store=True)
+    display_name = fields.Char('Display Name', tracking=True)
     type_id = fields.Many2one('manufacturing.type', string='Type', tracking=True, required=True)
     description = fields.Text('Description', tracking=True)
-    file = fields.Binary('File', tracking=True)
     file_id = fields.Many2one('ir.attachment', string='File')
     effective_date = fields.Date('Effective Date', tracking=True)
-    due_date = fields.Date('Due Date', tracking=True)
+    issue_date = fields.Date('Issue Date', tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('applicable', 'Applicable'),
         ('expired', 'Expired'),
         ('cancelled', 'Cancelled'),
     ], string='state', default='draft', tracking=True)
-    edition = fields.Integer('Edition', default=0)
+    edition = fields.Char('Edition')
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user.id)
+
+    @api.depends('display_name', 'edition')
+    def _compute_name(self):
+        for record in self:
+            record.name = f"{record.display_name} - {record.edition}" 
 
     def action_draft(self):
         for record in self:
