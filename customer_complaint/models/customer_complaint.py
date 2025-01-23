@@ -30,7 +30,7 @@ class ComplaintCauses(models.Model):
     date = fields.Date('Date', default=fields.Date.today(), tracking=True)
     
     complaint_id = fields.Many2one('customer.complaint', string='Complaint', tracking=True)
-    line_id = fields.Many2one('complaint.line', string='Complaint', domain="[('complain_id', '=', complain_id)]", tracking=True)
+    line_id = fields.Many2one('complaint.line', string='Complaint', domain="[('complaint_id', '=', complaint_id)]", tracking=True)
     causes = fields.Text('Analysis of Causes', tracking=True)
 
 
@@ -43,7 +43,7 @@ class ComplaintSolution(models.Model):
     date = fields.Date('Date', default=fields.Date.today(), tracking=True)
     
     complaint_id = fields.Many2one('customer.complaint', string='Complaint', tracking=True)
-    line_id = fields.Many2one('complaint.line', string='Complaint', domain="[('complain_id', '=', complain_id)]", tracking=True)
+    line_id = fields.Many2one('complaint.line', string='Complaint', domain="[('complaint_id', '=', complaint_id)]", tracking=True)
     settlement_solution = fields.Text('Settlement Solution', tracking=True)
 
 
@@ -56,7 +56,7 @@ class ComplaintCorrective(models.Model):
     date = fields.Date('Date', default=fields.Date.today())
     
     complaint_id = fields.Many2one('customer.complaint', string='Complaint', tracking=True)
-    line_id = fields.Many2one('complaint.line', string='Complaint', domain="[('complain_id', '=', complain_id)]", tracking=True)
+    line_id = fields.Many2one('complaint.line', string='Complaint', domain="[('complaint_id', '=', complaint_id)]", tracking=True)
     corrective_action = fields.Text('Corrective Action')
 
 
@@ -87,7 +87,7 @@ class CustomerComplaint(models.Model):
         ('analysis', 'Analysis'),
         ('closed', 'Closed'),
         ('cancel', 'Cancel'),
-    ], string='State', default='open', required=True, tracking=True)
+    ], string='State', default='draft', required=True, tracking=True)
     closing_date = fields.Date('Closing Date', tracking=True)
     verification = fields.Text('Verification', tracking=True)
 
