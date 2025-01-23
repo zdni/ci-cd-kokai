@@ -183,22 +183,12 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
 
                     lot_id = ''
                     if row_vals[4] != '':
-                        lot_id = self.env['stock.lot'].search([
-                            ('name', '=', row_vals[4]),
-                            ('product_id', '=', product.id),
-                            ('company_id', '=', self.env.company.id),
-                        ], limit=1).id
-
-                    if not lot_id:
                         lot_id = self.env['stock.lot'].create({
                             'name': row_vals[4],
                             'product_id': product.id,
                             'company_id': self.env.company.id,
                         }).id
-                    
-                    if product.tracking == 'lot':
-                        lot_id = '' # generate lot
-                    
+
                     vals = {
                         'location_id': location.id,
                         'product_id': product.id,
@@ -206,10 +196,12 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                         'product_uom_id': product.uom_id.id,
                         'inventory_date': row_vals[7],
                     }
-                    if product.tracking == 'serial':
+                    if row_vals[8]:
                         for i in range(0, int(row_vals[5])):
+                            vals['lot_id'] = product.generate_qrcode()
                             self.create_inventory_adjustment(1, vals)
                     else:
+                        vals['lot_id'] = product.generate_qrcode()
                         self.create_inventory_adjustment(int(row_vals[5]), vals)
                     self.create_inventory_adjustment(int(row_vals[5]), vals)
 
