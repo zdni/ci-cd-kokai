@@ -5,7 +5,7 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Inventory',
-    'depends': ['stock'],
+    'depends': ['stock', 'product_qrcode'],
     'data': [
         'security/ir.model.access.csv',
         'wizards/import_inventory_adjustment_wizards.xml'
