@@ -18,6 +18,7 @@ class CarStandard(models.Model):
     standard_id = fields.Many2one('standard.manufacturing', string='Standard Specification', tracking=True)
     section = fields.Char('Section', tracking=True, compute='_compute_section', store=True)
     name = fields.Char('Clause', tracking=True)
+    description = fields.Char('Description')
     @api.depends('name')
     def _compute_section(self):
         for record in self:
@@ -116,6 +117,7 @@ class CARCar(models.Model):
     date = fields.Date('Date', tracking=True)
     work_order_no = fields.Char('Work Order No', tracking=True)
     department_id = fields.Many2one('hr.department', string='Department', tracking=True)
+    document_id = fields.Many2one('list.of.documents', string='Controlling Document')
     issued_to_ids = fields.Many2many('res.users', string='Issued To', domain="[('department_id', '=', department_id)]", tracking=True)
     type_id = fields.Many2one('car.type', string='Source of CAR', tracking=True)
     finding_type = fields.Selection([

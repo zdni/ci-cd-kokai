@@ -73,6 +73,7 @@
                                         <field name="standard_id" />
                                         <field name="section" />
                                         <field name="name" />
+                                        <field name="description" />
                                     </tree>
                                 </field>
                             </page>

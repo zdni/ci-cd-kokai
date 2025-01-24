@@ -24,6 +24,9 @@ class WorkActivity(models.Model):
     description = fields.Text('Description', tracking=True)
     machine_id = fields.Many2one('machine.tool', string='Machine') # machine
     # product
+    product_id = fields.Many2one('product.template', string='Item')
+    pressure_rating = fields.Char('Class')
+    size = fields.Char('Size')
     # sale order
     # manufacturing order
     work_order_id = fields.Many2one('work.order', string='Work Order', tracking=True) # work order

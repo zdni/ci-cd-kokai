@@ -5,7 +5,12 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Inventory',
-    'depends': ['stock', 'hr'],
+    'depends': [
+        'hr', 
+        'sequence_reset_period', 
+        'schedule_task',
+        'stock', 
+    ],
     'data': [
         'data/ir_sequence.xml',
     ],
