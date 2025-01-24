@@ -23,8 +23,8 @@
                                 <field name="area_id" />
                                 <field name="machine_id" />
                                 <field name="product_id" />
-                                <field name="pressure_rating" />
                                 <field name="size" />
+                                <field name="pressure_rating" />
                                 <field name="description" />
                             </group>
                             <group>
