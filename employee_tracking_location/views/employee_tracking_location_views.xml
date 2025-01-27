@@ -19,7 +19,7 @@
         </record>
 
         <record id="employee_tracking_location_action" model="ir.actions.act_window">
-            <field name="name">Tracking_location</field>
+            <field name="name">Tracking Location</field>
             <field name="res_model">employee.tracking.location</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
