@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="employee_tracking_location_view_tree" model="ir.ui.view">
+            <field name="name">employee.tracking.location.view.tree</field>
+            <field name="model">employee.tracking.location</field>
+            <field name="arch" type="xml">
+                <tree string="Tracking Location" create="False">
+                    <field name="employee_id" />
+                    <field name="date" />
+                    <field name="location_id" />
+                    <field name="area_id" />
+                    <field name="longitudinal" optional="hide" />
+                    <field name="latitude" optional="hide" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="employee_tracking_location_action" model="ir.actions.act_window">
+            <field name="name">Tracking_location</field>
+            <field name="res_model">employee.tracking.location</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="employee_tracking_location_menu"
+            name="Tracking Location"
+            action="employee_tracking_location_action"
+            groups="hr.group_hr_user"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>
