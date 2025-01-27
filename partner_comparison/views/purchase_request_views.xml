@@ -21,7 +21,7 @@
                     </button>
                 </xpath>
                 <xpath expr="//field[@name='type_id']" position="after">
-                    <field name="sent_to_ids" attrs="{'readonly': [('state', 'in', ['in_progress', 'done'])], 'required': [('state', '=', 'comparison')]}" widget="many2many_tags" />
+                    <!-- <field name="sent_to_ids" attrs="{'readonly': [('state', 'in', ['in_progress', 'done'])], 'required': [('state', '=', 'comparison')]}" widget="many2many_tags" /> -->
                     <field name="sent_to_id" attrs="{'readonly': [('state', 'in', ['in_progress', 'done'])], 'required': [('state', '=', 'comparison')]}" />
                 </xpath>
                 <xpath expr="//notebook" position="inside">
