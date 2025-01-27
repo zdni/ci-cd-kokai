@@ -72,8 +72,8 @@ class PurchaseRequest(models.Model):
             'subject': 'Pemberitahuan mengenai Vendor Comparison',
             'description': f"",
             'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
-            'user_ids': self.sent_to_ids.ids,
-            # 'user_ids': self.sent_to_id.member_ids.ids,
+            # 'user_ids': self.sent_to_ids.ids,
+            'user_ids': self.sent_to_id.member_ids.ids,
             'model': 'purchase.request',
             'res_id': self.id,
         })
