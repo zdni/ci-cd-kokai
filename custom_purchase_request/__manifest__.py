@@ -5,7 +5,13 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Purchase',
-    'depends': ['purchase_request', 'department_user', 'schedule_task', 'department_detail', 'company_director'],
+    'depends': [
+        'company_director',
+        'department_detail', 
+        'department_user', 
+        'purchase_request', 
+        'schedule_task', 
+    ],
     'data': [
         'data/data.xml',
         'data/purchase_request_type_data.xml',
