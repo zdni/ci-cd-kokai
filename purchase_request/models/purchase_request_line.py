@@ -272,7 +272,13 @@ class PurchaseRequestLine(models.Model):
     @api.onchange("product_id")
     def onchange_product_id(self):
         if self.product_id:
-            name = self.product_id.name
+            variant = []
+            for line in self.product_id.product_template_attribute_value_ids:
+                if line.product_attribute_value_id.name != "NONE":
+                    variant.append(f"{line.attribute_id.name}: {line.product_attribute_value_id.name}")
+            variant_string = " (" + ", ".join(variant) + ")" if len(variant) > 0 else ""
+
+            name = self.product_id.name + variant_string
             if self.product_id.code:
                 name = "[{}] {}".format(self.product_id.code, name)
             if self.product_id.description_purchase:
