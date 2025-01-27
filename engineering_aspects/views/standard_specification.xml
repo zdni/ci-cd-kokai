@@ -73,6 +73,14 @@
             sequence="10"
         />
 
+        <menuitem
+            id="external_documents_menu"
+            name="Standard Manufacturing"
+            action="list_of_documents.list_of_external_doc_action"
+            parent="engineering_aspects.datasheet_menu"
+            sequence="10"
+        />
+
         <record id="manufacturing_type_view_tree" model="ir.ui.view">
             <field name="name">manufacturing.type.view.tree</field>
             <field name="model">manufacturing.type</field>

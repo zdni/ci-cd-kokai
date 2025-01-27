@@ -7,7 +7,7 @@ class PurchaseRequest(models.Model):
 
     state = fields.Selection(selection_add=[('comparison', 'Vendor Comparison'), ('sent', 'Sent')], string='Status', ondelete={'comparison': 'cascade', 'sent': 'cascade'})
     sent_to_ids = fields.Many2many('res.users', string='Sent Agreement To')
-    sent_to_id = fields.Many2one('hr.department', string='Sent Agreement To')
+    sent_to_id = fields.Many2one('department.team', string='Sent Agreement To')
     potential_partner_ids = fields.Many2many('res.partner', string='Potential Vendor')
     agreement_ids = fields.One2many('purchase.agreement', 'request_id', string='Agreement')
     agreement_count = fields.Integer('Agreement Count', compute='_compute_agreement_count')
@@ -55,7 +55,7 @@ class PurchaseRequest(models.Model):
                     'request_id': self.id,
                     'uom_id': line.product_uom_id.id,
                     'partner_id': partner.id,
-                }) for line in self.line_ids]
+                }) for line in self.mapped('line_ids').filtered(lambda line: line.product_qty != line.purchased_qty)]
             }
             self.env['purchase.agreement'].create(agreement)
         self.action_show_agreement()
@@ -90,7 +90,7 @@ class PurchaseRequest(models.Model):
             return
 
         action = self.env.ref('partner_comparison.agreement_line_action').sudo().read()[0]
-        action['domain'] = [('agreement_id', 'in', self.agreement_ids.ids)]
+        action['domain'] = [('agreement_id', 'in', self.agreement_ids.ids), ('agreement_id.state', '=', 'sent')]
         return action
 
     def action_notif_for_team(self):
@@ -112,4 +112,4 @@ class PurchaseRequest(models.Model):
         if not assignment:
             raise ValidationError("Can't Assignment Task! Please contact Administrator!")
         assignment.action_assign()
-        self.write({ 'state': 'approved' })
+        self.write({ 'state': 'in_progress' })

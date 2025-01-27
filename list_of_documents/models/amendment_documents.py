@@ -26,7 +26,7 @@ class AmendmentDocument(models.Model):
         ('cancel', 'Cancel'),
     ], string='State', required=True, default='draft', tracking=True)
     team_id = fields.Many2one('department.team', string='Team')
-    current_edition = fields.Integer('Current Edition', related='document_id.edition')
+    current_edition = fields.Integer('Current Edition', related='document_id.curr_edition')
     new_edition = fields.Integer('New Edition', compute='_compute_new_edition')
     @api.depends('current_edition')
     def _compute_new_edition(self):

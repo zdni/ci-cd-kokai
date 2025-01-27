@@ -15,7 +15,7 @@ class CarStandard(models.Model):
     _inherit = ['mail.activity.mixin', 'mail.thread']
 
     car_id = fields.Many2one('car.report', string='CAR')
-    standard_id = fields.Many2one('standard.manufacturing', string='Standard Specification', tracking=True)
+    standard_id = fields.Many2one('list.of.documents', string='Standard Specification', tracking=True)
     section = fields.Char('Section', tracking=True, compute='_compute_section', store=True)
     name = fields.Char('Clause', tracking=True)
     description = fields.Char('Description')

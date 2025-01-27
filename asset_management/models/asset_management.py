@@ -57,9 +57,9 @@ class EquipmentAsset(models.Model):
             detail_used_by = ''
             if record.used_by == 'department':
                 detail_used_by = record.department_id.name
-            if record.used_by == 'employee':
+            elif record.used_by == 'employee':
                 detail_used_by = record.employee_id.name
-            if record.used_by == 'location':
+            elif record.used_by == 'location':
                 detail_used_by = record.work_location_id.name
             record.detail_used_by = detail_used_by
 

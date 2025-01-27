@@ -13,6 +13,7 @@
 
         'views/menu.xml',
         'views/machine_views.xml',
+        'views/res_config_settings_views.xml',
         'views/work_order_views.xml',
     ],
     'auto_install': False,

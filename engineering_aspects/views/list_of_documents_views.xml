@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="list_of_documents_view_form_inherit_manufacturing_type" model="ir.ui.view">
+            <field name="name">list.of.documents.view.form.inherit</field>
+            <field name="model">list.of.documents</field>
+            <field name="inherit_id" ref="list_of_documents.list_of_documents_view_form"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="type_id" attrs="{'invisible': [('source','=','internal')]}" />
+                </field>
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('source','=','external')]}</attribute>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

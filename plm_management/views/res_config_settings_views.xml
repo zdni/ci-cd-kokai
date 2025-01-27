@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="res_config_settings_view_form_inherit_plm" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="PLM" string="PLM" data-key="plm_management">
+                        <h2>Work Activity</h2>
+                        <div class="row mt16 o_settings_container" name="work_activity_query_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="query_class" title="Query Class in Work Activity">
+                                <div class="o_setting_right_pane">
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label for="query_class" class="col-lg-3"/>
+                                            <field name="query_class"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="query_size" class="col-lg-3"/>
+                                            <field name="query_size"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module': 'plm_management', 'bin_size': False}</field>
+        </record>
+
+        <menuitem
+            id="res_config_settings_menu"
+            name="Settings"
+            action="res_config_settings_action"
+            groups="base.group_system"
+            parent="plm_management.setting_menu"
+            sequence="0"
+        />
+    
+    </data>
+
+</odoo>

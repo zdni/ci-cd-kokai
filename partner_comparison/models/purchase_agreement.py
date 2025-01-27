@@ -13,7 +13,7 @@ class PurchaseAgreement(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    @api.depends('line_ids.price_total')
+    @api.depends('line_ids.price_total', 'has_discount_global', 'discount', 'discount_fixed', 'discount_type')
     def _amount_all(self):
         for agreement in self:
             order_lines = agreement.line_ids
@@ -77,8 +77,8 @@ class PurchaseAgreement(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('sent', 'Sent'),
-        ('done', 'Done'),
         ('to_po', 'PO'),
+        ('done', 'Done'),
         ('cancel', 'Cancel'),
     ], string='Status', copy=False, default='draft', tracking=True)
     notes = fields.Html('Terms and Conditions')
@@ -104,6 +104,7 @@ class PurchaseAgreement(models.Model):
     discount_fixed = fields.Float(string="Discount (Fixed)", digits="Discount")
 
     attachment_id = fields.Many2one('ir.attachment', string='File')
+    # product_ids = fields.Many2many('product.product', string='Product', related='line_ids.product_id')
 
     @api.model_create_multi
     def create(self, vals):
@@ -132,10 +133,7 @@ class PurchaseAgreement(models.Model):
         try:
             self.ensure_one()
             order_line = self.line_ids.filtered(lambda x: x.is_accept)
-            if len(order_line) ==  0:
-                return
-
-            self.env['purchase.order'].create({
+            order = self.env['purchase.order'].create({
                 'company_id': self.company_id.id,
                 'agreement_id': self.id,
                 'partner_id': self.partner_id.id,
@@ -155,6 +153,7 @@ class PurchaseAgreement(models.Model):
                     'purchase_request_lines': [(4,line.line_id.id)]
                 }) for line in order_line],
             })
+            self.write({ 'order_id': order.id })
             self.action_done()
         except:
             raise ValidationError("Can't Generate Purchase Order! Please contact Administrator")
