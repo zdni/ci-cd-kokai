@@ -56,7 +56,7 @@
 
         <menuitem
             id="nc_menu"
-            name="Non Conforming"
+            name="Analysis of Data"
             parent="qhse_program.qhse_program_menu"
             sequence="10"
         />
