@@ -14,7 +14,7 @@ class CostQuality(models.Model):
     source = fields.Selection([
         ('certification_body', 'Certification Body'),
         ('supplier', 'Supplier'),
-        ('governance', 'Governance'),
+        ('government', 'Government'),
         ('customer', 'Customer'),
         ('internal', 'Internal Kokai'),
     ], string='Source', required=True, default='certification_body')
