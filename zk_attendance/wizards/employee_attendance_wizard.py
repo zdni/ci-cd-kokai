@@ -152,6 +152,14 @@ FINGERPRINTS = {
     "404": { "name" : "Alfin Rahman", "department": "HRGA"},
     "405": { "name" : "Muhammad Ibnu Dzaky A.M", "department": "HRGA"},
     "406": { "name" : "Nurindah", "department": "Sales & Marketing"},
+    "407": { "name" : "Muhammad Linggar Kusuma", "department": "Production"},
+    "408": { "name" : "Muhammad Dafa Khoirudin", "department": "Production"},
+    "409": { "name" : "Andika Yudha Pratama", "department": "Production"},
+    "410": { "name" : "Muhammad Ulil Amri", "department": "Production"},
+    "411": { "name" : "Muhammad Abid Alfin Nur", "department": "Production"},
+    "412": { "name" : "Muhammad Danu", "department": "Production"},
+    "413": { "name" : "Muhammad Farel", "department": "Production"},
+    "414": { "name" : "Reno Alfiansyah", "department": "Production"},
 }
 
 class EmployeeAttendanceWizard(models.TransientModel):
@@ -216,21 +224,20 @@ class EmployeeAttendanceWizard(models.TransientModel):
 
             employee_name = user_id
             department = ""
-            # if FINGERPRINTS.get(user_id):
-            #     employee_name = FINGERPRINTS[user_id]['name']
-            #     department = FINGERPRINTS[user_id]['department']
-            # display_name = f"{department} - {employee_name}"
-
-            fingerprint = self.env['hr.employee.fingerprint'].search([
-                ('pin', '=', user_id),
-                ('fingerprint_id', '=', self.device_id.id)
-            ], limit=1)
-            if not fingerprint:
-                continue
-                
-            employee_name = fingerprint.employee_id.name
-            department = fingerprint.employee_id.department_id.name
+            if FINGERPRINTS.get(user_id):
+                employee_name = FINGERPRINTS[user_id]['name']
+                department = FINGERPRINTS[user_id]['department']
             display_name = f"{department} - {employee_name}"
+
+            # fingerprint = self.env['hr.employee.fingerprint'].search([
+            #     ('pin', '=', user_id),
+            #     ('fingerprint_id', '=', self.device_id.id)
+            # ], limit=1)
+            # if not fingerprint:
+            #     continue
+            # employee_name = fingerprint.employee_id.name
+            # department = fingerprint.employee_id.department_id.name
+            # display_name = f"{department} - {employee_name}"
 
             attendance_date = attendance[1].date()
             punch = attendance[2]

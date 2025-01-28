@@ -30,10 +30,10 @@ class HRContractImport(models.TransientModel):
             except:
                 raise UserError(_("File not Valid"))
             
+            error = ''
             name = ''
-            categ_id = False
-            uom_id = False
-            attribute_line_ids = []
+            allowance_ids = []
+            employee = False
             
             vals = {}
             for rec in range(sheet.nrows):
@@ -42,55 +42,49 @@ class HRContractImport(models.TransientModel):
                     if len(row_vals) < int(1):
                         raise UserError(_("Please ensure that you selected the correct file"))
                     
-                    if name != '' and row_vals[0] != '':
-                        vals['attribute_line_ids'] = attribute_line_ids
+
+                    if name != '' and row_vals[0] != '' and employee:
+                        vals['allowance_ids'] = allowance_ids
+                        vals['wage'] = 1
                         _logger.warning(vals)
-                        self.env['product.template'].create(vals)
-                        attribute_line_ids = []
+                        self.env['hr.contract'].create(vals)
+                        allowance_ids = []
 
                     if row_vals[0] != '':
                         name = row_vals[0]
-                        vals['name'] = name
-
-                    if row_vals[1] != '':
-                        vals['sale_ok'] = row_vals[1]
+                        employee = self.env['hr.employee'].search([ ('name', '=', name) ], limit=1)
+                        if not employee:
+                            raise UserError(f"Employee {name} not Found || ")
+                            error += f"Employee {name} not Found || "
+                        vals['employee_id'] = employee.id
+                        vals['department_id'] = employee.department_id.id
+                        vals['job_id'] = employee.job_id.id
+                        vals['hr_responsible_id'] = 2
 
                     if row_vals[2] != '':
-                        vals['purchase_ok'] = row_vals[2]
-
-                    if row_vals[3] != '':
-                        vals['detailed_type'] = PRODUCT_TYPE[row_vals[3]]
+                        aer_category = self.env['aer.category'].search([ ('name', '=', row_vals[2]) ], limit=1)
+                        if not aer_category:
+                            raise UserError(f"AER Category {row_vals[2]} not Found || ")
+                            error += f"AER Category {row_vals[2]} not Found || "
+                        if employee:
+                            employee.write({ 'aer_category_id': aer_category.id })
                     
                     if row_vals[4] != '':
-                        categ_id = self.env['product.category'].search([ ('name', '=', row_vals[4]) ], limit=1)
-                        if not categ_id:
-                            raise UserError(f"{row_vals[4]} not Found")
-                        vals['categ_id'] = categ_id.id
+                        vals['name'] = row_vals[4]
 
                     if row_vals[5] != '':
-                        uom_id = self.env['uom.uom'].search([ ('name', '=', row_vals[5]) ], limit=1)
-                        if not uom_id:
-                            raise UserError(f"{row_vals[5]} not Found")
-                        vals['uom_id'] = uom_id.id
+                        vals['date_start'] = row_vals[5]
 
-                    if row_vals[7] != '' and row_vals[8] != '':
-                        value_ids = []
-                        attribute_id = self.env['product.attribute'].search([ ('name', '=', row_vals[7]) ], limit=1)
-                        if not attribute_id:
-                            raise UserError(f"{row_vals[7]} not Found")
-                        variants = row_vals[8].split(',')
-                        for variant in variants:
-                            value = self.env['product.attribute.value'].search([ 
-                                ('attribute_id', '=', attribute_id.id),
-                                ('name', '=', variant),
-                            ], limit=1)
-                            if not value:
-                                raise UserError(f"{variant} in {attribute_id.name} for {name} not Found")
-                            value_ids.append(value.id)
+                    if row_vals[6] != '':
+                        vals['date_end'] = row_vals[6]
 
-                        attribute_line_ids.append((0,0,{
-                            'attribute_id': attribute_id.id,
-                            'value_ids': value_ids
+                    if row_vals[12] != '' and row_vals[13] != '':
+                        allowance = self.env['hr.allowance.type'].search([ ('name', '=', row_vals[12]) ], limit=1)
+                        if not allowance:
+                            raise UserError(f"{row_vals[12]} not Found")
+                        allowance_ids.append((0,0, {
+                            'allowance_id': allowance.id,
+                            'value': row_vals[13],
                         }))
 
         except UserError as e:

@@ -11,6 +11,13 @@ class HRContractState(models.Model):
         ('monthly', 'Monthly'),
     ], string='Salary Type', default='monthly', required=True)
 
+    def name_get(self):
+        res = []
+        for state in self:
+            name = f"{state.name} ({dict(self._fields['salary_type'].selection).get(state.salary_type)})"
+            res.append((state.id, name,))
+        return res
+
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
