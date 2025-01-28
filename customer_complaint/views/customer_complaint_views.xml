@@ -35,7 +35,8 @@
                         </group>
                         <notebook>
                             <page name="complaint" string="Complaint">
-                                <field name="complaint_ids" context="{'default_complaint_id': active_id}" attrs="{'readonly': [('state', '!=', 'open')]}" >
+                                <field name="complaint_ids" context="{'default_complaint_id': active_id}"  >
+                                <!-- attrs="{'readonly': [('state', '!=', 'open')]}" -->
                                     <form string="Complaint">
                                         <sheet>
                                             <group>
@@ -51,13 +52,16 @@
                                 </field>
                             </page>
                             <page name="causes" string="Analysis of Causes">
-                                <field name="causes_ids" context="{'default_complaint_id': active_id}" attrs="{'readonly': [('state', '!=', 'analysis')]}" >
+                                <field name="causes_ids" context="{'default_complaint_id': active_id}"  >
+                                <!-- attrs="{'readonly': [('state', '!=', 'analysis')]}" -->
                                     <form string="Complaint">
                                         <sheet>
                                             <group>
                                                 <field name="complaint_id" invisible="1" />
                                                 <field name="line_id" />
                                                 <field name="causes" />
+                                                <field name="user_id" />
+                                                <field name="date" />
                                             </group>
                                         </sheet>
                                     </form>
@@ -65,17 +69,22 @@
                                         <field name="complaint_id" invisible="1" />
                                         <field name="line_id" />
                                         <field name="causes" />
+                                        <field name="user_id" />
+                                        <field name="date" />
                                     </tree>
                                 </field>
                             </page>
                             <page name="solution" string="Settlement Solution">
-                                <field name="solution_ids" context="{'default_complaint_id': active_id}" attrs="{'readonly': [('state', '!=', 'analysis')]}" >
+                                <field name="solution_ids" context="{'default_complaint_id': active_id}"  >
+                                <!-- attrs="{'readonly': [('state', '!=', 'analysis')]}" -->
                                     <form string="Complaint">
                                         <sheet>
                                             <group>
                                                 <field name="complaint_id" invisible="1" />
                                                 <field name="line_id" />
                                                 <field name="settlement_solution" />
+                                                <field name="user_id" />
+                                                <field name="date" />
                                             </group>
                                         </sheet>
                                     </form>
@@ -83,17 +92,22 @@
                                         <field name="complaint_id" invisible="1" />
                                         <field name="line_id" />
                                         <field name="settlement_solution" />
+                                        <field name="user_id" />
+                                        <field name="date" />
                                     </tree>
                                 </field>
                             </page>
                             <page name="corrective" string="Corrective Action">
-                                <field name="corrective_ids" context="{'default_complaint_id': active_id}" attrs="{'readonly': [('state', '!=', 'analysis')]}" >
+                                <field name="corrective_ids" context="{'default_complaint_id': active_id}"  >
+                                <!-- attrs="{'readonly': [('state', '!=', 'analysis')]}" -->
                                     <form string="Complaint">
                                         <sheet>
                                             <group>
                                                 <field name="complaint_id" invisible="1" />
                                                 <field name="line_id" />
                                                 <field name="corrective_action" />
+                                                <field name="user_id" />
+                                                <field name="date" />
                                             </group>
                                         </sheet>
                                     </form>
@@ -101,6 +115,8 @@
                                         <field name="complaint_id" invisible="1" />
                                         <field name="line_id" />
                                         <field name="corrective_action" />
+                                        <field name="user_id" />
+                                        <field name="date" />
                                     </tree>
                                 </field>
                             </page>

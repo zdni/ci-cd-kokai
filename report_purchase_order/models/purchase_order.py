@@ -26,6 +26,15 @@ class PurchaseOrder(models.Model):
         price_term = dict(self._fields['price_term'].selection).get(self.price_term)
         return price_term
 
+    def currency_format(self, number=0):
+        res = ""
+        for rec in self:
+            if rec.currency_id.position == "before":
+                res = rec.currency_id.symbol + "{:20,.0f}".format(number)
+            else:
+                res = "{:20,.0f}".format(number) + res.currency_id.symbol
+        return res
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
