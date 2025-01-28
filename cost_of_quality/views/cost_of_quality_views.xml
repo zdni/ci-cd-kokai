@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="cost_quality_view_form" model="ir.ui.view">
+            <field name="name">cost.quality.view.form</field>
+            <field name="model">cost.quality</field>
+            <field name="arch" type="xml">
+                <form string="Cost of Quality">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1" /></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date" />
+                                <field name="source" />
+                                <field name="group" />
+                                <field name="category" />
+                            </group>
+                            <group>
+                                <field name="contract_no" />
+                                <field name="order_no" />
+                                <field name="invoice_no" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" />
+                            <field name="remarks" />
+                        </group>
+                        <group>
+                            <field name="total_usd" />
+                            <field name="total_idr" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="cost_quality_view_tree" model="ir.ui.view">
+            <field name="name">cost.quality.view.tree</field>
+            <field name="model">cost.quality</field>
+            <field name="arch" type="xml">
+                <tree string="Cost of Quality">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="group" />
+                    <field name="category" />
+                    <field name="contract_no" />
+                    <field name="total_usd" />
+                    <field name="total_idr" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="cost_quality_action" model="ir.actions.act_window">
+            <field name="name">Cost of Quality</field>
+            <field name="res_model">cost.quality</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="cost_quality_menu"
+            name="Cost of Quality"
+            action="cost_quality_action"
+            parent="qhse_program.nc_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

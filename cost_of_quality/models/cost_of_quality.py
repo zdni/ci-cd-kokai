@@ -17,8 +17,24 @@ class CostQuality(models.Model):
         ('governance', 'Governance'),
         ('customer', 'Customer'),
         ('internal', 'Internal Kokai'),
-    ], string='Source')
-    
+    ], string='Source', required=True, default='certification_body')
+    group = fields.Selection([
+        ('good', 'Good'),
+        ('poor', 'Poor'),
+    ], string='Group', default='good', required=True)
+    category = fields.Selection([
+        ('internal', 'Internal Failure Cost'),
+        ('external', 'External Failure Cost'),
+        ('appraisal', 'Appraisal Cost'),
+        ('prevention', 'Prevention Cost'),
+    ], string='Category', default='internal', required=True)
+    contract_no = fields.Char('Contract No')
+    order_no = fields.Char('Purchase Order No')
+    invoice_no = fields.Char('Invoice No')
+    description = fields.Text('Description')
+    total_usd = fields.Float('Total USD')
+    total_idr = fields.Float('Total IDR')
+    remarks = fields.Text('Remarks')
 
     @api.model_create_multi
     def create(self, vals):

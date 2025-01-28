@@ -117,6 +117,7 @@ class CARCar(models.Model):
     date = fields.Date('Date', tracking=True)
     work_order_no = fields.Char('Work Order No', tracking=True)
     department_id = fields.Many2one('hr.department', string='Department', tracking=True)
+    team_id = fields.Many2one('department.team', string='Team', domain="[('department_id','=',department_id)]")
     document_id = fields.Many2one('list.of.documents', string='Controlling Document')
     issued_to_ids = fields.Many2many('res.users', string='Issued To', domain="[('department_id', '=', department_id)]", tracking=True)
     type_id = fields.Many2one('car.type', string='Source of CAR', tracking=True)

@@ -157,7 +157,7 @@
         </record>
     
         <menuitem
-            id="list_of_wi_menu"
+            id="list_of_ed_menu"
             name="External Document"
             action="list_of_external_doc_action"
             parent="list_of_documents.list_of_documents_menu"

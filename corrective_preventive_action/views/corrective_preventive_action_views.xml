@@ -53,6 +53,7 @@
                                 <field name="type_id" />
                                 <field name="date" />
                                 <field name="department_id" />
+                                <field name="team_id" />
                                 <field name="issued_to_ids" widget="many2many_tags" />
                             </group>
                             <group string="Related">
