@@ -32,8 +32,15 @@ class PurchaseOrder(models.Model):
             if rec.currency_id.position == "before":
                 res = rec.currency_id.symbol + "{:20,.0f}".format(number)
             else:
-                res = "{:20,.0f}".format(number) + res.currency_id.symbol
+                res = "{:20,.0f}".format(number) + rec.currency_id.symbol
         return res
+
+    def _amount_discount(self):
+        for order in self:
+            amount_discount = 0.0
+            for line in order.order_line:
+                amount_discount += ((line.discount/100)*line.product_qty*line.price_unit)
+            return amount_discount
 
 
 class PurchaseOrderLine(models.Model):
