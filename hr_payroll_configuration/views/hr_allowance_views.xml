@@ -122,7 +122,7 @@
             <field name="name">aer.category.view.tree</field>
             <field name="model">aer.category</field>
             <field name="arch" type="xml">
-                <tree string="AER Category" >
+                <tree string="AER Category" editable="bottom">
                     <field name="name" />
                     <field name="aer_id" />
                     <field name="marital" />
