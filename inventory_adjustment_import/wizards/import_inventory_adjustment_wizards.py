@@ -194,16 +194,18 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                         'product_id': product.id,
                         'lot_id': lot_id,
                         'product_uom_id': product.uom_id.id,
-                        'inventory_date': row_vals[7],
+                        'backdate': row_vals[7],
+                        'remarks': 'Saldo Awal Persediaan Gudang',
                     }
-                    if row_vals[8]:
+                    if row_vals[8] == 'Serial Number' and lot_id == '':
                         for i in range(0, int(row_vals[5])):
                             vals['lot_id'] = product.generate_qrcode()
                             self.create_inventory_adjustment(1, vals)
-                    else:
+                    elif row_vals[8] == 'Lots' and lot_id == '':
                         vals['lot_id'] = product.generate_qrcode()
                         self.create_inventory_adjustment(int(row_vals[5]), vals)
-                    self.create_inventory_adjustment(int(row_vals[5]), vals)
+                    else:
+                        self.create_inventory_adjustment(int(row_vals[5]), vals)
 
 
         except UserError as e:
