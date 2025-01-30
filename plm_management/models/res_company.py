@@ -6,3 +6,4 @@ class ResCompany(models.Model):
 
     query_class = fields.Char('Query Class')
     query_size = fields.Char('Query Size')
+    query_item = fields.Char('Query Item')
