@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet//group//group[1]" position="inside">
                     <field name="start_date" />
-                    <field name="end_date" readonly="1" />
+                    <field name="end_date" />
                     <field name="before_timesheet" widget="image" />
                     <field name="after_timesheet" widget="image" />
                 </xpath>
