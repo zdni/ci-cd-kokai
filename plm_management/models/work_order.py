@@ -17,6 +17,9 @@ class WorkActivity(models.Model):
     def _get_domain_query_pressure_rating(self):
         return self.env.company.query_class
 
+    def _get_domain_query_item(self):
+        return self.env.company.query_item
+
     def _get_domain_query_size(self):
         return self.env.company.query_size
 
@@ -31,7 +34,7 @@ class WorkActivity(models.Model):
     description = fields.Text('Description', tracking=True)
     machine_id = fields.Many2one('machine.tool', string='Machine', tracking=True)
     item_id = fields.Many2one('product.product', string='Item', tracking=True)
-    product_id = fields.Many2one('product.product', string='Item', tracking=True)
+    product_id = fields.Many2one('product.product', string='Item', tracking=True, domain=_get_domain_query_item)
     pressure_rating_id = fields.Many2one('product.attribute.value', string='Class', tracking=True, domain=_get_domain_query_pressure_rating)
     size_id = fields.Many2one('product.attribute.value', string='Size', domain=_get_domain_query_size)
     # sale order
