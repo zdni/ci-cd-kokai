@@ -20,6 +20,7 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
         ('attribute', 'Product Attribute'),
         ('variant', 'Product Variant'),
     ], string='Check', default='all')
+    just_check = fields.Boolean('Just Check')
 
     def checking_value(self):
         try:
@@ -75,6 +76,7 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                     if self.check in ['all', 'attribute', 'variant']:
                         variants = row_vals[3].split(' || ')
                         for variant in variants:
+                            product_tmpl_attr = False
                             attribute_name = variant.split(': ')[0]
                             variant_name = variant.split(': ')[1]
                             attribute = self.env['product.attribute'].search([ ('name', '=', attribute_name) ], limit=1)
@@ -100,7 +102,18 @@ class ImportInventoryAdjustmentWizard(models.TransientModel):
                             ], limit=1)
                             if not product_template_variant_value_ids and self.check in ['all', 'variant']:
                                 error['Product Variant'] += f"{i}) {row_vals[1]} - {attribute_name} - {product_attribute_value.name} || "
-            raise UserError(str(error))
+                                if not self.just_check:
+                                    if product_tmpl_attr:
+                                        product_tmpl_attr.value_ids = [(4, product_attribute_value.id)]
+                                    if not product_tmpl_attr and attribute:
+                                        attribute_line = self.env['product.template.attribute.line'].create({
+                                            'product_tmpl_id': product_tmpl_id.id,
+                                            'attribute_id': attribute.id,
+                                            'value_ids': [product_attribute_value.id],
+                                        })
+                                        product_tmpl_id.write({ 'attribute_line_ids': [(4, attribute_line.id)] })
+            if self.just_check:
+                raise UserError(str(error))
         except UserError as e:
             raise UserError(str(e))
         

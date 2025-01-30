@@ -12,6 +12,7 @@
                         <group>
                             <field name="file" />
                             <field name="check" />
+                            <field name="just_check" />
                         </group>
                     </sheet>
                     <footer>
