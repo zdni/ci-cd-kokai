@@ -7,21 +7,46 @@ class PurchaseRequest(models.Model):
 
     state = fields.Selection(selection_add=[('comparison', 'Vendor Comparison'), ('sent', 'Sent')], string='Status', ondelete={'comparison': 'cascade', 'sent': 'cascade'})
     sent_to_ids = fields.Many2many('res.users', string='Sent Agreement To')
-    sent_to_id = fields.Many2one('department.team', string='Sent Agreement To')
+    sent_to_id = fields.Many2one('department.team', string='Sent Agreement To', tracking=True)
     potential_partner_ids = fields.Many2many('res.partner', string='Potential Vendor')
     agreement_ids = fields.One2many('purchase.agreement', 'request_id', string='Agreement')
     agreement_count = fields.Integer('Agreement Count', compute='_compute_agreement_count')
+    have_comparison = fields.Boolean('Have Comparison', default=True, tracking=True)
     @api.depends('agreement_ids')
     def _compute_agreement_count(self):
         for record in self:
             record.agreement_count = len(record.agreement_ids)
 
+    def _generate_purchase_order(self):
+        try:
+            self.ensure_one()
+            order_line = self.line_ids.filtered(lambda x: not x.cancelled)
+            self.env['purchase.order'].create({
+                'company_id': self.company_id.id,
+                'partner_id': self.partner_id.id,
+                'date_order': fields.Datetime.now(),
+                'user_id': self.env.user.id,
+                'request_id': self.request_id.id,
+                'origin': self.request_id.name,
+                'order_line': [(0,0,{
+                    'product_id': line.product_id.id,
+                    'product_qty': line.qty,
+                    'product_uom': line.uom_id.id,
+                    'purchase_request_lines': [(4,line.id)]
+                }) for line in order_line],
+            })
+        except:
+            raise ValidationError("Can't Generate Purchase Order! Please contact Administrator")
+
     def generate_order(self):
         self.ensure_one()
-        if self.agreement_count == 0:
+        if self.agreement_count == 0 and self.have_comparison:
             return
-        for agreement in self.agreement_ids:
-            agreement.generate_purchase_order()
+        if self.have_comparison:
+            for agreement in self.agreement_ids:
+                agreement.generate_purchase_order()
+        else:
+            self._generate_purchase_order()
         action = self.env.ref('purchase.purchase_rfq').sudo().read()[0]
         action['domain'] = [('request_id', '=', self.id)]
         self.write({ 'state': 'in_progress' })
@@ -72,7 +97,6 @@ class PurchaseRequest(models.Model):
             'subject': 'Pemberitahuan mengenai Vendor Comparison',
             'description': f"",
             'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
-            # 'user_ids': self.sent_to_ids.ids,
             'user_ids': self.sent_to_id.member_ids.ids,
             'model': 'purchase.request',
             'res_id': self.id,

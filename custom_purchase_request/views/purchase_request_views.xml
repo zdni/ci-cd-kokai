@@ -58,6 +58,13 @@
                 <xpath expr="//notebook//page[1]//field[@name='line_ids']" position="attributes">
                     <attribute name="attrs">{'readonly': [('state', 'not in', ['draft','need_improvement'])]}</attribute>
                 </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page name="file" string="File">
+                        <group>
+                            <field name="attachment_ids" widget="many2many_attachment_preview" />
+                        </group>
+                    </page>
+                </xpath>
             </field>
         </record>
 

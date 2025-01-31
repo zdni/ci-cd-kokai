@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="equipment_asset_view_form" model="ir.ui.view">
+            <field name="name">equipment.asset.view.form</field>
+            <field name="model">equipment.asset</field>
+            <field name="arch" type="xml">
+                <form string="Asset">
+                    <header>
+                        <button string="Assign" name="action_assign" type="object" class="oe_highlight" states="draft"/>
+                        <button string="Cancel" name="action_cancel" type="object" states="draft"/>
+                        <button string="Return" name="action_return" type="object" states="assign" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_maintenance" type="object" class="oe_stat_button" icon="fa-list">
+                                <field name="maintenance_count" string="Maintenance" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1" /></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="category_id" attrs="{'readonly': [('state','!=','draft')]}" />
+                                <field name="product_id" attrs="{'readonly': [('state','!=','draft')]}" />
+                                <field name="lot_id" attrs="{'readonly': [('state','!=','draft')]}" />
+                                <field name="qty" attrs="{'readonly': [('state','!=','draft')]}" />
+                                <field name="uom_id" attrs="{'readonly': [('state','!=','draft')]}" />
+                            </group>
+                            <group>
+                                <field name="used_by" attrs="{'readonly': [('state','!=','draft')]}" />
+                                <field name="employee_id" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('used_by','!=','department')]}" />
+                                <field name="department_id" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('used_by','!=','employee')]}" />
+                                <field name="work_location_id" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('used_by','!=','location')]}" />
+                                <field name="detail_used_by" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('used_by','!=','other')]}" />
+                                <field name="responsible_id" attrs="{'readonly': [('state','!=','draft')]}" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="note" attrs="{'readonly': [('state','!=','draft')]}" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="equipment_asset_view_tree" model="ir.ui.view">
+            <field name="name">equipment.asset.view.tree</field>
+            <field name="model">equipment.asset</field>
+            <field name="arch" type="xml">
+                <tree string="Asset">
+                    <field name="name" />
+                    <field name="used_by" />
+                    <field name="product_id" />
+                    <field name="lot_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="equipment_asset_action" model="ir.actions.act_window">
+            <field name="name">Asset</field>
+            <field name="res_model">equipment.asset</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="equipment_asset_menu"
+            name="Asset"
+            action="equipment_asset_action"
+            parent="helpdesk_maintenance.helpdesk_maintenance_menu"
+            sequence="0"
+        />
+
+
+        <record id="equipment_category_view_tree" model="ir.ui.view">
+            <field name="name">equipment.category.view.tree</field>
+            <field name="model">equipment.category</field>
+            <field name="arch" type="xml">
+                <tree string="Equipment Category" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="equipment_category_action" model="ir.actions.act_window">
+            <field name="name">Equipment Category</field>
+            <field name="res_model">equipment.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem
+            id="equipment_category_menu"
+            name="Equipment Category"
+            action="equipment_category_action"
+            parent="helpdesk_maintenance.helpdesk_configuration_menu"
+            sequence="10"
+        />
+    
+    </data>
+
+</odoo>

@@ -48,12 +48,10 @@ class ScheduleMeetingWizard(models.TransientModel):
                 'lead_id': self.lead_id.id,
                 'crm_stage': self.lead_id.stage_id.id,
                 'crm_state': self.lead_id.state,
-                'lead_id': self.lead_id.id,
             })
             meeting.action_assign()
             action = (self.env.ref('minutes_of_meeting.minutes_meeting_action').sudo().read()[0])
-            action['views'] = [(self.env.ref('minutes_of_meeting.minutes_meeting_view_form').id, 'form')]
-            action['id'] = meeting.id
+            action['domain'] = [('lead_id', 'in', [self.lead_id.id])]
             return action
         except:
             raise ValidationError("Schedule Meeting Failed!")

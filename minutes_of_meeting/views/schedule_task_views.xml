@@ -62,6 +62,32 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page name="file" string="File">
+                                <group>
+                                    <group>
+                                        <field name="attachment_ids" widget="many2many_attachment_preview" />
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="note" string="MoM">
+                                <field name="note_ids">
+                                    <form string="MoM">
+                                        <sheet>
+                                            <group>
+                                                <field name="meeting_id" invisible="1" />
+                                                <field name="user_id" />
+                                                <field name="date" />
+                                                <field name="subject" />
+                                                <field name="note" />
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                    <tree>
+                                        <field name="meeting_id" invisible="1" />
+                                        <field name="note" />
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

@@ -11,7 +11,7 @@
             <field name="number_next">1</field>
             <field name="use_date_range">1</field>
             <field name="range_reset">monthly</field>
-            <field name="prefix">EQUIP-%(y)s%(month)s-</field>
+            <field name="prefix">ASSET-%(y)s%(month)s-</field>
         </record>
 
     </data>

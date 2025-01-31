@@ -7,11 +7,12 @@
     'category': 'Purchase',
     'depends': [
         'custom_purchase_request',
+        'many2many_attachment_preview',
         'purchase', 
+        'purchase_discount',
         'purchase_request', 
         'sequence_reset_period', 
         'schedule_task',
-        'purchase_discount',
     ],
     'data': [
         'data/ir_sequence.xml',

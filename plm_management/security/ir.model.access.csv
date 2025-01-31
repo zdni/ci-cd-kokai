@@ -5,3 +5,4 @@ access_machine_type,access_machine_type,model_machine_type,base.group_user,1,1,1
 access_machine_tag,access_machine_tag,model_machine_tag,base.group_user,1,1,1,1
 access_machine_model,access_machine_model,model_machine_model,base.group_user,1,1,1,1
 access_machine_tool,access_machine_tool,model_machine_tool,base.group_user,1,1,1,1
+access_temporary_item,access_temporary_item,model_temporary_item,base.group_user,1,1,1,1

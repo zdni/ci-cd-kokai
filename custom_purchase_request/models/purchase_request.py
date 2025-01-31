@@ -39,6 +39,7 @@ class PurchaseRequest(models.Model):
     ], string='Description', required=True, default='project', tracking=True)
     team_id = fields.Many2one('department.team', string='Purchase Team', required=True, domain=_default_domain_team, tracking=True)
     director = fields.Char('Director', related='company_id.director_id.name')
+    attachment_ids = fields.Many2many('ir.attachment', string='File')
 
     @api.onchange('requested_by')
     def _onchange_requested_by(self):

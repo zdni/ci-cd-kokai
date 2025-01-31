@@ -1,6 +1,13 @@
 from odoo import _, api, fields, models
 
 
+class TemporaryItem(models.Model):
+    _name = 'temporary.item'
+    _description = 'Temporary Item'
+
+    name = fields.Char('Name')
+
+
 class WorkOrder(models.Model):
     _name = 'work.order'
     _description = 'Work Order'
@@ -33,6 +40,7 @@ class WorkActivity(models.Model):
     activity_id = fields.Many2one('department.activity', string='Activity', domain="[('department_id', '=', department_id)]", tracking=True)
     description = fields.Text('Description', tracking=True)
     machine_id = fields.Many2one('machine.tool', string='Machine', tracking=True)
+    temporary_item_id = fields.Many2one('temporary.item', string='Type', tracking=True)
     item_id = fields.Many2one('product.product', string='Item', tracking=True, domain=_get_domain_query_item)
     product_id = fields.Many2one('product.product', string='Item', tracking=True, domain=_get_domain_query_item)
     pressure_rating_id = fields.Many2one('product.attribute.value', string='Class', tracking=True, domain=_get_domain_query_pressure_rating)

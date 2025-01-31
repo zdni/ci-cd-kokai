@@ -104,7 +104,7 @@ class PurchaseAgreement(models.Model):
     discount_fixed = fields.Float(string="Discount (Fixed)", digits="Discount")
 
     attachment_id = fields.Many2one('ir.attachment', string='File')
-    # product_ids = fields.Many2many('product.product', string='Product', related='line_ids.product_id')
+    attachment_ids = fields.Many2many('ir.attachment', string='File')
 
     @api.model_create_multi
     def create(self, vals):
@@ -119,7 +119,8 @@ class PurchaseAgreement(models.Model):
 
     def action_sent(self):
         self.ensure_one()
-        self.write({ 'state': 'sent' })
+        if self.state == 'draft':
+            self.write({ 'state': 'sent' })
 
     def action_done(self):
         self.ensure_one()
@@ -132,29 +133,30 @@ class PurchaseAgreement(models.Model):
     def generate_purchase_order(self):
         try:
             self.ensure_one()
-            order_line = self.line_ids.filtered(lambda x: x.is_accept)
-            order = self.env['purchase.order'].create({
-                'company_id': self.company_id.id,
-                'agreement_id': self.id,
-                'partner_id': self.partner_id.id,
-                'date_order': fields.Datetime.now(),
-                'user_id': self.env.user.id,
-                'request_id': self.request_id.id,
-                'origin': self.request_id.name,
-                'order_line': [(0,0,{
-                    'agreement_id': line.id,
-                    'product_id': line.product_id.id,
-                    'product_qty': line.qty,
-                    'product_uom': line.uom_id.id,
-                    'price_unit': line.price_unit,
-                    'taxes_id': line.tax_ids,
-                    'discount': line.discount,
-                    'discount_fixed': line.discount_fixed,
-                    'purchase_request_lines': [(4,line.line_id.id)]
-                }) for line in order_line],
-            })
-            self.write({ 'order_id': order.id })
-            self.action_done()
+            if self.state == 'sent':
+                order_line = self.line_ids.filtered(lambda x: x.is_accept)
+                order = self.env['purchase.order'].create({
+                    'company_id': self.company_id.id,
+                    'agreement_id': self.id,
+                    'partner_id': self.partner_id.id,
+                    'date_order': fields.Datetime.now(),
+                    'user_id': self.env.user.id,
+                    'request_id': self.request_id.id,
+                    'origin': self.request_id.name,
+                    'order_line': [(0,0,{
+                        'agreement_id': line.id,
+                        'product_id': line.product_id.id,
+                        'product_qty': line.qty,
+                        'product_uom': line.uom_id.id,
+                        'price_unit': line.price_unit,
+                        'taxes_id': line.tax_ids,
+                        'discount': line.discount,
+                        'discount_fixed': line.discount_fixed,
+                        'purchase_request_lines': [(4,line.line_id.id)]
+                    }) for line in order_line],
+                })
+                self.write({ 'order_id': order.id })
+                self.action_done()
         except:
             raise ValidationError("Can't Generate Purchase Order! Please contact Administrator")
 

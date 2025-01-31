@@ -5,7 +5,12 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Productivity',
-    'depends': ['schedule_task', 'department_detail', 'employee_attendance'],
+    'depends': [
+        'department_detail', 
+        'employee_attendance',
+        'many2many_attachment_preview',
+        'schedule_task', 
+    ],
     'data': [
         'data/data.xml',
         

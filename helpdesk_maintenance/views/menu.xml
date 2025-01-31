@@ -21,7 +21,7 @@
             id="helpdesk_configuration_menu"
             name="Configuration"
             parent="helpdesk_maintenance.helpdesk_maintenance_menu"
-            sequence="10"
+            sequence="1000"
         />
     
     </data>

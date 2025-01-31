@@ -9,6 +9,7 @@
         'company_director',
         'department_detail', 
         'department_user', 
+        'many2many_attachment_preview',
         'purchase_request', 
         'schedule_task', 
     ],

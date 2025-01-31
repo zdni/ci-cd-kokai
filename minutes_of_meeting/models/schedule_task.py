@@ -11,36 +11,36 @@ class MinutesMeeting(models.Model):
     user_id = fields.Many2one('res.users', string='Applicant', default=lambda self: self.env.user.id)
     leader_id = fields.Many2one('res.users', string='Leader')
 
-    name = fields.Char('Name', default='New')
-    videocall_url = fields.Char('Videocall URL')
-    location_id = fields.Many2one('hr.work.location', string='Location')
-    area_id = fields.Many2one('hr.work.area', string='Area')
-    detail_location = fields.Char('Detail Location')
-    date_start = fields.Datetime('Date Start', default=fields.Datetime.now())
-    date_end = fields.Datetime('Date End')
+    name = fields.Char('Name', default='New', tracking=True)
+    videocall_url = fields.Char('Videocall URL', tracking=True)
+    location_id = fields.Many2one('hr.work.location', string='Location', tracking=True)
+    area_id = fields.Many2one('hr.work.area', string='Area', tracking=True)
+    detail_location = fields.Char('Detail Location', tracking=True)
+    date_start = fields.Datetime('Date Start', default=fields.Datetime.now(), tracking=True)
+    date_end = fields.Datetime('Date End', tracking=True)
 
-    subject = fields.Text('Subject')
+    subject = fields.Text('Subject', tracking=True)
     
     type = fields.Selection([
         ('internal', 'Internal'),
         ('external', 'External'),
-    ], string='Type', required=True, default='internal')
+    ], string='Type', required=True, default='internal', tracking=True)
     media = fields.Selection([
         ('meeting', 'Meeting'),
         ('call', 'Call'),
         ('message', 'Message'),
-    ], string='Media', required=True, default='meeting')
+    ], string='Media', required=True, default='meeting', tracking=True)
     participant_type = fields.Selection([
         ('all', 'All'),
         ('department', 'Department'),
         ('employee', 'Employee'),
-    ], string='Participant Type', default='all')
-    department_ids = fields.Many2many('hr.department', string='Department')
-    employee_type_ids = fields.Many2many('hr.contract.type', string='Employee Type')
-    user_ids = fields.Many2many('res.users', string='Participants')
-    partner_ids = fields.Many2many('res.partner', string='Partner')
+    ], string='Participant Type', default='all', tracking=True)
+    department_ids = fields.Many2many('hr.department', string='Department', tracking=True)
+    employee_type_ids = fields.Many2many('hr.contract.type', string='Employee Type', tracking=True)
+    user_ids = fields.Many2many('res.users', string='Participants', tracking=True)
+    partner_ids = fields.Many2many('res.partner', string='Partner', tracking=True)
 
-    attendance_ids = fields.One2many('meeting.attendance', 'meeting_id', string='Attendance')
+    attendance_ids = fields.One2many('meeting.attendance', 'meeting_id', string='Attendance', tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('assign', 'Assign'),
@@ -49,7 +49,8 @@ class MinutesMeeting(models.Model):
         ('cancel', 'Cancel'),
     ], string='State', required=True, tracking=True, default='draft')
 
-    attachment_ids = fields.Many2many('ir.attachment', string='Files')
+    attachment_ids = fields.Many2many('ir.attachment', string='Files', tracking=True)
+    note_ids = fields.One2many('meeting.note', 'meeting_id', string='MoM', tracking=True)
 
     @api.onchange('area_id')
     def _onchange_area_id(self):
@@ -133,26 +134,17 @@ class MinutesMeeting(models.Model):
         self.ensure_one()
         self.write({ 'state': 'cancel' })
 
-    def action_attend(self):
-        self.ensure_one()
-        attend = self.env['meeting.attendance'].search([
-            ('user_id', '=', self.env.user.id),
-            ('meeting_id', '=', self.id)
-        ], limit=1)
-        if attend:
-            attend.action_attend()
-
 
 class MeetingAttendance(models.Model):
     _name = 'meeting.attendance'
     _description = 'Meeting Attendance'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    meeting_id = fields.Many2one('minutes.meeting', string='Minutes of Meeting', required=True)
-    user_id = fields.Many2one('res.users', string='Participant', required=True)
-    partner_id = fields.Many2one('res.partner', string='Partner')
-    attend_id = fields.Many2one('attendance.value', string='Attend')
-    datetime_attend = fields.Datetime('Datetime Attendance')
+    meeting_id = fields.Many2one('minutes.meeting', string='Minutes of Meeting', required=True, tracking=True)
+    user_id = fields.Many2one('res.users', string='Participant', required=True, tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True)
+    attend_id = fields.Many2one('attendance.value', string='Attend', tracking=True)
+    datetime_attend = fields.Datetime('Datetime Attendance', tracking=True)
 
     def action_attend(self):
         self.ensure_one()
@@ -163,7 +155,8 @@ class MeetingNote(models.Model):
     _description = 'Meeting Note'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    meeting_id = fields.Many2one('minutes.meeting', string='Minutes of Meeting', required=True)
-    user_id = fields.Many2one('res.users', string='Participant', required=True)
-    subject = fields.Char('Subject')
-    note = fields.Text('Note')
+    meeting_id = fields.Many2one('minutes.meeting', string='Minutes of Meeting', required=True, tracking=True)
+    user_id = fields.Many2one('res.users', string='Participant', required=True, default=lambda self: self.env.user.id, tracking=True)
+    date = fields.Datetime('Date', default=fields.Datetime.now(), tracking=True)
+    subject = fields.Char('Subject', tracking=True)
+    note = fields.Text('Note', tracking=True)

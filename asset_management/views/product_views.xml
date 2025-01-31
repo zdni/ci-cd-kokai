@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <record id="product_template_form_view_inherit_critical" model="ir.ui.view">
+            <field name="name">product.template.view.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="categ_id" position="after">
+                    <field name="is_asset" />
+                </field>
+            </field>
+        </record>
+    
+        <record id="product_template_inherit_datasheet" model="ir.ui.view">
+            <field name="name">product.product.view.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='general_information']//group[1]" position="inside">
+                    <group>
+                        <field name="is_asset" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+
+</odoo>

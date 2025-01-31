@@ -22,7 +22,7 @@
                                 <field name="location_id" options="{'no_create': True}" />
                                 <field name="area_id" options="{'no_create': True}" />
                                 <field name="machine_id" options="{'no_create': True}" />
-                                <field name="item_id" options="{'no_create': True}" />
+                                <field name="temporary_item_id" options="{'no_create': True}" />
                                 <field name="size_id" options="{'no_create': True}" />
                                 <field name="pressure_rating_id" options="{'no_create': True}" />
                                 <field name="description" />

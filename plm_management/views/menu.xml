@@ -5,7 +5,7 @@
     
         <menuitem
             id="plm_management_menu"
-            name="PLM"
+            name="Work Order"
             sequence="10"
             web_icon="plm_management,static/description/icon.png"
         />
