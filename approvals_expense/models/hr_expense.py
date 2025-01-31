@@ -45,6 +45,12 @@ class HrExpense(models.Model):
             'state': 'request'
         })
         request = self.approval_ids[self.approval_count-1]
+        approver = self.env['approval.approver'].search([
+            ('request_id.id', '=', request.id),
+            ('user_id.id', '=', 2),
+        ])
+        if approver:
+            approver.sudo().write({ 'user_id': self.employee_id.parent_id.user_id.id })
         request.action_confirm()
 
     def action_view_approval_request(self):

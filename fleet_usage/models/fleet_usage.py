@@ -94,6 +94,14 @@ class FleetUsage(models.Model):
         approval = self.env['approval.request'].create(vals)
         if not approval:
             raise ValidationError("Can't Request Approval. Please Contact Administrator")
+        
+        request = self.approval_ids[self.approval_count-1]
+        approver = self.env['approval.approver'].search([
+            ('request_id.id', '=', request.id),
+            ('user_id.id', '=', 2),
+        ])
+        if approver:
+            approver.sudo().write({ 'user_id': self.driver_id.department_id.manager_id.user_id.id })
         approval.action_confirm()
         self.write({ 'state': 'requested' })
 
