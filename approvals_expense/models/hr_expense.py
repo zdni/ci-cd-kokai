@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 class HrExpense(models.Model):
     _inherit = 'hr.expense'
 
+    team_id = fields.Many2one('department.team', string='Team')
     state = fields.Selection(selection_add=[('request', 'Request'), ('need_improvement', 'Need Improvement')], string='Status')
     approval_ids = fields.One2many(comodel_name='approval.request', inverse_name='expense_id', string='Approval Request', readonly=True, copy=False, tracking=True)
     approval_count = fields.Integer('Approval Count', compute='_compute_approval_count', readonly=True)
@@ -12,8 +13,25 @@ class HrExpense(models.Model):
         for rec in self:
             rec.approval_count = len(rec.mapped('approval_ids'))
 
+    def _send_notification_to_team(self):
+        self.ensure_one()
+        if self.team_id:
+            schedule = self.env['assignment.task'].sudo().create({
+                'department_ids': [self.team_id.department_id.id],
+                'user_id': self.env.user.id,
+                'user_ids': self.team_id.member_ids,
+                'assigned_to': 'employee',
+                'subject': f"Notifikasi Request Expense {self.name}",
+                'description': f"Notifikasi Request Expense {self.name}",
+                'schedule_type_id': self.env.ref('schedule_task.mail_activity_type_data_notification').id,
+                'model': 'hr.expense',
+                'res_id': self.id,
+            })
+            schedule.action_assign()
+
     def generate_approval_request(self):
         self.ensure_one()
+        self._send_notification_to_team()
         category_pr = self.env.ref('approvals_expense.approval_category_data_expense')
         vals = {
             'name': 'Request Approval for ' + self.name,

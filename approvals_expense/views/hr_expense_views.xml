@@ -18,6 +18,9 @@
                         </button>
                     </div>
                 </xpath>
+                <field name="company_id" position="before">
+                    <field name="team_id" />
+                </field>
             </field>
         </record>
     
