@@ -18,7 +18,7 @@
                         </button>
                     </div>
                 </xpath>
-                <field name="company_id" position="before">
+                <field name="reference" position="before">
                     <field name="team_id" />
                 </field>
             </field>
