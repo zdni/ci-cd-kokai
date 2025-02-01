@@ -13,7 +13,7 @@
     "author": "Luca Vercelli - Finsoft srl",
     "website": "",
     "depends": ["product"],
-    'data': [],
+    'data': ['views/product_product_views.xml'],
     "init_xml": [],
     "update_xml": [],
     "demo_xml": [],
