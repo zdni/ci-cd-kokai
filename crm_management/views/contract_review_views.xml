@@ -28,6 +28,7 @@
                                 <field name="partner_id" readonly="1" required="1" />
                                 <field name="source" required="1" />
                                 <field name="frk_type" />
+                                <field name="inquiry_number" />
                                 <field name="customer_inquiry_number" />
                                 <field name="customer_po_number" />
                             </group>

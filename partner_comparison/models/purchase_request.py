@@ -32,7 +32,8 @@ class PurchaseRequest(models.Model):
                     'product_id': line.product_id.id,
                     'product_qty': line.qty,
                     'product_uom': line.uom_id.id,
-                    'purchase_request_lines': [(4,line.id)]
+                    'purchase_request_lines': [(4,line.id)],
+                    'uom_invoice_id': line.uom_invoice_id.id,
                 }) for line in order_line],
             })
         except:

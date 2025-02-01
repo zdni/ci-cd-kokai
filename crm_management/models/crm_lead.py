@@ -38,6 +38,7 @@ class CRMLead(models.Model):
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
     attachment_ids = fields.Many2many('ir.attachment', string='Files')
     sm_team_id = fields.Many2one('department.team', string='Sales Team')
+    pic_ids = fields.Many2many('res.partner', string='PIC')
 
     def action_view_stage_change_wizard(self):
         self.ensure_one()
@@ -183,7 +184,7 @@ class CRMLead(models.Model):
 
     def action_view_schedule_meeting_wizard(self):
         self.ensure_one()
-        ctx = dict(default_lead_id=self.id, active_ids=self.ids, default_description='Meeting with ' + self.partner_id.name, default_partner_ids=[self.partner_id.id])
+        ctx = dict(default_lead_id=self.id, active_ids=self.ids, default_description='Meeting with ' + self.partner_id.name, default_partner_ids=[self.partner_id.id], default_partner_id=self.partner_id.id)
         return {
             'name': _('Meeting'),
             'type': 'ir.actions.act_window',

@@ -1,11 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-class ScheduleMeetingWizard(models.TransientModel):
-    _name = 'schedule.meeting.wizard'
-    _description = 'Schedule Meeting with Customer'
+class ApplicantMeetingWizard(models.TransientModel):
+    _name = 'applicant.meeting.wizard'
+    _description = 'Applicant Meeting with Applicant'
 
-    lead_id = fields.Many2one('crm.lead', string='Lead', required=True)
+    applicant_id = fields.Many2one('hr.applicant', string='Lead', required=True)
     videocall_url = fields.Char('Videocall URL')
     start_date = fields.Datetime('Start At', required=True)
     stop_date = fields.Datetime('Stop At')
@@ -13,16 +13,13 @@ class ScheduleMeetingWizard(models.TransientModel):
     area_id = fields.Many2one('hr.work.area', string='Area')
     detail_location = fields.Char('Detail Location', tracking=True)
     user_ids = fields.Many2many('res.users', string='Participants', default=lambda self: [self.env.user.id])
-    partner_id = fields.Many2one('res.partner', string='Customer')
-    partner_ids = fields.Many2many('res.partner', string='Customer', domain="['|',('id','=',partner_id),('parent_id','=',partner_id)]")
+    partner = fields.Char('Applicant', related='applicant_id.partner_name')
     description = fields.Text('Description')
     media = fields.Selection([
         ('meeting', 'Meeting'),
         ('call', 'Call'),
         ('message', 'Message'),
     ], string='Media', required=True, default='meeting')
-    
-    
     type = fields.Selection([
         ('internal', 'Internal'),
         ('external', 'External'),
@@ -30,13 +27,13 @@ class ScheduleMeetingWizard(models.TransientModel):
 
     def action_schedule(self):
         self.ensure_one()
-        if not self.lead_id:
-            raise ValidationError("Schedule Meeting Failed!")
+        if not self.applicant_id:
+            raise ValidationError("Applicant Interview Failed!")
         
         try:
             meeting = self.env['minutes.meeting'].create({
                 'user_id': self.env.user.id,
-                'name': 'Meeting with ' + self.lead_id.partner_id.name,
+                'name': 'Interview with ' + self.applicant_id.partner_name,
                 'videocall_url': self.videocall_url,
                 'location_id': self.work_loc_id_id.id,
                 'area_id': self.area_id.id,
@@ -45,16 +42,15 @@ class ScheduleMeetingWizard(models.TransientModel):
                 'subject': self.description,
                 'type': self.type,
                 'media': self.media,
+                'partner': self.partner,
                 'user_ids': self.user_ids.ids,
                 'participant_type': 'employee',
-                'partner_ids': self.partner_ids.ids,
-                'lead_id': self.lead_id.id,
-                'crm_stage': self.lead_id.stage_id.id,
-                'crm_state': self.lead_id.state,
+                'applicant_id': self.applicant_id.id,
+                'applicant_stage': self.applicant_id.stage_id.name,
             })
             meeting.action_assign()
             action = (self.env.ref('minutes_of_meeting.minutes_meeting_action').sudo().read()[0])
-            action['domain'] = [('lead_id', 'in', [self.lead_id.id])]
+            action['domain'] = [('applicant_id', 'in', [self.applicant_id.id])]
             return action
         except:
-            raise ValidationError("Schedule Meeting Failed!")
+            raise ValidationError("Applicant Interview Failed!")

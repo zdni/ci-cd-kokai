@@ -12,6 +12,7 @@
         'engineering_aspects',
         'many2many_attachment_preview',
         'minutes_of_meeting',
+        'report_py3o',
         'sale_crm',
         'schedule_task',
         'sequence_reset_period',
@@ -23,6 +24,8 @@
         'data/ir_sequence_data.xml',
         
         'security/ir.model.access.csv',
+
+        'reports/reports.xml',
 
         'views/menu.xml',
         'views/contract_issue_views.xml',

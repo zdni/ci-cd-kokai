@@ -93,3 +93,26 @@ class PurchaseRequestLine(models.Model):
     reason = fields.Char('Reason')
     drawing = fields.Binary('Drawing')
     suggested = fields.Char('Item/Supplier')
+    uom_invoice_id = fields.Many2one('uom.uom', string='UoM Inv')
+
+    @api.onchange('product_uom_id')
+    def _onchange_product_uom_id(self):
+        for record in self:
+            record.uom_invoice_id = record.product_uom_id.category_id.reference_uom_id.id
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    uom_invoice_id = fields.Many2one('uom.uom', string='UoM Inv')
+
+    @api.onchange('product_uom')
+    def _onchange_product_uom(self):
+        for record in self:
+            record.uom_invoice_id = record.product_uom.category_id.reference_uom_id.id
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    uom_invoice_id = fields.Many2one('uom.uom', string='UoM Inv')

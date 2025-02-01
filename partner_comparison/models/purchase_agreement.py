@@ -152,7 +152,8 @@ class PurchaseAgreement(models.Model):
                         'taxes_id': line.tax_ids,
                         'discount': line.discount,
                         'discount_fixed': line.discount_fixed,
-                        'purchase_request_lines': [(4,line.line_id.id)]
+                        'purchase_request_lines': [(4,line.line_id.id)],
+                        'uom_invoice_id': line.uom_invoice_id.id,
                     }) for line in order_line],
                 })
                 self.write({ 'order_id': order.id })

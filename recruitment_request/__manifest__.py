@@ -14,6 +14,7 @@
         'department_user', 
         'hr_recruitment', 
         'hr_payroll_configuration',
+        'minutes_of_meeting',
         'proof_approval',
         'schedule_task',
     ],
@@ -26,6 +27,7 @@
 
         'security/ir.model.access.csv',
 
+        'views/hr_applicant_views.xml',
         'views/recruitment_request_views.xml',
     ],
     'auto_install': False,

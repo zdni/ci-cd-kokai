@@ -26,6 +26,12 @@
                     <field name="reason" />
                     <field name="drawing" />
                 </xpath>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='product_uom_id']" position="after">
+                    <field name="uom_invoice_id" />
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='company_id']" position="attributes">
+                    <attribute name="optional" value="hide">hide</attribute>
+                </xpath>
                 <xpath expr="//button[@name='button_approved']" position="attributes">
                     <attribute name="invisible" value="1">1</attribute>
                 </xpath>
@@ -56,7 +62,7 @@
                     <attribute name="groups"></attribute>
                 </xpath>
                 <xpath expr="//notebook//page[1]//field[@name='line_ids']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('state', 'not in', ['draft','need_improvement'])]}</attribute>
+                    <attribute name="attrs">{'readonly': [('state', 'not in', ['draft','in_progress','need_improvement'])]}</attribute>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page name="file" string="File">

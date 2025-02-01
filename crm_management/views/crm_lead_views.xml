@@ -81,6 +81,16 @@
                             <field name="attachment_ids" widget="many2many_attachment_preview" />
                         </group>
                     </page>
+                    <page name="pic" string="PIC">
+                        <field name="pic_ids" context="{'search_default_parent_id': partner_id}">
+                            <tree>
+                                <field name="name" />
+                                <field name="function" />
+                                <field name="phone" />
+                                <field name="email" />
+                            </tree>
+                        </field>
+                    </page>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="action_show_inquiry" type="object" class="oe_stat_button" icon="fa-key">
