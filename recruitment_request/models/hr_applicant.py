@@ -4,18 +4,18 @@ from odoo import _, api, fields, models
 class HrApplicant(models.Model):
     _inherit = 'hr.applicant'
 
-    meeting_ids = fields.One2many('minutes.meeting', 'applicant_id', string='Interview')
-    meeting_count = fields.Integer('Meeting Count', compute='_compute_meeting_count')
-    @api.depends('meeting_ids')
-    def _compute_meeting_count(self):
+    interview_ids = fields.One2many('minutes.meeting', 'applicant_id', string='Interview')
+    interview_count = fields.Integer('Interview Count', compute='_compute_interview_count')
+    @api.depends('interview_ids')
+    def _compute_interview_count(self):
         for record in self:
-            record.meeting_count = len(record.meeting_ids)
+            record.interview_count = len(record.interview_ids)
 
-    def action_show_meeting(self):
-        if self.meeting_count == 0:
+    def action_show_interview(self):
+        if self.interview_count == 0:
             return
         action = (self.env.ref('minutes_of_meeting.minutes_meeting_action').sudo().read()[0])
-        action['domain'] = [('id', 'in', self.meeting_ids.ids)]
+        action['domain'] = [('id', 'in', self.interview_ids.ids)]
         return action
 
     def action_view_applicant_meeting_wizard(self):
