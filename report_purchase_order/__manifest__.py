@@ -5,7 +5,12 @@
     'author': 'github.com/zdni',
     'license': 'LGPL-3',
     'category': 'Report',
-    'depends': ['purchase', 'report_py3o', 'approvals_purchase_order'],
+    'depends': [
+        'approvals_purchase_order', 
+        'custom_purchase_request',
+        'purchase', 
+        'report_py3o', 
+    ],
     'data': [
         'views/purchase_order_views.xml',
         'reports/reports.xml',

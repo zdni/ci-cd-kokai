@@ -83,7 +83,7 @@
                     <field name="link" widget='url' />
                     <field name="suggested" />
                     <field name="reason" />
-                    <field name="drawing" />
+                    <field name="drawing" widget="binary_preview" />
                 </field>
             </field>
         </record>

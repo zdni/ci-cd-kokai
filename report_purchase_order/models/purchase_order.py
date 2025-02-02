@@ -47,3 +47,9 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     size = fields.Char('Size')
+
+    def _get_uom(self):
+        self.ensure_one()
+        if self.uom_invoice_id != self.product_uom:
+            return f"{self.uom_invoice_id.name} [{self.uom_invoice_id.name}={self.product_uom.name}]"
+        return self.uom_invoice_id.name

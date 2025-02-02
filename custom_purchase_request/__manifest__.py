@@ -10,6 +10,7 @@
         'department_detail', 
         'department_user', 
         'many2many_attachment_preview',
+        'ps_binary_field_attachment_preview',
         'purchase_request', 
         'schedule_task', 
     ],

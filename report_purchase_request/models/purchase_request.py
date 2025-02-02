@@ -27,3 +27,13 @@ class PurchaseRequest(models.Model):
         self.ensure_one()
         type = dict(self._fields['type'].selection).get(self.type)
         return type
+
+
+class PurchaseRequestLine(models.Model):
+    _inherit = 'purchase.request.line'
+
+    def _get_uom(self):
+        self.ensure_one()
+        if self.uom_invoice_id != self.product_uom_id:
+            return f"{self.uom_invoice_id.name} [{self.uom_invoice_id.name}={self.product_uom_id.name}]"
+        return self.uom_invoice_id.name
