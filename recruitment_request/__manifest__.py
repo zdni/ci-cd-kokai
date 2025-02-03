@@ -29,6 +29,8 @@
 
         'views/hr_applicant_views.xml',
         'views/recruitment_request_views.xml',
+
+        'wizards/schedule_meeting_wizard.xml',
     ],
     'auto_install': False,
     'application': False,
