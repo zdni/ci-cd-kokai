@@ -5,3 +5,4 @@ access_recruitment_request_manager,access_recruitment_request_manager,model_recr
 access_hr_applicant,access_hr_applicant,model_hr_applicant,base.group_user,1,0,0,0
 access_recruitment_request_stage,access_recruitment_request_stage,model_recruitment_request_stage,base.group_user,1,1,1,1
 access_allowance_submission,access_allowance_submission,model_allowance_submission,base.group_user,1,1,1,1
+access_applicant_meeting_wizard,access_applicant_meeting_wizard,model_applicant_meeting_wizard,base.group_user,1,1,1,1
