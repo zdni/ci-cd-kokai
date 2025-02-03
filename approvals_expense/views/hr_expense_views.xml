@@ -21,6 +21,12 @@
                 <field name="reference" position="before">
                     <field name="team_id" />
                 </field>
+                <xpath expr="//button[@name='action_submit_expenses'][1]" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_submit_expenses'][2]" position="attributes">
+                    <attribute name="invisible" value="1">1</attribute>
+                </xpath>
             </field>
         </record>
     
