@@ -43,7 +43,7 @@
                                     <tree editable="bottom">
                                         <field name="agreement_id" optional="hide" readonly="1" />
                                         <field name="line_id" optional="hide" readonly="1" />
-                                        <field name="product_id" readonly="1" />
+                                        <field name="product_id" attrs="{'readonly': [('id','>',0)]}" />
                                         <field name="qty" optional="hide" readonly="1" />
                                         <field name="uom_id" optional="hide" readonly="1" />
                                         <field name="price_unit" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" />

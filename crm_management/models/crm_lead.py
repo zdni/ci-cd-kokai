@@ -82,13 +82,14 @@ class CRMLead(models.Model):
     def generate_quotation(self):
         self.ensure_one()
         code = CODE_CONTRACT[self.source]
-        contract_number = self.env['ir.sequence'].sudo().next_by_code(code)
+        # contract_number = self.env['ir.sequence'].sudo().next_by_code(code)
+        quotation_number = self.env['ir.sequence'].sudo().next_by_code('quotation.order')
         inquiry = self.order_ids[self.inquiry_count-1]
         if inquiry.inquiry_state == 'done':
             inquiry.write({
-                'name': contract_number,
+                'name': quotation_number,
                 'state': 'draft',
-                'is_frk': True,
+                'is_frk': False,
             })
             self.write({ 'state': 'process' })
 
