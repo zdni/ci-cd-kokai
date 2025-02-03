@@ -1,8 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_work_order,access_work_order,model_work_order,base.group_user,1,1,1,1
-access_work_activity,access_work_activity,model_work_activity,base.group_user,1,1,1,1
 access_machine_type,access_machine_type,model_machine_type,base.group_user,1,1,1,1
 access_machine_tag,access_machine_tag,model_machine_tag,base.group_user,1,1,1,1
 access_machine_model,access_machine_model,model_machine_model,base.group_user,1,1,1,1
 access_machine_tool,access_machine_tool,model_machine_tool,base.group_user,1,1,1,1
 access_temporary_item,access_temporary_item,model_temporary_item,base.group_user,1,1,1,1
+access_work_activity_user,access_work_activity_user,model_work_activity,base.group_user,1,1,1,0
+access_work_activity_user_all,access_work_activity_user_all,model_work_activity,plm_management.group_work_activity_user,1,1,1,1
+access_work_activity_user_administrator,access_work_activity_user_administrator,model_work_activity,plm_management.group_work_activity_user_all_task,1,1,1,1

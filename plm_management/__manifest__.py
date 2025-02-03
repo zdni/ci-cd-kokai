@@ -7,9 +7,11 @@
     'category': 'Productivity',
     'depends': ['mrp', 'schedule_task'],
     'data': [
-        'data/ir_sequence_data.xml',
-
+        'security/group_security.xml',
+        'security/ir_rules.xml',
         'security/ir.model.access.csv',
+
+        'data/ir_sequence_data.xml',
 
         'views/menu.xml',
         'views/machine_views.xml',

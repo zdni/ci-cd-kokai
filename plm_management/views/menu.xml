@@ -28,6 +28,7 @@
             id="setting_menu"
             name="Configuration"
             parent="plm_management.plm_management_menu"
+            groups="plm_management.group_work_activity_user_all_task"
             sequence="10"
         />
     
